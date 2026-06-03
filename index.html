@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Healthcare AI Futures Lab</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+
+:root {
+–bg: #0a0e1a;
+–surface: #111827;
+–surface2: #1a2235;
+–border: #1e2d47;
+–accent: #00d4aa;
+–accent2: #ff6b35;
+–accent3: #7c6cfc;
+–danger: #ef4444;
+–warn: #f59e0b;
+–text: #e2e8f0;
+–muted: #64748b;
+–safety: #00d4aa;
+–trust: #7c6cfc;
+–innovation: #f59e0b;
+–finance: #38bdf8;
+}
+
+- { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: ‘IBM Plex Sans’, sans-serif;
+font-weight: 300;
+min-height: 100vh;
+overflow-x: hidden;
+}
+
+/* GRID NOISE BACKGROUND */
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background-image:
+linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
+linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
+background-size: 40px 40px;
+pointer-events: none;
+z-index: 0;
+}
+
+.screen {
+display: none;
+position: relative;
+z-index: 1;
+animation: fadeIn 0.4s ease;
+}
+.screen.active { display: block; }
+@keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+
+/* ─── TITLE SCREEN ─── */
+#screen-title {
+min-height: 100vh;
+display: none;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+text-align: center;
+padding: 40px 24px;
+}
+#screen-title.active { display: flex; }
+
+.lab-wordmark {
+font-family: ‘Syne’, sans-serif;
+font-size: clamp(13px, 2vw, 16px);
+font-weight: 600;
+letter-spacing: 0.3em;
+text-transform: uppercase;
+color: var(–accent);
+margin-bottom: 24px;
+}
+
+.title-hero {
+font-family: ‘Syne’, sans-serif;
+font-weight: 800;
+font-size: clamp(40px, 8vw, 80px);
+line-height: 0.95;
+letter-spacing: -0.02em;
+margin-bottom: 8px;
+}
+
+.title-hero span {
+display: block;
+background: linear-gradient(135deg, #00d4aa, #7c6cfc);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+
+.title-year {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: clamp(60px, 12vw, 120px);
+font-weight: 300;
+color: rgba(255,255,255,0.06);
+line-height: 1;
+margin: -10px 0 24px;
+letter-spacing: -0.04em;
+}
+
+.title-sub {
+font-size: 17px;
+font-weight: 300;
+color: var(–muted);
+max-width: 480px;
+line-height: 1.6;
+margin-bottom: 48px;
+}
+
+.scenario-select {
+display: flex;
+flex-direction: column;
+gap: 12px;
+width: 100%;
+max-width: 520px;
+margin-bottom: 32px;
+}
+
+.scenario-card {
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 20px 24px;
+text-align: left;
+cursor: pointer;
+transition: all 0.2s;
+background: var(–surface);
+position: relative;
+overflow: hidden;
+}
+.scenario-card::before {
+content: ‘’;
+position: absolute;
+inset: 0;
+opacity: 0;
+transition: opacity 0.2s;
+}
+.scenario-card.s1::before { background: linear-gradient(135deg, rgba(0,212,170,0.08), transparent); }
+.scenario-card.s2::before { background: linear-gradient(135deg, rgba(124,108,252,0.08), transparent); }
+.scenario-card.s3::before { background: linear-gradient(135deg, rgba(255,107,53,0.08), transparent); }
+.scenario-card:hover { border-color: var(–accent); transform: translateX(4px); }
+.scenario-card:hover::before { opacity: 1; }
+
+.sc-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 10px;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(–accent);
+margin-bottom: 6px;
+}
+.scenario-card.s2 .sc-label { color: var(–accent3); }
+.scenario-card.s3 .sc-label { color: var(–accent2); }
+
+.sc-title {
+font-family: ‘Syne’, sans-serif;
+font-size: 18px;
+font-weight: 700;
+margin-bottom: 4px;
+}
+.sc-desc { font-size: 13px; color: var(–muted); line-height: 1.5; }
+
+.sc-locked {
+position: absolute;
+right: 20px;
+top: 50%;
+transform: translateY(-50%);
+font-size: 18px;
+opacity: 0.3;
+}
+
+/* ─── BRIEFING SCREEN ─── */
+#screen-brief {
+max-width: 760px;
+margin: 0 auto;
+padding: 48px 24px;
+}
+
+.breadcrumb {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 11px;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 32px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.breadcrumb span { color: var(–accent); }
+
+.brief-header {
+margin-bottom: 32px;
+}
+.brief-role {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 12px;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(–accent);
+margin-bottom: 12px;
+}
+.brief-title {
+font-family: ‘Syne’, sans-serif;
+font-size: clamp(28px, 5vw, 44px);
+font-weight: 800;
+line-height: 1.1;
+margin-bottom: 16px;
+}
+.brief-meta {
+display: flex;
+gap: 16px;
+flex-wrap: wrap;
+}
+.meta-pill {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 11px;
+padding: 4px 12px;
+border-radius: 100px;
+border: 1px solid var(–border);
+color: var(–muted);
+letter-spacing: 0.08em;
+}
+
+.brief-situation {
+background: var(–surface);
+border: 1px solid var(–border);
+border-left: 3px solid var(–accent2);
+border-radius: 12px;
+padding: 24px 28px;
+margin-bottom: 24px;
+}
+.brief-situation h3 {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 10px;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+color: var(–accent2);
+margin-bottom: 14px;
+}
+.brief-situation p {
+font-size: 15px;
+line-height: 1.7;
+color: #c8d4e6;
+margin-bottom: 10px;
+}
+.brief-situation p:last-child { margin-bottom: 0; }
+
+.data-row {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+gap: 12px;
+margin-bottom: 24px;
+}
+.data-card {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 16px 20px;
+}
+.data-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 10px;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 8px;
+}
+.data-value {
+font-family: ‘Syne’, sans-serif;
+font-size: 24px;
+font-weight: 700;
+}
+.data-value.up { color: var(–accent); }
+.data-value.down { color: var(–danger); }
+.data-value.warn { color: var(–warn); }
+.data-sub { font-size: 11px; color: var(–muted); margin-top: 2px; }
+
+.btn-primary {
+background: var(–accent);
+color: #0a0e1a;
+border: none;
+border-radius: 10px;
+padding: 16px 32px;
+font-family: ‘Syne’, sans-serif;
+font-size: 15px;
+font-weight: 700;
+cursor: pointer;
+letter-spacing: 0.02em;
+transition: all 0.2s;
+display: inline-block;
+}
+.btn-primary:hover { background: #00f0c0; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,212,170,0.3); }
+
+.btn-secondary {
+background: transparent;
+color: var(–muted);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 14px 28px;
+font-family: ‘IBM Plex Sans’, sans-serif;
+font-size: 14px;
+cursor: pointer;
+transition: all 0.2s;
+display: inline-block;
+}
+.btn-secondary:hover { border-color: var(–muted); color: var(–text); }
+
+/* ─── GAME SCREEN ─── */
+#screen-game {
+max-width: 1100px;
+margin: 0 auto;
+padding: 24px 20px 48px;
+}
+
+.game-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 28px;
+flex-wrap: wrap;
+gap: 12px;
+}
+
+.game-title-area { }
+.game-role-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 10px;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(–accent);
+margin-bottom: 4px;
+}
+.game-scenario-title {
+font-family: ‘Syne’, sans-serif;
+font-size: 20px;
+font-weight: 700;
+}
+
+.quarter-tracker {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.q-dot {
+width: 10px; height: 10px;
+border-radius: 50%;
+background: var(–border);
+transition: all 0.3s;
+}
+.q-dot.done { background: var(–accent); }
+.q-dot.active { background: var(–accent); box-shadow: 0 0 8px var(–accent); }
+.q-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 12px;
+color: var(–muted);
+margin-left: 4px;
+}
+
+/* DASHBOARD */
+.dashboard {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 10px;
+margin-bottom: 24px;
+}
+
+@media (max-width: 700px) {
+.dashboard { grid-template-columns: repeat(2, 1fr); }
+}
+
+.metric-card {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 14px 16px;
+position: relative;
+overflow: hidden;
+}
+.metric-card::after {
+content: ‘’;
+position: absolute;
+bottom: 0; left: 0; right: 0;
+height: 3px;
+border-radius: 0 0 10px 10px;
+}
+.metric-card.safety::after { background: var(–safety); }
+.metric-card.trust::after { background: var(–trust); }
+.metric-card.innovation::after { background: var(–innovation); }
+.metric-card.finance::after { background: var(–finance); }
+
+.metric-name {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 9px;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 8px;
+}
+.metric-val {
+font-family: ‘Syne’, sans-serif;
+font-size: 28px;
+font-weight: 700;
+line-height: 1;
+margin-bottom: 6px;
+}
+.metric-card.safety .metric-val { color: var(–safety); }
+.metric-card.trust .metric-val { color: var(–trust); }
+.metric-card.innovation .metric-val { color: var(–innovation); }
+.metric-card.finance .metric-val { color: var(–finance); }
+
+.metric-bar-bg {
+height: 4px;
+background: var(–border);
+border-radius: 4px;
+overflow: hidden;
+}
+.metric-bar-fill {
+height: 100%;
+border-radius: 4px;
+transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.safety .metric-bar-fill { background: var(–safety); }
+.trust .metric-bar-fill { background: var(–trust); }
+.innovation .metric-bar-fill { background: var(–innovation); }
+.finance .metric-bar-fill { background: var(–finance); }
+
+/* MAIN GAME AREA */
+.game-columns {
+display: grid;
+grid-template-columns: 1fr 360px;
+gap: 20px;
+align-items: start;
+}
+
+@media (max-width: 900px) {
+.game-columns { grid-template-columns: 1fr; }
+}
+
+/* SITUATION */
+.situation-panel {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 14px;
+padding: 24px;
+margin-bottom: 20px;
+}
+
+.panel-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 10px;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 14px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.panel-label::after {
+content: ‘’;
+flex: 1;
+height: 1px;
+background: var(–border);
+}
+
+.situation-text {
+font-size: 15px;
+line-height: 1.75;
+color: #c8d4e6;
+}
+.situation-text strong { color: var(–text); font-weight: 500; }
+
+.alert-box {
+background: rgba(239,68,68,0.1);
+border: 1px solid rgba(239,68,68,0.3);
+border-radius: 8px;
+padding: 12px 16px;
+margin-top: 14px;
+font-size: 13px;
+color: #fca5a5;
+line-height: 1.5;
+}
+.alert-box .alert-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 9px;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(–danger);
+display: block;
+margin-bottom: 4px;
+}
+
+/* DECISIONS */
+.decisions-panel {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 14px;
+padding: 24px;
+}
+
+.decision-cards { display: flex; flex-direction: column; gap: 12px; }
+
+.decision-card {
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 16px 18px;
+cursor: pointer;
+transition: all 0.2s;
+background: var(–surface2);
+position: relative;
+overflow: hidden;
+}
+.decision-card::before {
+content: ‘’;
+position: absolute;
+left: 0; top: 0; bottom: 0;
+width: 3px;
+border-radius: 3px 0 0 3px;
+background: var(–border);
+transition: background 0.2s;
+}
+.decision-card:hover { border-color: rgba(0,212,170,0.4); transform: translateX(3px); }
+.decision-card:hover::before { background: var(–accent); }
+.decision-card.selected { border-color: var(–accent); background: rgba(0,212,170,0.06); }
+.decision-card.selected::before { background: var(–accent); }
+.decision-card.selected-bad { border-color: var(–danger); background: rgba(239,68,68,0.06); }
+.decision-card.selected-bad::before { background: var(–danger); }
+.decision-card.selected-warn { border-color: var(–warn); background: rgba(245,158,11,0.06); }
+.decision-card.selected-warn::before { background: var(–warn); }
+
+.dc-option {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 10px;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 6px;
+}
+.dc-title {
+font-family: ‘Syne’, sans-serif;
+font-size: 16px;
+font-weight: 700;
+margin-bottom: 6px;
+}
+.dc-desc { font-size: 13px; color: var(–muted); line-height: 1.5; }
+
+.dc-impacts {
+display: flex;
+gap: 6px;
+margin-top: 10px;
+flex-wrap: wrap;
+}
+.impact-pill {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 10px;
+padding: 3px 8px;
+border-radius: 100px;
+border: 1px solid;
+letter-spacing: 0.05em;
+}
+.impact-pill.pos { color: var(–accent); border-color: rgba(0,212,170,0.3); }
+.impact-pill.neg { color: var(–danger); border-color: rgba(239,68,68,0.3); }
+.impact-pill.warn { color: var(–warn); border-color: rgba(245,158,11,0.3); }
+
+/* SIDEBAR */
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+.stakeholder-panel {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 14px;
+padding: 20px;
+}
+
+.stakeholder-list { display: flex; flex-direction: column; gap: 10px; }
+
+.stakeholder-item {
+display: flex;
+align-items: flex-start;
+gap: 12px;
+padding: 10px 12px;
+border-radius: 8px;
+background: var(–surface2);
+border: 1px solid transparent;
+transition: all 0.3s;
+}
+.stakeholder-item.reacting {
+border-color: var(–accent2);
+background: rgba(255,107,53,0.06);
+animation: pulse 1s ease;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+
+.sh-icon {
+width: 32px; height: 32px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 14px;
+flex-shrink: 0;
+background: var(–border);
+}
+.sh-name {
+font-size: 12px;
+font-weight: 500;
+margin-bottom: 3px;
+}
+.sh-status {
+font-size: 11px;
+color: var(–muted);
+line-height: 1.4;
+}
+.sh-status.alert { color: var(–accent2); }
+.sh-status.good { color: var(–accent); }
+.sh-status.warn { color: var(–warn); }
+
+/* REGULATION PANEL */
+.reg-panel {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 14px;
+padding: 20px;
+}
+
+.reg-item {
+display: flex;
+align-items: center;
+gap: 10px;
+padding: 8px 0;
+border-bottom: 1px solid var(–border);
+}
+.reg-item:last-child { border-bottom: none; }
+.reg-status {
+width: 8px; height: 8px;
+border-radius: 50%;
+flex-shrink: 0;
+}
+.reg-status.green { background: var(–accent); box-shadow: 0 0 6px var(–accent); }
+.reg-status.amber { background: var(–warn); box-shadow: 0 0 6px var(–warn); }
+.reg-status.red { background: var(–danger); box-shadow: 0 0 6px var(–danger); }
+.reg-name {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 11px;
+letter-spacing: 0.05em;
+flex: 1;
+}
+.reg-state { font-size: 11px; color: var(–muted); }
+
+/* CONFIRM BUTTON ROW */
+.decision-actions {
+display: flex;
+gap: 12px;
+margin-top: 20px;
+align-items: center;
+}
+
+/* ─── CONSEQUENCE SCREEN ─── */
+#screen-consequence {
+max-width: 760px;
+margin: 0 auto;
+padding: 48px 24px;
+}
+
+.consequence-header {
+margin-bottom: 32px;
+}
+.consequence-type {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 11px;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+margin-bottom: 10px;
+}
+.consequence-type.good { color: var(–accent); }
+.consequence-type.bad { color: var(–danger); }
+.consequence-type.mixed { color: var(–warn); }
+
+.consequence-title {
+font-family: ‘Syne’, sans-serif;
+font-size: clamp(24px, 4vw, 38px);
+font-weight: 800;
+line-height: 1.1;
+margin-bottom: 16px;
+}
+
+.consequence-narrative {
+font-size: 15px;
+line-height: 1.75;
+color: #c8d4e6;
+margin-bottom: 24px;
+}
+
+.delta-grid {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 10px;
+margin-bottom: 28px;
+}
+@media (max-width: 600px) {
+.delta-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.delta-card {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 14px 16px;
+text-align: center;
+}
+.delta-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 9px;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 8px;
+}
+.delta-val {
+font-family: ‘Syne’, sans-serif;
+font-size: 28px;
+font-weight: 800;
+}
+.delta-val.pos { color: var(–accent); }
+.delta-val.neg { color: var(–danger); }
+.delta-val.neu { color: var(–muted); }
+
+.stakeholder-reactions {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 20px;
+margin-bottom: 24px;
+}
+
+.reaction-item {
+display: flex;
+gap: 14px;
+padding: 12px 0;
+border-bottom: 1px solid var(–border);
+}
+.reaction-item:last-child { border-bottom: none; }
+.reaction-icon {
+width: 36px; height: 36px;
+border-radius: 50%;
+background: var(–surface2);
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 16px;
+flex-shrink: 0;
+}
+.reaction-who { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+.reaction-says { font-size: 13px; color: var(–muted); line-height: 1.5; font-style: italic; }
+
+/* ─── DEBRIEF SCREEN ─── */
+#screen-debrief {
+max-width: 800px;
+margin: 0 auto;
+padding: 48px 24px 80px;
+}
+
+.debrief-header {
+text-align: center;
+margin-bottom: 48px;
+}
+.debrief-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 11px;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+color: var(–accent);
+margin-bottom: 12px;
+}
+.debrief-title {
+font-family: ‘Syne’, sans-serif;
+font-size: clamp(28px, 5vw, 48px);
+font-weight: 800;
+line-height: 1.1;
+margin-bottom: 12px;
+}
+.debrief-subtitle { font-size: 15px; color: var(–muted); line-height: 1.6; }
+
+.final-scores {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 12px;
+margin-bottom: 40px;
+}
+@media (max-width: 600px) {
+.final-scores { grid-template-columns: repeat(2, 1fr); }
+}
+
+.final-score-card {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 20px 16px;
+text-align: center;
+}
+.fs-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 10px;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 10px;
+}
+.fs-val {
+font-family: ‘Syne’, sans-serif;
+font-size: 36px;
+font-weight: 800;
+margin-bottom: 4px;
+}
+.fs-change { font-size: 12px; }
+.fs-change.pos { color: var(–accent); }
+.fs-change.neg { color: var(–danger); }
+
+.outcome-banner {
+border-radius: 14px;
+padding: 28px 32px;
+margin-bottom: 32px;
+text-align: center;
+}
+.outcome-banner.good { background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.3); }
+.outcome-banner.mixed { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+.outcome-banner.bad { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); }
+
+.outcome-name {
+font-family: ‘Syne’, sans-serif;
+font-size: 24px;
+font-weight: 800;
+margin-bottom: 8px;
+}
+.outcome-banner.good .outcome-name { color: var(–accent); }
+.outcome-banner.mixed .outcome-name { color: var(–warn); }
+.outcome-banner.bad .outcome-name { color: var(–danger); }
+.outcome-desc { font-size: 14px; color: var(–muted); line-height: 1.6; }
+
+.learning-section {
+margin-bottom: 32px;
+}
+.learning-section h3 {
+font-family: ‘Syne’, sans-serif;
+font-size: 20px;
+font-weight: 700;
+margin-bottom: 16px;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.learning-item {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 18px 20px;
+margin-bottom: 10px;
+display: flex;
+gap: 16px;
+align-items: flex-start;
+}
+.li-tag {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 10px;
+padding: 4px 10px;
+border-radius: 6px;
+background: rgba(0,212,170,0.12);
+color: var(–accent);
+white-space: nowrap;
+flex-shrink: 0;
+letter-spacing: 0.05em;
+margin-top: 2px;
+}
+.li-tag.reg { background: rgba(124,108,252,0.12); color: var(–accent3); }
+.li-tag.risk { background: rgba(239,68,68,0.12); color: var(–danger); }
+.li-tag.eth { background: rgba(245,158,11,0.12); color: var(–warn); }
+
+.li-content { }
+.li-title { font-weight: 500; font-size: 14px; margin-bottom: 4px; }
+.li-body { font-size: 13px; color: var(–muted); line-height: 1.55; }
+
+.decision-replay {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 20px;
+margin-bottom: 32px;
+}
+.replay-title {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 10px;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 14px;
+}
+.replay-item {
+display: flex;
+align-items: flex-start;
+gap: 12px;
+padding: 10px 0;
+border-bottom: 1px solid var(–border);
+font-size: 13px;
+}
+.replay-item:last-child { border-bottom: none; }
+.replay-q {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 10px;
+color: var(–accent);
+width: 20px;
+flex-shrink: 0;
+padding-top: 1px;
+}
+.replay-choice { color: var(–text); flex: 1; }
+.replay-note { font-size: 11px; color: var(–muted); margin-top: 2px; }
+
+.debrief-actions {
+display: flex;
+gap: 12px;
+justify-content: center;
+flex-wrap: wrap;
+}
+
+/* PROGRESS BAR */
+.progress-header {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 24px;
+}
+.progress-line {
+flex: 1;
+height: 2px;
+background: var(–border);
+border-radius: 2px;
+overflow: hidden;
+}
+.progress-fill {
+height: 100%;
+background: linear-gradient(90deg, var(–accent), var(–accent3));
+border-radius: 2px;
+transition: width 0.5s ease;
+}
+.progress-pct {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 11px;
+color: var(–muted);
+white-space: nowrap;
+}
+
+/* EVENT POPUP */
+.event-overlay {
+display: none;
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.7);
+z-index: 100;
+align-items: center;
+justify-content: center;
+padding: 24px;
+backdrop-filter: blur(4px);
+}
+.event-overlay.active { display: flex; }
+
+.event-modal {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 16px;
+padding: 32px;
+max-width: 500px;
+width: 100%;
+animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+.event-type {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 10px;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+color: var(–accent2);
+margin-bottom: 10px;
+}
+.event-title {
+font-family: ‘Syne’, sans-serif;
+font-size: 24px;
+font-weight: 800;
+margin-bottom: 14px;
+}
+.event-body {
+font-size: 14px;
+color: var(–muted);
+line-height: 1.65;
+margin-bottom: 24px;
+}
+</style>
+
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     TITLE SCREEN
+══════════════════════════════════════════════════════════ -->
+
+<div id="screen-title" class="screen active">
+  <div class="lab-wordmark">Healthcare AI Futures Lab</div>
+
+  <h1 class="title-hero">The AI<span>Hospital</span></h1>
+  <div class="title-year">2032</div>
+
+  <p class="title-sub">
+    The NHS has deployed AI across clinical workflows. Every decision you make ripples through an interconnected system. There are no perfect answers.
+  </p>
+
+  <div class="scenario-select">
+    <div class="scenario-card s1" onclick="startScenario('cso')">
+      <div class="sc-label">Level 2 · Playable Demo</div>
+      <div class="sc-title">Clinical Safety Officer</div>
+      <div class="sc-desc">An AI sepsis detector is generating alarm fatigue. A patient has deteriorated. You have 48 hours to decide.</div>
+    </div>
+    <div class="scenario-card s2" style="opacity:0.5; cursor:not-allowed;">
+      <div class="sc-label">Level 3 · Coming Soon</div>
+      <div class="sc-title">Chief Nursing Information Officer</div>
+      <div class="sc-desc">Workforce adoption has stalled. The board wants results by Q3.</div>
+      <div class="sc-locked">🔒</div>
+    </div>
+    <div class="scenario-card s3" style="opacity:0.5; cursor:not-allowed;">
+      <div class="sc-label">Level 4 · Coming Soon</div>
+      <div class="sc-title">Trust Chief Executive</div>
+      <div class="sc-desc">A vendor wants to expand deployment. A regulator is asking questions.</div>
+      <div class="sc-locked">🔒</div>
+    </div>
+  </div>
+
+  <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:0.1em;">
+    PROOF OF CONCEPT · HEALTHCARE AI FUTURES LAB
+  </p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     BRIEFING SCREEN
+══════════════════════════════════════════════════════════ -->
+
+<div id="screen-brief" class="screen">
+  <div class="breadcrumb">
+    <span>Healthcare AI Futures Lab</span> › Level 2 › Clinical Safety Officer
+  </div>
+
+  <div class="brief-header">
+    <div class="brief-role">🩺 Your Role: Clinical Safety Officer</div>
+    <h2 class="brief-title">The Sepsis<br>Signal Problem</h2>
+    <div class="brief-meta">
+      <span class="meta-pill">📅 Q1 2032</span>
+      <span class="meta-pill">🏥 Mid-sized NHS Acute Trust</span>
+      <span class="meta-pill">⏱ 4 Decision Rounds</span>
+      <span class="meta-pill">📋 DCB0129 / DCB0160</span>
+    </div>
+  </div>
+
+  <div class="brief-situation">
+    <h3>⚠ Situation Brief</h3>
+    <p>
+      Twelve weeks ago, your Trust deployed <strong>SepsisAlert AI</strong> — a commercially procured sepsis prediction system. Initial results were promising: sepsis mortality fell by 11% in the first month.
+    </p>
+    <p>
+      Over the past four weeks, <strong>false positive rates have climbed from 12% to 34%</strong>. Ward nurses are dismissing alerts without escalating. This morning, a 67-year-old patient with sepsis was not escalated following an alert that nursing staff believed was another false positive.
+    </p>
+    <p>
+      The patient is now in ICU. The vendor says the model is performing within contractual specification. Your Medical Director wants a decision by end of day.
+    </p>
+    <div class="alert-box">
+      <span class="alert-label">🔴 Critical Development</span>
+      The family of the deteriorated patient has contacted PALS. The story has reached a health journalist. You have 48 hours before this becomes public.
+    </div>
+  </div>
+
+  <div class="data-row">
+    <div class="data-card">
+      <div class="data-label">False Positive Rate</div>
+      <div class="data-value warn">34%</div>
+      <div class="data-sub">↑ from 12% at launch</div>
+    </div>
+    <div class="data-card">
+      <div class="data-label">Alert Dismissal Rate</div>
+      <div class="data-value down">71%</div>
+      <div class="data-sub">Without review</div>
+    </div>
+    <div class="data-card">
+      <div class="data-label">Sepsis Mortality</div>
+      <div class="data-value up">−11%</div>
+      <div class="data-sub">Since deployment</div>
+    </div>
+    <div class="data-card">
+      <div class="data-label">Patients in Scope</div>
+      <div class="data-value">2,840</div>
+      <div class="data-sub">Per quarter</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;flex-wrap:wrap;">
+    <button class="btn-primary" onclick="startGame()">Accept briefing →</button>
+    <button class="btn-secondary" onclick="showScreen('screen-title')">← Back</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     GAME SCREEN
+══════════════════════════════════════════════════════════ -->
+
+<div id="screen-game" class="screen">
+
+  <!-- Header -->
+
+  <div class="game-header">
+    <div class="game-title-area">
+      <div class="game-role-label">🩺 Clinical Safety Officer · SepsisAlert AI</div>
+      <div class="game-scenario-title" id="round-title">Round 1 of 4 · Immediate Response</div>
+    </div>
+    <div class="quarter-tracker">
+      <div class="q-dot active" id="qdot-1"></div>
+      <div class="q-dot" id="qdot-2"></div>
+      <div class="q-dot" id="qdot-3"></div>
+      <div class="q-dot" id="qdot-4"></div>
+      <div class="q-label" id="qlabel">Q1</div>
+    </div>
+  </div>
+
+  <!-- Progress -->
+
+  <div class="progress-header">
+    <div class="progress-line"><div class="progress-fill" id="progress-bar" style="width:25%"></div></div>
+    <div class="progress-pct" id="progress-pct">Round 1/4</div>
+  </div>
+
+  <!-- Dashboard -->
+
+  <div class="dashboard">
+    <div class="metric-card safety">
+      <div class="metric-name">Patient Safety</div>
+      <div class="metric-val" id="m-safety">68</div>
+      <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-safety" style="width:68%"></div></div>
+    </div>
+    <div class="metric-card trust">
+      <div class="metric-name">Staff Trust</div>
+      <div class="metric-val" id="m-trust">55</div>
+      <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-trust" style="width:55%"></div></div>
+    </div>
+    <div class="metric-card innovation">
+      <div class="metric-name">Innovation</div>
+      <div class="metric-val" id="m-innovation">72</div>
+      <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-innovation" style="width:72%"></div></div>
+    </div>
+    <div class="metric-card finance">
+      <div class="metric-name">Financial</div>
+      <div class="metric-val" id="m-finance">60</div>
+      <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-finance" style="width:60%"></div></div>
+    </div>
+  </div>
+
+  <!-- Columns -->
+
+  <div class="game-columns">
+
+```
+<!-- Left: Situation + Decisions -->
+<div>
+  <div class="situation-panel" id="situation-panel">
+    <div class="panel-label">Situation</div>
+    <div class="situation-text" id="situation-text">Loading...</div>
+    <div id="situation-alert" class="alert-box" style="display:none;"></div>
+  </div>
+
+  <div class="decisions-panel">
+    <div class="panel-label">Your Decision</div>
+    <div class="decision-cards" id="decision-cards"></div>
+    <div class="decision-actions">
+      <button class="btn-primary" id="confirm-btn" onclick="confirmDecision()" disabled>Confirm Decision →</button>
+      <span id="selection-hint" style="font-size:12px;color:var(--muted);">Select an option above</span>
+    </div>
+  </div>
+</div>
+
+<!-- Right: Sidebar -->
+<div class="sidebar">
+
+  <div class="stakeholder-panel">
+    <div class="panel-label">Stakeholders</div>
+    <div class="stakeholder-list" id="stakeholder-list">
+      <div class="stakeholder-item" id="sh-medical">
+        <div class="sh-icon">👨‍⚕️</div>
+        <div><div class="sh-name">Medical Director</div><div class="sh-status" id="sh-medical-status">Awaiting your recommendation</div></div>
+      </div>
+      <div class="stakeholder-item" id="sh-nurses">
+        <div class="sh-icon">👩‍⚕️</div>
+        <div><div class="sh-name">Ward Nursing Staff</div><div class="sh-status" id="sh-nurses-status">Alert fatigue high. Morale low.</div></div>
+      </div>
+      <div class="stakeholder-item" id="sh-vendor">
+        <div class="sh-icon">💼</div>
+        <div><div class="sh-name">Vendor (DataBio Ltd)</div><div class="sh-status" id="sh-vendor-status">Claims spec compliance. Resisting review.</div></div>
+      </div>
+      <div class="stakeholder-item" id="sh-patient">
+        <div class="sh-icon">🧑‍🦳</div>
+        <div><div class="sh-name">Patient Family / PALS</div><div class="sh-status" id="sh-patient-status">Formal complaint filed. Journalist contact made.</div></div>
+      </div>
+      <div class="stakeholder-item" id="sh-regulator">
+        <div class="sh-icon">⚖️</div>
+        <div><div class="sh-name">MHRA / CQC</div><div class="sh-status" id="sh-regulator-status">No active inquiry yet</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reg-panel">
+    <div class="panel-label">Regulatory Status</div>
+    <div class="reg-item">
+      <div class="reg-status amber" id="reg-dcb129"></div>
+      <div class="reg-name">DCB0129</div>
+      <div class="reg-state" id="reg-dcb129-state">Review needed</div>
+    </div>
+    <div class="reg-item">
+      <div class="reg-status red" id="reg-dcb160"></div>
+      <div class="reg-name">DCB0160</div>
+      <div class="reg-state" id="reg-dcb160-state">Breach risk</div>
+    </div>
+    <div class="reg-item">
+      <div class="reg-status amber" id="reg-mhra"></div>
+      <div class="reg-name">MHRA AIMD</div>
+      <div class="reg-state" id="reg-mhra-state">Monitoring</div>
+    </div>
+    <div class="reg-item">
+      <div class="reg-status green" id="reg-lfpse"></div>
+      <div class="reg-name">LFPSE</div>
+      <div class="reg-state" id="reg-lfpse-state">Not yet reported</div>
+    </div>
+  </div>
+
+</div>
+```
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     CONSEQUENCE SCREEN
+══════════════════════════════════════════════════════════ -->
+
+<div id="screen-consequence" class="screen">
+  <div class="breadcrumb">
+    <span>Healthcare AI Futures Lab</span> › CSO Scenario › Round Outcome
+  </div>
+
+  <div class="consequence-header">
+    <div class="consequence-type" id="c-type">OUTCOME</div>
+    <h2 class="consequence-title" id="c-title">Decision Processed</h2>
+    <p class="consequence-narrative" id="c-narrative">Loading...</p>
+  </div>
+
+  <div class="delta-grid">
+    <div class="delta-card">
+      <div class="delta-label">Safety</div>
+      <div class="delta-val" id="d-safety">—</div>
+    </div>
+    <div class="delta-card">
+      <div class="delta-label">Staff Trust</div>
+      <div class="delta-val" id="d-trust">—</div>
+    </div>
+    <div class="delta-card">
+      <div class="delta-label">Innovation</div>
+      <div class="delta-val" id="d-innovation">—</div>
+    </div>
+    <div class="delta-card">
+      <div class="delta-label">Financial</div>
+      <div class="delta-val" id="d-finance">—</div>
+    </div>
+  </div>
+
+  <div class="stakeholder-reactions" id="reaction-list"></div>
+
+  <div id="event-reveal" style="display:none;margin-bottom:24px;">
+    <div style="background:rgba(255,107,53,0.1);border:1px solid rgba(255,107,53,0.3);border-radius:12px;padding:20px 24px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:8px;">⚡ Emerging Event</div>
+      <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:8px;" id="event-title"></div>
+      <div style="font-size:14px;color:var(--muted);line-height:1.6;" id="event-body"></div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;">
+    <button class="btn-primary" id="next-round-btn" onclick="nextRound()">Next Round →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     DEBRIEF SCREEN
+══════════════════════════════════════════════════════════ -->
+
+<div id="screen-debrief" class="screen">
+  <div class="debrief-header">
+    <div class="debrief-label">📋 Simulation Complete · Clinical Safety Officer</div>
+    <h2 class="debrief-title">Your SepsisAlert<br>Debrief</h2>
+    <p class="debrief-subtitle">Review your decisions, their consequences, and the learning objectives they surfaced.</p>
+  </div>
+
+  <div class="final-scores" id="final-scores"></div>
+
+  <div class="outcome-banner" id="outcome-banner">
+    <div class="outcome-name" id="outcome-name">—</div>
+    <div class="outcome-desc" id="outcome-desc">—</div>
+  </div>
+
+  <div class="decision-replay" id="decision-replay">
+    <div class="replay-title">Your Decision Log</div>
+    <div id="replay-items"></div>
+  </div>
+
+  <div class="learning-section">
+    <h3>🎓 Learning Points</h3>
+    <div id="learning-items"></div>
+  </div>
+
+  <div class="debrief-actions">
+    <button class="btn-primary" onclick="resetGame()">Play Again</button>
+    <button class="btn-secondary" onclick="showScreen('screen-title')">← Back to Lab</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// GAME STATE
+// ══════════════════════════════════════════════════════════
+let state = {
+  round: 1,
+  totalRounds: 4,
+  metrics: { safety: 68, trust: 55, innovation: 72, finance: 60 },
+  initialMetrics: { safety: 68, trust: 55, innovation: 72, finance: 60 },
+  decisions: [],
+  selectedOption: null,
+  decisionLog: []
+};
+
+// ══════════════════════════════════════════════════════════
+// SCENARIO DATA
+// ══════════════════════════════════════════════════════════
+const ROUNDS = [
+  {
+    id: 1,
+    title: "Round 1 of 4 · Immediate Response",
+    situation: `The patient who deteriorated is stable but remains in ICU. You have confirmed the alert was generated at the correct time — the AI did its job. The failure was in the <strong>human response layer</strong>: nurses dismissed the alert as another false positive.<br><br>The Medical Director is outside your office. The journalist has sent an email asking for comment. You have 4 hours before ward rounds begin.`,
+    alertText: "🔴 The LFPSE incident report has not yet been filed. Every hour without a report increases regulatory risk.",
+    options: [
+      {
+        id: "A",
+        title: "Suspend SepsisAlert immediately",
+        desc: "Take the system offline pending full DCB0160 safety review. Communicate proactively to MHRA and CQC.",
+        impacts: [
+          { label: "+18 Safety", cls: "pos" },
+          { label: "+12 Trust", cls: "pos" },
+          { label: "−22 Innovation", cls: "neg" },
+          { label: "−15 Financial", cls: "neg" }
+        ],
+        deltas: { safety: 18, trust: 12, innovation: -22, finance: -15 },
+        type: "good",
+        narrative: "You suspend SepsisAlert and immediately file an LFPSE report. The Medical Director is supportive. Nurses feel heard — the alert fatigue had been raised informally for weeks. The vendor is furious and threatens a breach of contract claim. The journalist runs a story: 'NHS Trust suspends AI safety tool after patient harmed.' CQC acknowledge your proactive disclosure. DCB0129 hazard log updated.",
+        reactions: [
+          { icon: "👨‍⚕️", who: "Medical Director", says: "Right call. We can defend this. The transparency protects us." },
+          { icon: "👩‍⚕️", who: "Ward Nurses", says: "Finally. We've been raising this informally for weeks." },
+          { icon: "💼", who: "DataBio Ltd", says: "This is a breach of contract. Our model is within spec." },
+          { icon: "⚖️", who: "MHRA", says: "Proactive disclosure noted. We will review the hazard log." }
+        ],
+        event: null,
+        dcbUpdate: { dcb160: "green", dcb160State: "Compliant", lfpse: "amber", lfpseState: "Filed" }
+      },
+      {
+        id: "B",
+        title: "Adjust alert threshold, continue deployment",
+        desc: "Raise the sensitivity threshold to reduce false positives. Maintain deployment with enhanced nurse escalation protocol.",
+        impacts: [
+          { label: "+5 Safety", cls: "pos" },
+          { label: "+8 Trust", cls: "pos" },
+          { label: "+5 Innovation", cls: "pos" },
+          { label: "+3 Financial", cls: "pos" }
+        ],
+        deltas: { safety: 5, trust: 8, innovation: 5, finance: 3 },
+        type: "mixed",
+        narrative: "You adjust the threshold and issue a nursing safety bulletin. Alert volumes fall by 40%. Short-term, things look better. But the threshold change is not validated against the patient cohort — you have modified a regulated AI medical device without formal change control. The model now misses 3 true sepsis cases over the next 6 weeks. A hidden problem has been papered over.",
+        reactions: [
+          { icon: "👨‍⚕️", who: "Medical Director", says: "Pragmatic. We can't be without the tool over winter." },
+          { icon: "👩‍⚕️", who: "Ward Nurses", says: "Better. But are we sure this is safe?" },
+          { icon: "💼", who: "DataBio Ltd", says: "Any threshold changes must go through our change management process." },
+          { icon: "⚖️", who: "MHRA", says: "Are you aware that modifying AI medical device parameters requires formal change control under MDR 2002?" }
+        ],
+        event: { title: "Unvalidated Change Flagged", body: "The vendor's legal team has notified the Trust that the threshold modification constitutes an unauthorised change to a registered medical device. MHRA are conducting a preliminary inquiry." },
+        dcbUpdate: { dcb160: "amber", dcb160State: "Requires review", lfpse: "amber", lfpseState: "Delayed" }
+      },
+      {
+        id: "C",
+        title: "Convene emergency clinical review",
+        desc: "Pause for 48 hours. Bring together clinical leads, the vendor, and your safety team to formally assess the hazard before deciding.",
+        impacts: [
+          { label: "+10 Safety", cls: "pos" },
+          { label: "+6 Trust", cls: "pos" },
+          { label: "−5 Innovation", cls: "warn" },
+          { label: "−5 Financial", cls: "warn" }
+        ],
+        deltas: { safety: 10, trust: 6, innovation: -5, finance: -5 },
+        type: "mixed",
+        narrative: "The 48-hour review is clinically sound but the journalist breaks the story before it concludes. Headlines read: 'NHS delays action after AI alert ignored.' The family contacts their MP. Internally, the review produces a thorough hazard log that will become the cornerstone of your DCB0129 documentation — but the reputational window has closed.",
+        reactions: [
+          { icon: "🧑‍🦳", who: "Patient Family", says: "A review? My mother is in ICU and they're having meetings." },
+          { icon: "👨‍⚕️", who: "Medical Director", says: "The process is right but we needed to act faster on the public communications." },
+          { icon: "📰", who: "Health Journalist", says: "'NHS in 48-hour delay on AI safety response' — story filed." },
+          { icon: "⚖️", who: "CQC", says: "We note the Trust is conducting an internal review. We will monitor." }
+        ],
+        event: null,
+        dcbUpdate: { dcb160: "amber", dcb160State: "Under review", lfpse: "amber", lfpseState: "Pending" }
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: "Round 2 of 4 · Vendor Relations",
+    situation: `Three weeks have passed. Your incident review is underway. The vendor DataBio Ltd has sent a legal letter arguing the system is performing within contractual specification — their contract defines performance as <strong>sensitivity ≥ 90%</strong>, which the model still achieves.<br><br>However, your clinical review shows that <strong>specificity has declined</strong> — the metric that determines false positives — and this was never defined in the contract. The Medical Director has escalated to the CEO. Your procurement team is asking whether you have grounds to terminate.`,
+    alertText: null,
+    options: [
+      {
+        id: "A",
+        title: "Invoke the DCB0129 safety case",
+        desc: "Formally document the hazard in the safety case. Argue that the vendor's obligation is patient safety, not contractual specification compliance. Escalate to MHRA.",
+        impacts: [
+          { label: "+15 Safety", cls: "pos" },
+          { label: "+10 Trust", cls: "pos" },
+          { label: "−10 Innovation", cls: "neg" },
+          { label: "−8 Financial", cls: "neg" }
+        ],
+        deltas: { safety: 15, trust: 10, innovation: -10, finance: -8 },
+        type: "good",
+        narrative: "Your safety case documentation is rigorous. The MHRA begin a formal review of DataBio Ltd's regulatory filing. The vendor's position weakens. Legal counsel for the Trust advises you have strong grounds to claim material safety failure beyond contractual specification. This sets a precedent that other Trusts follow when facing similar vendor disputes.",
+        reactions: [
+          { icon: "⚖️", who: "MHRA", says: "The safety case is well-constructed. We are opening a formal inquiry into the device's post-market surveillance." },
+          { icon: "💼", who: "DataBio Ltd", says: "We are engaging our legal team. We dispute the safety case framing." },
+          { icon: "👨‍⚕️", who: "Medical Director", says: "This is the right approach. Patient safety cannot be contracted away." },
+          { icon: "🏛️", who: "NHS England", says: "Trust to be cited as good practice in AI procurement guidance." }
+        ],
+        event: null,
+        dcbUpdate: { dcb129: "green", dcb129State: "Safety case filed", mhra: "amber", mhraState: "Under review" }
+      },
+      {
+        id: "B",
+        title: "Negotiate a contractual amendment",
+        desc: "Work with procurement to add specificity as a Key Performance Indicator and give the vendor 30 days to improve performance.",
+        impacts: [
+          { label: "+5 Safety", cls: "pos" },
+          { label: "+3 Trust", cls: "pos" },
+          { label: "+8 Innovation", cls: "pos" },
+          { label: "+5 Financial", cls: "pos" }
+        ],
+        deltas: { safety: 5, trust: 3, innovation: 8, finance: 5 },
+        type: "mixed",
+        narrative: "The negotiation buys time but weakens your position. The vendor agrees to the amendment but their 30-day improvement timeline runs through the peak winter period. If they fail to improve, you'll need to make the same decision again under worse conditions — and with less legal standing because you accepted their framing.",
+        reactions: [
+          { icon: "💼", who: "DataBio Ltd", says: "We appreciate the constructive approach and commit to a model improvement sprint." },
+          { icon: "👨‍⚕️", who: "Medical Director", says: "Pragmatic, but are we kicking this down the road?" },
+          { icon: "👩‍⚕️", who: "Ward Nurses", says: "So the system is staying on? The alerts are still coming." },
+          { icon: "🧑‍🦳", who: "Patient Family", says: "They're still using the system that missed my mother's sepsis." }
+        ],
+        event: { title: "Winter Pressure Peaks", body: "Bed occupancy reaches 98%. ED waits are at 7 hours. Nursing staff are stretched. The 30-day improvement window begins under the worst possible conditions for meaningful evaluation." },
+        dcbUpdate: { dcb129: "amber", dcb129State: "Pending amendment", mhra: "green", mhraState: "No action" }
+      },
+      {
+        id: "C",
+        title: "Terminate the contract",
+        desc: "Advise the CEO to terminate on patient safety grounds. Begin emergency procurement for an alternative or revert to manual sepsis screening protocols.",
+        impacts: [
+          { label: "+10 Safety", cls: "pos" },
+          { label: "+5 Trust", cls: "pos" },
+          { label: "−18 Innovation", cls: "neg" },
+          { label: "−20 Financial", cls: "neg" }
+        ],
+        deltas: { safety: 10, trust: 5, innovation: -18, finance: -20 },
+        type: "mixed",
+        narrative: "Termination is bold and defensible on safety grounds. However, manual sepsis screening during winter pressures results in two missed cases. The financial penalty clause in the contract is triggered. The CEO is supportive but the CFO is alarmed. Within 60 days, a rival Trust's AI sepsis system posts 95% sensitivity with 8% false positives — a system you could have procured instead.",
+        reactions: [
+          { icon: "👨‍⚕️", who: "Medical Director", says: "Clinically the right call. The manual fallback is the risk now." },
+          { icon: "💰", who: "Trust CFO", says: "The penalty clause is £180,000. We needed more legal groundwork first." },
+          { icon: "👩‍⚕️", who: "Ward Nurses", says: "Back to manual screening during winter. This is going to be brutal." },
+          { icon: "⚖️", who: "CQC", says: "We note the Trust has reverted to manual protocols. Please submit a continuity of care report." }
+        ],
+        event: null,
+        dcbUpdate: { dcb129: "green", dcb129State: "Closed", mhra: "green", mhraState: "No active AI device" }
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: "Round 3 of 4 · Workforce & Culture",
+    situation: `Two months on. Regardless of your earlier decision, a new challenge has emerged. A survey of clinical staff shows that <strong>62% would be reluctant to act on an AI alert without physician review</strong> — even for high-confidence predictions. Your human factors lead calls this 'automation distrust': the opposite of automation bias, and equally dangerous.<br><br>A new ward manager, recently recruited from a Trust with excellent AI adoption, tells you: "The nurses here have been burned. They need to be brought along, not mandated." The Digital Transformation Director wants to launch mandatory AI literacy training. You disagree on the approach.`,
+    alertText: null,
+    options: [
+      {
+        id: "A",
+        title: "Co-design a clinical AI compact",
+        desc: "Work with nurses, doctors and AHPs to co-produce a locally agreed protocol for AI-assisted clinical decisions. Bottom-up, not top-down.",
+        impacts: [
+          { label: "+12 Safety", cls: "pos" },
+          { label: "+20 Trust", cls: "pos" },
+          { label: "+5 Innovation", cls: "pos" },
+          { label: "−5 Financial", cls: "warn" }
+        ],
+        deltas: { safety: 12, trust: 20, innovation: 5, finance: -5 },
+        type: "good",
+        narrative: "Six weeks of co-design produces a 'Clinical AI Compact' — a shared agreement on when to act, when to escalate, and when to override. Staff participation is 78%. Alert response rates improve significantly. The compact is cited in a BMJ paper. The process takes longer than the Digital Director wanted but produces durable cultural change.",
+        reactions: [
+          { icon: "👩‍⚕️", who: "Ward Nurses", says: "We actually feel like our experience shaped this. That hasn't happened before with digital." },
+          { icon: "👨‍⚕️", who: "Medical Director", says: "This is what genuine clinical engagement looks like. We should adopt this model Trust-wide." },
+          { icon: "💻", who: "Digital Director", says: "Slower than I wanted but I accept the approach produced better outcomes." },
+          { icon: "🏛️", who: "NHS England", says: "Model cited in NHS AI governance framework consultation." }
+        ],
+        event: null,
+        dcbUpdate: { dcb129: "green", dcb129State: "Updated with compact", lfpse: "green", lfpseState: "No incidents" }
+      },
+      {
+        id: "B",
+        title: "Mandate AI literacy training",
+        desc: "Support the Digital Director's proposal. Roll out a 2-hour mandatory e-learning module on AI-assisted decision making for all clinical staff.",
+        impacts: [
+          { label: "+3 Safety", cls: "pos" },
+          { label: "−12 Trust", cls: "neg" },
+          { label: "+10 Innovation", cls: "pos" },
+          { label: "+5 Financial", cls: "pos" }
+        ],
+        deltas: { safety: 3, trust: -12, innovation: 10, finance: 5 },
+        type: "mixed",
+        narrative: "Completion rates hit 89% but post-training surveys show 71% felt the training did not address their real concerns. A senior nurse posts on social media: 'Mandatory AI training. 2 hours to fix what 6 months of poor governance broke.' The digital team are pleased with completion numbers. The culture problem has been papered over with a metric.",
+        reactions: [
+          { icon: "👩‍⚕️", who: "Senior Nurse (Twitter)", says: "2-hour mandatory e-learning to fix what 6 months of bad governance broke. Feels about right for the NHS." },
+          { icon: "💻", who: "Digital Director", says: "89% completion. Excellent result." },
+          { icon: "👨‍⚕️", who: "Medical Director", says: "The metric looks good. I'm not sure the culture has changed." },
+          { icon: "📰", who: "HSJ", says: "Story: 'Trusts use tick-box training to address clinical AI concerns, staff say'" }
+        ],
+        event: null,
+        dcbUpdate: { dcb129: "amber", dcb129State: "Human factors unresolved", lfpse: "green", lfpseState: "No incidents" }
+      },
+      {
+        id: "C",
+        title: "Embed clinical AI champions",
+        desc: "Identify 8 clinical champions across wards and specialties. Give them protected time, training, and authority to shape AI use in their areas.",
+        impacts: [
+          { label: "+8 Safety", cls: "pos" },
+          { label: "+14 Trust", cls: "pos" },
+          { label: "+12 Innovation", cls: "pos" },
+          { label: "−8 Financial", cls: "neg" }
+        ],
+        deltas: { safety: 8, trust: 14, innovation: 12, finance: -8 },
+        type: "good",
+        narrative: "The champions programme creates a distributed network of clinical AI literacy. Within 3 months, two champions propose improvements to the alert protocol that reduce false positives by 18%. One champion is invited to speak at the NHS AI Summit. The upfront cost is higher than the e-learning module but the return on clinical trust is substantial.",
+        reactions: [
+          { icon: "👩‍⚕️", who: "Ward Nurses", says: "Having someone on our ward who actually understands both sides is transformative." },
+          { icon: "💰", who: "Trust CFO", says: "The protected time costs are above budget but the safety dividend is hard to argue with." },
+          { icon: "💻", who: "Digital Director", says: "This is what good clinical digital transformation looks like." },
+          { icon: "🏛️", who: "NHS England", says: "Champions model to be shared across ICS." }
+        ],
+        event: null,
+        dcbUpdate: { dcb129: "green", dcb129State: "Champions active", lfpse: "green", lfpseState: "No incidents" }
+      }
+    ]
+  },
+  {
+    id: 4,
+    title: "Round 4 of 4 · The Strategic Question",
+    situation: `Six months have passed. The Trust Board is reviewing the AI programme. The CEO presents three future paths. As the CSO, you are asked to provide a formal written recommendation on the safety implications of each.<br><br>This is your chance to shape the Trust's approach for the next three years. Your recommendation will go to the Board, MHRA, and NHS England as part of a pilot governance framework submission.`,
+    alertText: "Your recommendation becomes part of your formal DCB0129 safety case submission.",
+    options: [
+      {
+        id: "A",
+        title: "Recommend a staged AI adoption framework",
+        desc: "Propose that no new AI is deployed without: clinical validation, hazard log, post-market surveillance plan, and a pre-agreed suspension protocol. Slow and safe.",
+        impacts: [
+          { label: "+20 Safety", cls: "pos" },
+          { label: "+10 Trust", cls: "pos" },
+          { label: "−10 Innovation", cls: "neg" },
+          { label: "+5 Financial", cls: "pos" }
+        ],
+        deltas: { safety: 20, trust: 10, innovation: -10, finance: 5 },
+        type: "good",
+        narrative: "Your framework is adopted by the Board and submitted to NHS England. It becomes a model for three other Trusts. A year later, it forms part of the baseline for an NHSE AI governance guidance document. Innovation slows temporarily but the Trust has zero AI-related serious incidents in the following 12 months. You are invited to speak at a national patient safety conference.",
+        reactions: [
+          { icon: "🏛️", who: "NHS England", says: "Framework adopted as part of national AI governance pilot. Trust cited as exemplar." },
+          { icon: "👨‍⚕️", who: "Medical Director", says: "This is the approach that will stand the test of time." },
+          { icon: "💼", who: "Vendors", says: "Stringent but fair. We know exactly what is required." },
+          { icon: "⚖️", who: "MHRA", says: "This aligns with our post-market surveillance expectations for AI as a medical device." }
+        ],
+        event: null,
+        dcbUpdate: { dcb129: "green", dcb129State: "Framework adopted", dcb160: "green", dcb160State: "Compliant", mhra: "green", mhraState: "Satisfied" }
+      },
+      {
+        id: "B",
+        title: "Recommend an AI innovation accelerator",
+        desc: "Propose a fast-track pathway for AI adoption with lighter-touch governance. Prioritise benefit realisation and learning from deployment.",
+        impacts: [
+          { label: "−5 Safety", cls: "neg" },
+          { label: "−3 Trust", cls: "neg" },
+          { label: "+25 Innovation", cls: "pos" },
+          { label: "+15 Financial", cls: "pos" }
+        ],
+        deltas: { safety: -5, trust: -3, innovation: 25, finance: 15 },
+        type: "mixed",
+        narrative: "The accelerator drives impressive innovation metrics. Seven new AI tools deployed in 12 months. Three show genuine patient benefit. But a fourth — an AI-assisted prescribing tool — generates a serious incident. Because the governance was light-touch, the safety case documentation is insufficient for the subsequent investigation. The CSO (you) is asked to appear before the Trust's Quality and Safety Committee to explain the gap.",
+        reactions: [
+          { icon: "💻", who: "Digital Director", says: "Seven deployments in 12 months. This is the pace NHS patients deserve." },
+          { icon: "⚖️", who: "CQC", says: "The Trust's governance documentation for the prescribing AI incident is inadequate." },
+          { icon: "🧑‍🦳", who: "Patient Safety Commissioner", says: "Speed of deployment cannot be prioritised over safety architecture." },
+          { icon: "📰", who: "HSJ", says: "'NHS Trust's AI rush leads to safety governance gaps, inquiry finds'" }
+        ],
+        event: { title: "Prescribing AI Incident", body: "An AI-assisted prescribing tool deployed under the accelerator pathway generates a dosing error in a renally impaired patient. The lack of a pre-agreed hazard log means the incident investigation cannot determine whether the AI or the human was the proximate cause." },
+        dcbUpdate: { dcb129: "red", dcb129State: "Incident under review", dcb160: "red", dcb160State: "Potential breach", mhra: "red", mhraState: "Inquiry opened" }
+      },
+      {
+        id: "C",
+        title: "Recommend a shared ICS governance model",
+        desc: "Propose that the Trust leads a system-wide AI governance framework across the ICS, pooling clinical safety resource, vendor due diligence, and incident reporting.",
+        impacts: [
+          { label: "+15 Safety", cls: "pos" },
+          { label: "+12 Trust", cls: "pos" },
+          { label: "+10 Innovation", cls: "pos" },
+          { label: "+5 Financial", cls: "pos" }
+        ],
+        deltas: { safety: 15, trust: 12, innovation: 10, finance: 5 },
+        type: "good",
+        narrative: "The ICS model takes 6 months to establish but creates a genuinely powerful governance structure. Shared vendor due diligence saves each Trust an estimated £40,000. A common hazard taxonomy emerges that feeds into NHS England's national AI harm registry. You are appointed as the ICS Clinical AI Safety Lead — a new role that doesn't officially exist yet.",
+        reactions: [
+          { icon: "🏛️", who: "ICB Chief Executive", says: "This is system thinking applied to AI safety. Exactly what integration should look like." },
+          { icon: "👨‍⚕️", who: "Medical Director", says: "Our Trust leading this positions us well nationally and protects us locally." },
+          { icon: "💼", who: "Vendors", says: "A single ICS procurement standard is actually easier for us to work with than five different Trust requirements." },
+          { icon: "⚖️", who: "MHRA", says: "The shared surveillance model is a model we would like to see replicated nationally." }
+        ],
+        event: null,
+        dcbUpdate: { dcb129: "green", dcb129State: "ICS standard adopted", dcb160: "green", dcb160State: "Compliant", mhra: "green", mhraState: "Commended" }
+      }
+    ]
+  }
+];
+
+// Learning points mapped to decision patterns
+const LEARNING_POINTS = {
+  safetyFirst: {
+    tag: "Patient Safety",
+    tagCls: "risk",
+    title: "Safety cases must precede not follow incidents",
+    body: "DCB0129 requires hazard identification before deployment. When you encountered the sepsis alert crisis, the absence of pre-defined thresholds for what constitutes a safety failure created ambiguity that benefited the vendor, not the patient."
+  },
+  humanFactors: {
+    tag: "Human Factors",
+    tagCls: "",
+    title: "Automation distrust is as dangerous as automation bias",
+    body: "Clinical AI failure often occurs not because the AI is wrong, but because the human-AI interaction layer breaks down. Alarm fatigue, dismissal culture, and low psychological safety around escalation are human factors risks that no algorithm can solve."
+  },
+  regulatory: {
+    tag: "DCB0129/0160",
+    tagCls: "reg",
+    title: "Contractual compliance ≠ regulatory compliance",
+    body: "Vendors can meet their contractual KPIs while the AI creates patient harm. DCB0129 requires the deploying organisation — not the vendor — to maintain the safety case. The accountability stays with you, regardless of what the contract says."
+  },
+  codesign: {
+    tag: "Co-design",
+    tagCls: "",
+    title: "Clinical adoption is a cultural, not a technical, problem",
+    body: "Training completion rates and interface quality are necessary but not sufficient. Sustainable AI adoption requires clinical ownership. The co-design approaches in this scenario consistently outperformed mandated rollout on both safety and trust metrics."
+  },
+  systemThinking: {
+    tag: "Systems Thinking",
+    tagCls: "eth",
+    title: "Every safety decision ripples across the system",
+    body: "Your decisions as CSO affected vendor relations, staff morale, media coverage, regulatory posture, and financial sustainability simultaneously. Clinical AI governance requires literacy across all these domains — not just clinical risk management."
+  },
+  postmarket: {
+    tag: "Post-Market Surveillance",
+    tagCls: "reg",
+    title: "Deployment is the beginning of governance, not the end",
+    body: "The SepsisAlert scenario shows how an AI system can pass pre-deployment validation but develop safety-critical failure modes in the real clinical environment. Post-market surveillance — including specificity drift — must be contractually and clinically mandated before go-live."
+  }
+};
+
+// ══════════════════════════════════════════════════════════
+// UTILITY
+// ══════════════════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateMetric(key, delta) {
+  state.metrics[key] = Math.min(100, Math.max(0, state.metrics[key] + delta));
+  const el = document.getElementById(`m-${key}`);
+  const bar = document.getElementById(`bar-${key}`);
+  if (el) el.textContent = Math.round(state.metrics[key]);
+  if (bar) bar.style.width = Math.round(state.metrics[key]) + '%';
+}
+
+function formatDelta(val) {
+  if (val > 0) return { text: `+${val}`, cls: "pos" };
+  if (val < 0) return { text: `${val}`, cls: "neg" };
+  return { text: "—", cls: "neu" };
+}
+
+// ══════════════════════════════════════════════════════════
+// SCREEN TRANSITIONS
+// ══════════════════════════════════════════════════════════
+function startScenario(id) {
+  if (id === 'cso') showScreen('screen-brief');
+}
+
+function startGame() {
+  state = {
+    round: 1,
+    totalRounds: 4,
+    metrics: { safety: 68, trust: 55, innovation: 72, finance: 60 },
+    initialMetrics: { safety: 68, trust: 55, innovation: 72, finance: 60 },
+    decisions: [],
+    selectedOption: null,
+    decisionLog: []
+  };
+  renderRound();
+  showScreen('screen-game');
+}
+
+function resetGame() {
+  startGame();
+}
+
+// ══════════════════════════════════════════════════════════
+// RENDER ROUND
+// ══════════════════════════════════════════════════════════
+function renderRound() {
+  const round = ROUNDS[state.round - 1];
+  state.selectedOption = null;
+
+  // Header
+  document.getElementById('round-title').textContent = round.title;
+  document.getElementById('qlabel').textContent = `Q${state.round}`;
+
+  // Progress
+  const pct = (state.round / state.totalRounds) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = `Round ${state.round}/${state.totalRounds}`;
+
+  // Quarter dots
+  for (let i = 1; i <= 4; i++) {
+    const dot = document.getElementById(`qdot-${i}`);
+    dot.classList.remove('done', 'active');
+    if (i < state.round) dot.classList.add('done');
+    if (i === state.round) dot.classList.add('active');
+  }
+
+  // Metrics
+  ['safety','trust','innovation','finance'].forEach(k => {
+    document.getElementById(`m-${k}`).textContent = Math.round(state.metrics[k]);
+    document.getElementById(`bar-${k}`).style.width = Math.round(state.metrics[k]) + '%';
+  });
+
+  // Situation
+  document.getElementById('situation-text').innerHTML = round.situation;
+  const alertEl = document.getElementById('situation-alert');
+  if (round.alertText) {
+    alertEl.style.display = 'block';
+    alertEl.innerHTML = `<span class="alert-label">⚠ Alert</span>${round.alertText}`;
+  } else {
+    alertEl.style.display = 'none';
+  }
+
+  // Decision cards
+  const container = document.getElementById('decision-cards');
+  container.innerHTML = '';
+  round.options.forEach(opt => {
+    const card = document.createElement('div');
+    card.className = 'decision-card';
+    card.id = `dc-${opt.id}`;
+    card.onclick = () => selectOption(opt.id);
+    card.innerHTML = `
+      <div class="dc-option">Option ${opt.id}</div>
+      <div class="dc-title">${opt.title}</div>
+      <div class="dc-desc">${opt.desc}</div>
+      <div class="dc-impacts">
+        ${opt.impacts.map(i => `<span class="impact-pill ${i.cls}">${i.label}</span>`).join('')}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  // Reset confirm
+  const btn = document.getElementById('confirm-btn');
+  btn.disabled = true;
+  document.getElementById('selection-hint').textContent = 'Select an option above';
+}
+
+function selectOption(id) {
+  state.selectedOption = id;
+  document.querySelectorAll('.decision-card').forEach(c => {
+    c.classList.remove('selected', 'selected-bad', 'selected-warn');
+  });
+  const round = ROUNDS[state.round - 1];
+  const opt = round.options.find(o => o.id === id);
+  const card = document.getElementById(`dc-${id}`);
+  if (opt.type === 'good') card.classList.add('selected');
+  else if (opt.type === 'bad') card.classList.add('selected-bad');
+  else card.classList.add('selected-warn');
+
+  document.getElementById('confirm-btn').disabled = false;
+  document.getElementById('selection-hint').textContent = `Option ${id} selected`;
+}
+
+// ══════════════════════════════════════════════════════════
+// CONFIRM & CONSEQUENCE
+// ══════════════════════════════════════════════════════════
+function confirmDecision() {
+  const round = ROUNDS[state.round - 1];
+  const opt = round.options.find(o => o.id === state.selectedOption);
+  if (!opt) return;
+
+  // Log decision
+  state.decisionLog.push({ round: state.round, title: round.title.split(' · ')[1], option: opt.title, note: opt.type });
+  state.decisions.push(state.selectedOption);
+
+  // Apply deltas
+  Object.entries(opt.deltas).forEach(([k, v]) => updateMetric(k, v));
+
+  // Render consequence
+  renderConsequence(round, opt);
+  showScreen('screen-consequence');
+}
+
+function renderConsequence(round, opt) {
+  // Type label
+  const typeEl = document.getElementById('c-type');
+  if (opt.type === 'good') { typeEl.textContent = '✅ OUTCOME'; typeEl.className = 'consequence-type good'; }
+  else if (opt.type === 'bad') { typeEl.textContent = '🔴 CONSEQUENCE'; typeEl.className = 'consequence-type bad'; }
+  else { typeEl.textContent = '⚠ MIXED OUTCOME'; typeEl.className = 'consequence-type mixed'; }
+
+  document.getElementById('c-title').textContent = opt.title;
+  document.getElementById('c-narrative').innerHTML = opt.narrative;
+
+  // Deltas
+  Object.entries(opt.deltas).forEach(([k, v]) => {
+    const d = formatDelta(v);
+    const el = document.getElementById(`d-${k}`);
+    if (el) { el.textContent = d.text; el.className = `delta-val ${d.cls}`; }
+  });
+
+  // Reactions
+  const rl = document.getElementById('reaction-list');
+  rl.innerHTML = `<div class="panel-label">Stakeholder Reactions</div>` +
+    opt.reactions.map(r => `
+      <div class="reaction-item">
+        <div class="reaction-icon">${r.icon}</div>
+        <div>
+          <div class="reaction-who">${r.who}</div>
+          <div class="reaction-says">"${r.says}"</div>
+        </div>
+      </div>
+    `).join('');
+
+  // Event
+  const evEl = document.getElementById('event-reveal');
+  if (opt.event) {
+    evEl.style.display = 'block';
+    document.getElementById('event-title').textContent = opt.event.title;
+    document.getElementById('event-body').textContent = opt.event.body;
+  } else {
+    evEl.style.display = 'none';
+  }
+
+  // Next button
+  const nextBtn = document.getElementById('next-round-btn');
+  if (state.round >= state.totalRounds) {
+    nextBtn.textContent = 'View Debrief →';
+    nextBtn.onclick = showDebrief;
+  } else {
+    nextBtn.textContent = 'Next Round →';
+    nextBtn.onclick = nextRound;
+  }
+}
+
+function nextRound() {
+  state.round++;
+  renderRound();
+  showScreen('screen-game');
+}
+
+// ══════════════════════════════════════════════════════════
+// DEBRIEF
+// ══════════════════════════════════════════════════════════
+function showDebrief() {
+  // Final scores
+  const scoresEl = document.getElementById('final-scores');
+  scoresEl.innerHTML = ['safety','trust','innovation','finance'].map(k => {
+    const final = Math.round(state.metrics[k]);
+    const initial = state.initialMetrics[k];
+    const delta = final - initial;
+    const d = formatDelta(delta);
+    const labels = { safety: 'Patient Safety', trust: 'Staff Trust', innovation: 'Innovation', finance: 'Financial' };
+    return `
+      <div class="final-score-card">
+        <div class="fs-label">${labels[k]}</div>
+        <div class="fs-val" style="color:var(--${k === 'safety' ? 'safety' : k === 'trust' ? 'trust' : k === 'innovation' ? 'innovation' : 'finance'})">${final}</div>
+        <div class="fs-change ${d.cls}">${d.text} from start</div>
+      </div>
+    `;
+  }).join('');
+
+  // Outcome
+  const safety = state.metrics.safety;
+  const trust = state.metrics.trust;
+  const avg = (safety + trust + state.metrics.innovation + state.metrics.finance) / 4;
+
+  const banner = document.getElementById('outcome-banner');
+  const outName = document.getElementById('outcome-name');
+  const outDesc = document.getElementById('outcome-desc');
+
+  if (safety >= 80 && trust >= 70 && avg >= 70) {
+    banner.className = 'outcome-banner good';
+    outName.textContent = '🌟 Healthcare Transformation';
+    outDesc.textContent = 'You balanced safety, innovation, clinical trust, and sustainability. Your approach will become the model for AI governance across the system. This is the optimal outcome — rare, hard-won, and replicable.';
+  } else if (safety >= 70 && avg >= 60) {
+    banner.className = 'outcome-banner mixed';
+    outName.textContent = '⚖️ Safe but Cautious';
+    outDesc.textContent = 'Patient safety held firm and you avoided serious incidents. Innovation and financial sustainability were sacrificed. The NHS is safer but the transformative potential of clinical AI has not been realised. A defensible outcome, not an inspiring one.';
+  } else if (state.metrics.innovation >= 80 && safety < 65) {
+    banner.className = 'outcome-banner bad';
+    outName.textContent = '⚡ Automation Crisis';
+    outDesc.textContent = 'Speed outpaced governance. Your innovations produced measurable gains but the safety architecture was not robust enough to withstand failure. The Trust faces regulatory sanction. Patient confidence is shaken.';
+  } else if (trust < 50) {
+    banner.className = 'outcome-banner bad';
+    outName.textContent = '🔴 Trust Failure';
+    outDesc.textContent = 'Clinical staff have lost confidence in AI-assisted care. Even good AI is being ignored. The cultural damage will take years to repair and no technology investment will fix it.';
+  } else {
+    banner.className = 'outcome-banner mixed';
+    outName.textContent = '📊 Digital Stagnation';
+    outDesc.textContent = 'Safety was preserved and major incidents avoided. But innovation has stalled, financial pressure is mounting, and the Trust is falling behind peer organisations. A stable but unsustainable position.';
+  }
+
+  // Decision log
+  const replayEl = document.getElementById('replay-items');
+  replayEl.innerHTML = state.decisionLog.map((d, i) => `
+    <div class="replay-item">
+      <div class="replay-q">R${d.round}</div>
+      <div>
+        <div class="replay-choice">${d.option}</div>
+        <div class="replay-note">${d.title} · ${d.note === 'good' ? '✅ Strong governance choice' : d.note === 'mixed' ? '⚠ Compromise — review trade-offs' : '🔴 High risk — consider alternative'}</div>
+      </div>
+    </div>
+  `).join('');
+
+  // Learning items
+  const learnEl = document.getElementById('learning-items');
+  const points = Object.values(LEARNING_POINTS);
+  learnEl.innerHTML = points.map(p => `
+    <div class="learning-item">
+      <div class="li-tag ${p.tagCls}">${p.tag}</div>
+      <div class="li-content">
+        <div class="li-title">${p.title}</div>
+        <div class="li-body">${p.body}</div>
+      </div>
+    </div>
+  `).join('');
+
+  showScreen('screen-debrief');
+}
+</script>
+
+</body>
+</html>
