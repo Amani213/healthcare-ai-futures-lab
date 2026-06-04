@@ -12,16 +12,6 @@ A free, open-source clinical AI governance simulation for NHS leaders, clinician
 
 Healthcare AI Futures Lab is a decision simulation that places you inside real NHS AI governance dilemmas. Every choice has second and third-order consequences. There are no perfect answers.
 
-Two scenarios are now playable:
-
-> **Level 2 — Clinical Safety Officer: The Sepsis Signal Problem**
-> 
-> An AI sepsis detector is generating alarm fatigue across your Trust. A patient has deteriorated after nurses dismissed an alert they believed was another false positive. You have 4 decision rounds and 48 hours to act. Metrics tracked: Patient Safety, Staff Trust, Innovation, Financial Sustainability.
-
-> **Level 3 — CxIO: The Invisible Patient**
-> 
-> You are the Chief Information Officer (CNIO, CMIO, or CAHPIO) at an NHS Mental Health Trust. An AI-assisted Early Intervention in Psychosis (EIP) triage tool is improving referral-to-treatment times — but a newly qualified nurse has identified a disturbing pattern: the system appears to be systematically under-flagging young Black men at first episode. You have 4 decision rounds to decide how hard to look, what to do with what you find, and what to argue for at national policy level. Metrics tracked: Patient Safety, Equity & Trust, Clinical Adoption, System Influence.
-
 Each simulation tracks four interconnected metrics and generates a full debrief tied to NHS clinical AI governance frameworks.
 
 -----
