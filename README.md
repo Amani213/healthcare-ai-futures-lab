@@ -4,7 +4,7 @@
 
 A free, open-source clinical AI governance simulation for NHS leaders, clinicians, digital professionals, and regulators. Built as an interactive HTML tool — no installation, no login, no data collected.
 
-**[▶ Play the demo](https://your-github-pages-url-here)** · [Report an issue](../../issues) · [Contribute](#contributing)
+**[▶ Play the demo](https://healthcare-ai-futures-lab.vercel.app/)** · [Report an issue](../../issues) · [Contribute](#contributing)
 
 -----
 
