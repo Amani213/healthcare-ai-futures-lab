@@ -1,1403 +1,1853 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light">
-<title>Healthcare AI Futures Lab · Level 3 · CxIO</title>
+<meta name="description" content="Healthcare AI Futures Lab — decision simulations for NHS clinical and digital leaders.">
+<title>Healthcare AI Futures Lab</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
 
 :root {
+  --bg: #f7f8f7;
+  --surface: #ffffff;
+  --surface-2: #f1f4f2;
+  --border: #e2e8e4;
+  --border-strong: #cbd5cf;
 
-```
---bg: #f8fafc;
---surface: #ffffff;
---surface2: #f1f5f9;
---border: #e2e8f0;
---accent: #7c6cfc;
---accent2: #ff6b35;
---accent3: #00d4aa;
---danger: #ef4444;
---warn: #f59e0b;
---text: #0f172a;
---muted: #64748b;
---safety: #00d4aa;
---equity: #7c6cfc;
---adoption: #f59e0b;
---influence: #38bdf8;
-```
+  --accent: #00a884;
+  --accent-soft: #d4f0e8;
+  --accent-deep: #006d56;
+  --indigo: #4f46e5;
+  --amber: #d97706;
+  --danger: #dc2626;
 
+  --text: #0f172a;
+  --text-muted: #475569;
+  --text-faint: #94a3b8;
+
+  --safety: #00a884;
+  --trust: #4f46e5;
+  --innovation: #d97706;
+  --finance: #0284c7;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
 }
 
-- { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-html {
-background: #f8fafc;
-}
-
+html { background: var(--bg); }
 body {
-background: var(–bg);
-color: var(–text);
-font-family: ‘IBM Plex Sans’, sans-serif;
-font-weight: 300;
-min-height: 100vh;
-overflow-x: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.55;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 body::before {
-content: ‘’;
-position: fixed;
-inset: 0;
-background-image:
-linear-gradient(rgba(124,108,252,0.05) 1px, transparent 1px),
-linear-gradient(90deg, rgba(124,108,252,0.05) 1px, transparent 1px);
-background-size: 40px 40px;
-pointer-events: none;
-z-index: 0;
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 168, 132, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 168, 132, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
 }
+
+/* ─── SHARED TYPOGRAPHY ─── */
+
+.display { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: -0.02em; }
+.mono { font-family: 'IBM Plex Mono', monospace; }
+.label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* ─── SCREENS ─── */
 
 .screen {
-display: none;
-position: relative;
-z-index: 1;
-animation: fadeIn 0.4s ease;
+  display: none;
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 320ms var(--ease-out);
 }
 .screen.active { display: block; }
-@keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
 
-/* ─── TITLE SCREEN ─── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── BUTTONS ─── */
+
+.btn-primary {
+  background: var(--accent-deep);
+  color: #fff;
+  border-radius: 10px;
+  padding: 14px 28px;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  transition: background 180ms var(--ease-out), transform 120ms var(--ease-out);
+}
+.btn-primary:hover:not(:disabled) { background: #005a47; }
+.btn-primary:active:not(:disabled) { transform: scale(0.98); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 13px 26px;
+  font-size: 14px;
+  transition: all 180ms var(--ease-out);
+}
+.btn-secondary:hover {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+/* ═══════════════════════════════════════════
+   TITLE SCREEN
+═══════════════════════════════════════════ */
+
 #screen-title {
-min-height: 100vh;
-display: none;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-text-align: center;
-padding: 40px 24px;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 24px;
+  text-align: center;
 }
 #screen-title.active { display: flex; }
 
 .lab-wordmark {
-font-family: ‘Syne’, sans-serif;
-font-size: clamp(13px, 2vw, 16px);
-font-weight: 600;
-letter-spacing: 0.3em;
-text-transform: uppercase;
-color: var(–accent);
-margin-bottom: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+  margin-bottom: 28px;
 }
-
-.level-badge {
-display: inline-flex;
-align-items: center;
-gap: 8px;
-background: rgba(124,108,252,0.09);
-border: 1px solid rgba(124,108,252,0.3);
-border-radius: 100px;
-padding: 6px 16px;
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 11px;
-letter-spacing: 0.15em;
-text-transform: uppercase;
-color: var(–accent);
-margin-bottom: 24px;
+.lab-wordmark::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(0, 168, 132, 0.18);
 }
 
 .title-hero {
-font-family: ‘Syne’, sans-serif;
-font-weight: 800;
-font-size: clamp(36px, 7vw, 72px);
-line-height: 0.95;
-letter-spacing: -0.02em;
-margin-bottom: 8px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(42px, 7.5vw, 78px);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  margin-bottom: 24px;
+  max-width: 800px;
 }
-
-.title-hero span {
-display: block;
-background: linear-gradient(135deg, #7c6cfc, #00d4aa);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-background-clip: text;
-}
-
-.title-year {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: clamp(50px, 10vw, 100px);
-font-weight: 300;
-color: rgba(0,0,0,0.03);
-line-height: 1;
-margin: -8px 0 24px;
-letter-spacing: -0.04em;
+.title-hero em {
+  font-style: normal;
+  background: linear-gradient(120deg, var(--accent-deep), var(--indigo));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .title-sub {
-font-size: 17px;
-font-weight: 300;
-color: var(–muted);
-max-width: 520px;
-line-height: 1.65;
-margin-bottom: 40px;
+  font-size: 17px;
+  color: var(--text-muted);
+  max-width: 540px;
+  line-height: 1.65;
+  margin-bottom: 56px;
 }
 
-.context-pills {
-display: flex;
-gap: 8px;
-flex-wrap: wrap;
-justify-content: center;
-margin-bottom: 40px;
-}
-.ctx-pill {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 10px;
-padding: 5px 12px;
-border-radius: 100px;
-border: 1px solid var(–border);
-color: var(–muted);
-letter-spacing: 0.08em;
+.scenario-grid {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  max-width: 560px;
+  margin-bottom: 44px;
 }
 
-.start-card {
-background: var(–surface);
-border: 1px solid rgba(124,108,252,0.4);
-border-radius: 14px;
-padding: 24px 28px;
-max-width: 540px;
-width: 100%;
-text-align: left;
-cursor: pointer;
-transition: all 0.2s;
-position: relative;
-overflow: hidden;
-margin-bottom: 20px;
+.scenario-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  text-align: left;
+  background: var(--surface);
+  transition: border-color 180ms var(--ease-out), transform 180ms var(--ease-out), box-shadow 180ms var(--ease-out);
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  position: relative;
 }
-.start-card::before {
-content: ‘’;
-position: absolute;
-inset: 0;
-background: linear-gradient(135deg, rgba(124,108,252,0.07), transparent);
-opacity: 0;
-transition: opacity 0.2s;
+.scenario-card.playable:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -10px rgba(0, 168, 132, 0.3);
 }
-.start-card:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(124,108,252,0.15); }
-.start-card:hover::before { opacity: 1; }
-.sc-eyebrow {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 10px;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: var(–accent);
-margin-bottom: 8px;
+.scenario-card.locked { opacity: 0.5; cursor: not-allowed; }
+
+.sc-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
-.sc-title-main {
-font-family: ‘Syne’, sans-serif;
-font-size: 20px;
-font-weight: 700;
-margin-bottom: 6px;
+.sc-level {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-faint);
 }
-.sc-desc-main {
-font-size: 13px;
-color: var(–muted);
-line-height: 1.55;
+.sc-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 100px;
+}
+.sc-badge.live {
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+}
+.sc-badge.soon {
+  background: var(--surface-2);
+  color: var(--text-faint);
+}
+.sc-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.sc-desc { font-size: 14px; color: var(--text-muted); line-height: 1.55; }
+
+.title-foot {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--text-faint);
 }
 
-/* ─── BRIEFING ─── */
+/* ═══════════════════════════════════════════
+   BRIEFING SCREEN
+═══════════════════════════════════════════ */
+
 #screen-brief {
-max-width: 780px;
-margin: 0 auto;
-padding: 48px 24px;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 56px 24px;
 }
 
 .breadcrumb {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 11px;
-letter-spacing: 0.12em;
-text-transform: uppercase;
-color: var(–muted);
-margin-bottom: 32px;
-display: flex;
-align-items: center;
-gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 36px;
 }
-.breadcrumb span { color: var(–accent); }
+.breadcrumb .crumb-current { color: var(--accent-deep); }
+.breadcrumb .sep { opacity: 0.5; }
 
 .brief-role {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 12px;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: var(–accent);
-margin-bottom: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+  margin-bottom: 14px;
 }
 .brief-title {
-font-family: ‘Syne’, sans-serif;
-font-size: clamp(28px, 5vw, 46px);
-font-weight: 800;
-line-height: 1.05;
-margin-bottom: 16px;
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(30px, 5vw, 46px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 22px;
 }
+
 .brief-meta {
-display: flex;
-gap: 10px;
-flex-wrap: wrap;
-margin-bottom: 28px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
 }
 .meta-pill {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 11px;
-padding: 4px 12px;
-border-radius: 100px;
-border: 1px solid var(–border);
-color: var(–muted);
-letter-spacing: 0.06em;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
 }
 
 .brief-situation {
-background: var(–surface);
-border: 1px solid var(–border);
-border-left: 3px solid var(–accent2);
-border-radius: 12px;
-padding: 24px 28px;
-margin-bottom: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 26px 30px;
+  margin-bottom: 24px;
 }
-.brief-situation h3 {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 10px;
-letter-spacing: 0.25em;
-text-transform: uppercase;
-color: var(–accent2);
-margin-bottom: 14px;
-}
+.brief-situation .label { margin-bottom: 16px; color: var(--accent-deep); }
 .brief-situation p {
-font-size: 15px;
-line-height: 1.75;
-color: #334155;
-margin-bottom: 12px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #334155;
+  margin-bottom: 12px;
 }
 .brief-situation p:last-child { margin-bottom: 0; }
-
-.equity-callout {
-background: rgba(124,108,252,0.07);
-border: 1px solid rgba(124,108,252,0.2);
-border-radius: 8px;
-padding: 14px 18px;
-margin-top: 16px;
-font-size: 13px;
-color: #4338ca;
-line-height: 1.6;
-}
-.equity-callout strong { color: var(–accent); }
+.brief-situation strong { color: var(--text); font-weight: 500; }
 
 .alert-box {
-background: rgba(239,68,68,0.07);
-border: 1px solid rgba(239,68,68,0.25);
-border-radius: 8px;
-padding: 12px 16px;
-margin-top: 14px;
-font-size: 13px;
-color: #dc2626;
-line-height: 1.55;
+  background: rgba(220, 38, 38, 0.05);
+  border: 1px solid rgba(220, 38, 38, 0.22);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  margin-top: 16px;
+  font-size: 13.5px;
+  color: #b91c1c;
+  line-height: 1.55;
 }
-.alert-box .alert-label {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 9px;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: var(–danger);
-display: block;
-margin-bottom: 4px;
-}
+.alert-box .label { color: var(--danger); margin-bottom: 6px; }
 
 .data-row {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-gap: 12px;
-margin-bottom: 28px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  margin-bottom: 32px;
 }
 .data-card {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: 10px;
-padding: 16px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
 }
 .data-label {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 10px;
-letter-spacing: 0.12em;
-text-transform: uppercase;
-color: var(–muted);
-margin-bottom: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 10px;
 }
-.data-value { font-family: ‘Syne’, sans-serif; font-size: 24px; font-weight: 700; }
-.data-value.up { color: var(–accent3); }
-.data-value.down { color: var(–danger); }
-.data-value.warn { color: var(–warn); }
-.data-value.purple { color: var(–accent); }
-.data-sub { font-size: 11px; color: var(–muted); margin-top: 3px; }
-
-.btn-primary {
-background: var(–accent);
-color: #fff;
-border: none;
-border-radius: 10px;
-padding: 16px 32px;
-font-family: ‘Syne’, sans-serif;
-font-size: 15px;
-font-weight: 700;
-cursor: pointer;
-letter-spacing: 0.02em;
-transition: all 0.2s;
-display: inline-block;
+.data-value {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1;
 }
-.btn-primary:hover { background: #9d8fff; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(124,108,252,0.35); }
+.data-value.warn { color: var(--amber); }
+.data-value.down { color: var(--danger); }
+.data-value.up { color: var(--accent-deep); }
+.data-sub { font-size: 11.5px; color: var(--text-faint); margin-top: 6px; }
 
-.btn-secondary {
-background: transparent;
-color: var(–muted);
-border: 1px solid var(–border);
-border-radius: 10px;
-padding: 14px 28px;
-font-family: ‘IBM Plex Sans’, sans-serif;
-font-size: 14px;
-cursor: pointer;
-transition: all 0.2s;
-display: inline-block;
+.brief-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
-.btn-secondary:hover { border-color: var(–muted); color: var(–text); }
 
-/* ─── GAME SCREEN ─── */
+/* ═══════════════════════════════════════════
+   GAME SCREEN
+═══════════════════════════════════════════ */
+
 #screen-game {
-max-width: 1100px;
-margin: 0 auto;
-padding: 24px 20px 60px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 20px 56px;
 }
 
 .game-header {
-display: flex;
-align-items: center;
-justify-content: space-between;
-margin-bottom: 24px;
-flex-wrap: wrap;
-gap: 12px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
 }
 .game-role-label {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 10px;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: var(–accent);
-margin-bottom: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+  margin-bottom: 6px;
 }
 .game-scenario-title {
-font-family: ‘Syne’, sans-serif;
-font-size: 20px;
-font-weight: 700;
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .quarter-tracker {
-display: flex;
-align-items: center;
-gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 .q-dot {
-width: 10px; height: 10px;
-border-radius: 50%;
-background: var(–border);
-transition: all 0.3s;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
 }
-.q-dot.done { background: var(–accent3); }
-.q-dot.active { background: var(–accent); box-shadow: 0 0 8px var(–accent); }
+.q-dot.done { background: var(--accent-deep); }
+.q-dot.active {
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(0, 168, 132, 0.2);
+}
 .q-label {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 12px;
-color: var(–muted);
-margin-left: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-left: 6px;
 }
 
 .progress-header {
-display: flex;
-align-items: center;
-gap: 12px;
-margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
 }
 .progress-line {
-flex: 1;
-height: 2px;
-background: var(–border);
-border-radius: 2px;
-overflow: hidden;
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
 }
 .progress-fill {
-height: 100%;
-background: linear-gradient(90deg, var(–accent), var(–accent3));
-border-radius: 2px;
-transition: width 0.5s ease;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--indigo));
+  border-radius: 2px;
+  transition: width 480ms var(--ease-out);
 }
 .progress-pct {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 11px;
-color: var(–muted);
-white-space: nowrap;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.08em;
 }
 
-/* DASHBOARD — 4 metrics renamed for CxIO level */
+/* DASHBOARD */
 .dashboard {
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-gap: 10px;
-margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 28px;
 }
-@media (max-width: 700px) { .dashboard { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 700px) {
+  .dashboard { grid-template-columns: repeat(2, 1fr); }
+}
 
 .metric-card {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: 10px;
-padding: 14px 16px;
-position: relative;
-overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
 }
 .metric-card::after {
-content: ‘’;
-position: absolute;
-bottom: 0; left: 0; right: 0;
-height: 3px;
-border-radius: 0 0 10px 10px;
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
 }
-.metric-card.safety::after { background: var(–safety); }
-.metric-card.equity::after { background: var(–equity); }
-.metric-card.adoption::after { background: var(–adoption); }
-.metric-card.influence::after { background: var(–influence); }
+.metric-card.safety::after { background: var(--safety); }
+.metric-card.trust::after { background: var(--trust); }
+.metric-card.innovation::after { background: var(--innovation); }
+.metric-card.finance::after { background: var(--finance); }
 
 .metric-name {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 9px;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: var(–muted);
-margin-bottom: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
 }
 .metric-val {
-font-family: ‘Syne’, sans-serif;
-font-size: 28px;
-font-weight: 700;
-line-height: 1;
-margin-bottom: 6px;
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 8px;
+  transition: color 400ms var(--ease-out);
 }
-.metric-card.safety .metric-val { color: var(–safety); }
-.metric-card.equity .metric-val { color: var(–equity); }
-.metric-card.adoption .metric-val { color: var(–adoption); }
-.metric-card.influence .metric-val { color: var(–influence); }
+.metric-card.safety .metric-val { color: var(--safety); }
+.metric-card.trust .metric-val { color: var(--trust); }
+.metric-card.innovation .metric-val { color: var(--innovation); }
+.metric-card.finance .metric-val { color: var(--finance); }
 
-.metric-bar-bg { height: 4px; background: var(–border); border-radius: 4px; overflow: hidden; }
-.metric-bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-.safety .metric-bar-fill { background: var(–safety); }
-.equity .metric-bar-fill { background: var(–equity); }
-.adoption .metric-bar-fill { background: var(–adoption); }
-.influence .metric-bar-fill { background: var(–influence); }
+.metric-bar-bg {
+  height: 4px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.metric-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 600ms var(--ease-out);
+}
+.safety .metric-bar-fill { background: var(--safety); }
+.trust .metric-bar-fill { background: var(--trust); }
+.innovation .metric-bar-fill { background: var(--innovation); }
+.finance .metric-bar-fill { background: var(--finance); }
 
+/* GAME COLUMNS */
 .game-columns {
-display: grid;
-grid-template-columns: 1fr 360px;
-gap: 20px;
-align-items: start;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+  align-items: start;
 }
-@media (max-width: 900px) { .game-columns { grid-template-columns: 1fr; } }
+@media (max-width: 920px) {
+  .game-columns { grid-template-columns: 1fr; }
+}
 
-.situation-panel {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: 14px;
-padding: 24px;
-margin-bottom: 20px;
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 26px;
 }
+
 .panel-label {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 10px;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: var(–muted);
-margin-bottom: 14px;
-display: flex;
-align-items: center;
-gap: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.panel-label::after { content: ‘’; flex: 1; height: 1px; background: var(–border); }
-
-.situation-text { font-size: 15px; line-height: 1.75; color: #334155; }
-.situation-text strong { color: var(–text); font-weight: 500; }
-
-.warn-box {
-background: rgba(245,158,11,0.09);
-border: 1px solid rgba(245,158,11,0.3);
-border-radius: 8px;
-padding: 12px 16px;
-margin-top: 14px;
-font-size: 13px;
-color: #92400e;
-line-height: 1.55;
-}
-.warn-box .warn-label {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 9px;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: var(–warn);
-display: block;
-margin-bottom: 4px;
+.panel-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
 }
 
-.decisions-panel {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: 14px;
-padding: 24px;
+.situation-panel { margin-bottom: 20px; }
+.situation-text {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #334155;
 }
+.situation-text strong { color: var(--text); font-weight: 500; }
+
 .decision-cards { display: flex; flex-direction: column; gap: 12px; }
 
 .decision-card {
-border: 1px solid var(–border);
-border-radius: 10px;
-padding: 16px 18px;
-cursor: pointer;
-transition: all 0.2s;
-background: var(–surface2);
-position: relative;
-overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  background: var(--surface-2);
+  text-align: left;
+  width: 100%;
+  position: relative;
+  transition: border-color 180ms var(--ease-out), transform 180ms var(--ease-out), background 180ms var(--ease-out);
 }
 .decision-card::before {
-content: ‘’;
-position: absolute;
-left: 0; top: 0; bottom: 0;
-width: 3px;
-border-radius: 3px 0 0 3px;
-background: var(–border);
-transition: background 0.2s;
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 3px 0 0 3px;
+  background: var(--border);
+  transition: background 180ms var(--ease-out);
 }
-.decision-card:hover { border-color: rgba(124,108,252,0.45); transform: translateX(3px); }
-.decision-card:hover::before { background: var(–accent); }
-.decision-card.selected { border-color: var(–accent3); background: rgba(0,212,170,0.06); }
-.decision-card.selected::before { background: var(–accent3); }
-.decision-card.selected-bad { border-color: var(–danger); background: rgba(239,68,68,0.06); }
-.decision-card.selected-bad::before { background: var(–danger); }
-.decision-card.selected-warn { border-color: var(–warn); background: rgba(245,158,11,0.06); }
-.decision-card.selected-warn::before { background: var(–warn); }
-
-.dc-option { font-family: ‘IBM Plex Mono’, monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(–muted); margin-bottom: 6px; }
-.dc-title { font-family: ‘Syne’, sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-.dc-desc { font-size: 13px; color: var(–muted); line-height: 1.5; }
-
-.dc-impacts { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
-.impact-pill {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 10px;
-padding: 3px 8px;
-border-radius: 100px;
-border: 1px solid;
-letter-spacing: 0.05em;
+.decision-card:hover {
+  border-color: var(--border-strong);
+  transform: translateX(2px);
 }
-.impact-pill.pos { color: var(–accent3); border-color: rgba(0,212,170,0.3); }
-.impact-pill.neg { color: var(–danger); border-color: rgba(239,68,68,0.25); }
-.impact-pill.warn { color: var(–warn); border-color: rgba(245,158,11,0.3); }
-.impact-pill.pur { color: var(–accent); border-color: rgba(124,108,252,0.35); }
+.decision-card:hover::before { background: var(--text-muted); }
+.decision-card.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.decision-card.selected::before { background: var(--accent); }
+.decision-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
-.decision-actions { display: flex; gap: 12px; margin-top: 20px; align-items: center; }
+.dc-option {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 8px;
+}
+.dc-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: -0.005em;
+}
+.dc-desc {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.decision-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 22px;
+  align-items: center;
+}
+#selection-hint {
+  font-size: 12.5px;
+  color: var(--text-faint);
+}
 
 /* SIDEBAR */
 .sidebar { display: flex; flex-direction: column; gap: 16px; }
 
-.stakeholder-panel, .reg-panel {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: 14px;
-padding: 20px;
-}
-
+.stakeholder-list { display: flex; flex-direction: column; gap: 8px; }
 .stakeholder-item {
-display: flex;
-align-items: flex-start;
-gap: 12px;
-padding: 10px 12px;
-border-radius: 8px;
-background: var(–surface2);
-border: 1px solid transparent;
-transition: all 0.3s;
-margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid transparent;
 }
-.stakeholder-item:last-child { margin-bottom: 0; }
-.sh-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; background: var(–border); }
-.sh-name { font-size: 12px; font-weight: 500; margin-bottom: 3px; }
-.sh-status { font-size: 11px; color: var(–muted); line-height: 1.4; }
-.sh-status.alert { color: var(–accent2); }
-.sh-status.good { color: var(–accent3); }
-.sh-status.warn { color: var(–warn); }
-.sh-status.purple { color: var(–accent); }
+.sh-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.sh-name { font-size: 12.5px; font-weight: 500; margin-bottom: 3px; }
+.sh-status { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
 
-.reg-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(–border); }
+.reg-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+}
 .reg-item:last-child { border-bottom: none; }
-.reg-status { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.reg-status.green { background: var(–accent3); box-shadow: 0 0 6px var(–accent3); }
-.reg-status.amber { background: var(–warn); box-shadow: 0 0 6px var(–warn); }
-.reg-status.red { background: var(–danger); box-shadow: 0 0 6px var(–danger); }
-.reg-name { font-family: ‘IBM Plex Mono’, monospace; font-size: 11px; letter-spacing: 0.05em; flex: 1; }
-.reg-state { font-size: 11px; color: var(–muted); }
+.reg-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 300ms var(--ease-out);
+}
+.reg-status.green { background: var(--accent); }
+.reg-status.amber { background: var(--amber); }
+.reg-status.red { background: var(--danger); }
+.reg-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  flex: 1;
+}
+.reg-state { font-size: 11px; color: var(--text-faint); }
 
-/* ─── CONSEQUENCE SCREEN ─── */
+/* ═══════════════════════════════════════════
+   CONSEQUENCE SCREEN
+═══════════════════════════════════════════ */
+
 #screen-consequence {
-max-width: 780px;
-margin: 0 auto;
-padding: 48px 24px;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 56px 24px;
 }
 
-.consequence-type { font-family: ‘IBM Plex Mono’, monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; }
-.consequence-type.good { color: var(–accent3); }
-.consequence-type.bad { color: var(–danger); }
-.consequence-type.mixed { color: var(–warn); }
+.consequence-type {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.consequence-type.good { color: var(--accent-deep); }
+.consequence-type.mixed { color: var(--amber); }
+.consequence-type.bad { color: var(--danger); }
 
-.consequence-title { font-family: ‘Syne’, sans-serif; font-size: clamp(24px, 4vw, 38px); font-weight: 800; line-height: 1.1; margin-bottom: 16px; }
-.consequence-narrative { font-size: 15px; line-height: 1.8; color: #334155; margin-bottom: 24px; }
+.consequence-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+.consequence-narrative {
+  font-size: 15.5px;
+  line-height: 1.78;
+  color: #334155;
+  margin-bottom: 28px;
+}
 
 .delta-grid {
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-gap: 10px;
-margin-bottom: 28px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 28px;
 }
-@media (max-width: 600px) { .delta-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) {
+  .delta-grid { grid-template-columns: repeat(2, 1fr); }
+}
 
-.delta-card { background: var(–surface); border: 1px solid var(–border); border-radius: 10px; padding: 14px 16px; text-align: center; }
-.delta-label { font-family: ‘IBM Plex Mono’, monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(–muted); margin-bottom: 8px; }
-.delta-val { font-family: ‘Syne’, sans-serif; font-size: 28px; font-weight: 800; }
-.delta-val.pos { color: var(–accent3); }
-.delta-val.neg { color: var(–danger); }
-.delta-val.neu { color: var(–muted); }
+.delta-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  text-align: center;
+}
+.delta-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 10px;
+}
+.delta-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.delta-val.pos { color: var(--accent-deep); }
+.delta-val.neg { color: var(--danger); }
+.delta-val.neu { color: var(--text-faint); }
 
-.stakeholder-reactions { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
-.reaction-item { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(–border); }
+.reaction-list {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin-bottom: 28px;
+}
+.reaction-item {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
 .reaction-item:last-child { border-bottom: none; }
-.reaction-icon { width: 36px; height: 36px; border-radius: 50%; background: var(–surface2); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-.reaction-who { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
-.reaction-says { font-size: 13px; color: var(–muted); line-height: 1.55; font-style: italic; }
+.reaction-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.reaction-who { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+.reaction-says { font-size: 13.5px; color: var(--text-muted); line-height: 1.55; font-style: italic; }
 
-/* ─── DEBRIEF SCREEN ─── */
+.event-reveal {
+  background: rgba(217, 119, 6, 0.06);
+  border: 1px solid rgba(217, 119, 6, 0.22);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 28px;
+}
+.event-reveal .label { color: var(--amber); margin-bottom: 10px; }
+.event-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.event-body { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+/* ═══════════════════════════════════════════
+   DEBRIEF SCREEN
+═══════════════════════════════════════════ */
+
 #screen-debrief {
-max-width: 820px;
-margin: 0 auto;
-padding: 48px 24px 80px;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 56px 24px 88px;
 }
 
-.debrief-header { text-align: center; margin-bottom: 48px; }
-.debrief-label { font-family: ‘IBM Plex Mono’, monospace; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(–accent); margin-bottom: 12px; }
-.debrief-title { font-family: ‘Syne’, sans-serif; font-size: clamp(28px, 5vw, 48px); font-weight: 800; line-height: 1.1; margin-bottom: 12px; }
-.debrief-subtitle { font-size: 15px; color: var(–muted); line-height: 1.6; }
+.debrief-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.debrief-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+  margin-bottom: 14px;
+}
+.debrief-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(30px, 5vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: 14px;
+}
+.debrief-subtitle {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 540px;
+  margin: 0 auto;
+}
 
-.final-scores { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 40px; }
-@media (max-width: 600px) { .final-scores { grid-template-columns: repeat(2, 1fr); } }
+.final-scores {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 36px;
+}
+@media (max-width: 600px) {
+  .final-scores { grid-template-columns: repeat(2, 1fr); }
+}
 
-.final-score-card { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; padding: 20px 16px; text-align: center; }
-.fs-label { font-family: ‘IBM Plex Mono’, monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(–muted); margin-bottom: 10px; }
-.fs-val { font-family: ‘Syne’, sans-serif; font-size: 36px; font-weight: 800; margin-bottom: 4px; }
+.final-score-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 16px;
+  text-align: center;
+}
+.fs-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 12px;
+}
+.fs-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
 .fs-change { font-size: 12px; }
-.fs-change.pos { color: var(–accent3); }
-.fs-change.neg { color: var(–danger); }
+.fs-change.pos { color: var(--accent-deep); }
+.fs-change.neg { color: var(--danger); }
+.fs-change.neu { color: var(--text-faint); }
 
-.outcome-banner { border-radius: 14px; padding: 28px 32px; margin-bottom: 32px; text-align: center; }
-.outcome-banner.good { background: rgba(0,180,140,0.08); border: 1px solid rgba(0,212,170,0.3); }
-.outcome-banner.mixed { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); }
-.outcome-banner.bad { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.25); }
-.outcome-name { font-family: ‘Syne’, sans-serif; font-size: 24px; font-weight: 800; margin-bottom: 8px; }
-.outcome-banner.good .outcome-name { color: var(–accent3); }
-.outcome-banner.mixed .outcome-name { color: var(–warn); }
-.outcome-banner.bad .outcome-name { color: var(–danger); }
-.outcome-desc { font-size: 14px; color: var(–muted); line-height: 1.65; }
+.outcome-banner {
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  margin-bottom: 36px;
+  text-align: center;
+}
+.outcome-banner.good {
+  background: var(--accent-soft);
+  border: 1px solid rgba(0, 168, 132, 0.3);
+}
+.outcome-banner.mixed {
+  background: rgba(217, 119, 6, 0.08);
+  border: 1px solid rgba(217, 119, 6, 0.25);
+}
+.outcome-banner.bad {
+  background: rgba(220, 38, 38, 0.06);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+}
+.outcome-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.outcome-banner.good .outcome-name { color: var(--accent-deep); }
+.outcome-banner.mixed .outcome-name { color: var(--amber); }
+.outcome-banner.bad .outcome-name { color: var(--danger); }
+.outcome-desc {
+  font-size: 14.5px;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.replay-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin-bottom: 32px;
+}
+.replay-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+.replay-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13.5px;
+}
+.replay-item:last-child { border-bottom: none; }
+.replay-q {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--accent-deep);
+  width: 24px;
+  flex-shrink: 0;
+  padding-top: 1px;
+  letter-spacing: 0.05em;
+}
+.replay-choice { color: var(--text); flex: 1; line-height: 1.5; }
+.replay-note { font-size: 11.5px; color: var(--text-faint); margin-top: 3px; }
 
 .learning-section { margin-bottom: 36px; }
-.learning-section h3 { font-family: ‘Syne’, sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+.learning-section h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  letter-spacing: -0.01em;
+}
 
-.learning-item { background: var(–surface); border: 1px solid var(–border); border-radius: 10px; padding: 18px 20px; margin-bottom: 10px; display: flex; gap: 16px; align-items: flex-start; }
-.li-tag { font-family: ‘IBM Plex Mono’, monospace; font-size: 10px; padding: 4px 10px; border-radius: 6px; background: rgba(124,108,252,0.09); color: var(–accent); white-space: nowrap; flex-shrink: 0; letter-spacing: 0.05em; margin-top: 2px; }
-.li-tag.safety { background: rgba(0,180,140,0.09); color: var(–accent3); }
-.li-tag.risk { background: rgba(239,68,68,0.08); color: var(–danger); }
-.li-tag.eth { background: rgba(245,158,11,0.12); color: var(–warn); }
-.li-tag.reg { background: rgba(56,189,248,0.09); color: var(–influence); }
+.learning-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px 22px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.li-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+.li-tag.reg { background: rgba(79, 70, 229, 0.12); color: var(--indigo); }
+.li-tag.risk { background: rgba(220, 38, 38, 0.1); color: var(--danger); }
+.li-tag.eth { background: rgba(217, 119, 6, 0.12); color: var(--amber); }
 
-.li-title { font-weight: 500; font-size: 14px; margin-bottom: 4px; }
-.li-body { font-size: 13px; color: var(–muted); line-height: 1.55; }
+.li-title { font-weight: 500; font-size: 14.5px; margin-bottom: 5px; }
+.li-body { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; }
 
-.decision-replay { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; padding: 20px; margin-bottom: 32px; }
-.replay-title { font-family: ‘IBM Plex Mono’, monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(–muted); margin-bottom: 14px; }
-.replay-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(–border); font-size: 13px; }
-.replay-item:last-child { border-bottom: none; }
-.replay-q { font-family: ‘IBM Plex Mono’, monospace; font-size: 10px; color: var(–accent); width: 20px; flex-shrink: 0; padding-top: 1px; }
-.replay-choice { color: var(–text); flex: 1; }
-.replay-note { font-size: 11px; color: var(–muted); margin-top: 2px; }
+.debrief-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
 
-.debrief-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+/* ─── ACCESSIBILITY ─── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 120ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 </style>
-
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════════
-     TITLE SCREEN
-══════════════════════════════════════════════════════ -->
+<!-- ═══════════ TITLE SCREEN ═══════════ -->
 
-<div id="screen-title" class="screen active">
+<main id="screen-title" class="screen active" aria-labelledby="lab-title">
   <div class="lab-wordmark">Healthcare AI Futures Lab</div>
-  <div class="level-badge">⬡ Level 3 · CxIO</div>
 
-  <h1 class="title-hero">The Invisible<span>Patient</span></h1>
-  <div class="title-year">2032</div>
+  <h1 id="lab-title" class="title-hero">
+    Decisions that shape <em>safe AI</em> in healthcare.
+  </h1>
 
   <p class="title-sub">
-    An AI tool is improving psychosis referral times across your mental health trust — but clinicians are raising a disturbing pattern. The system appears to systematically under-flag young Black men at first episode. Your decisions will shape whether the NHS learns from this, or buries it.
+    Two scenarios. Four decision rounds each. Every choice ripples across patient safety,
+    clinical trust, innovation, and finances. There are no perfect answers — only defensible ones.
   </p>
 
-  <div class="context-pills">
-    <span class="ctx-pill">🧠 Mental Health Trust</span>
-    <span class="ctx-pill">⚡ EIP Pathway AI</span>
-    <span class="ctx-pill">⚖️ Algorithmic Equity</span>
-    <span class="ctx-pill">📋 DCB0129 / UK GDPR Art.22</span>
-    <span class="ctx-pill">🔬 4 Decision Rounds</span>
-  </div>
+  <div class="scenario-grid" role="list">
+    <button class="scenario-card playable" role="listitem" onclick="startScenario('cso')" aria-label="Start Clinical Safety Officer scenario">
+      <div class="sc-status-row">
+        <span class="sc-level">Scenario 01 · Clinical Safety Officer</span>
+        <span class="sc-badge live">Playable</span>
+      </div>
+      <div class="sc-title">The Sepsis Signal Problem</div>
+      <div class="sc-desc">A procured AI sepsis predictor is generating alarm fatigue. A patient has deteriorated. 48 hours to act.</div>
+    </button>
 
-  <div class="start-card" onclick="showScreen('screen-brief')">
-    <div class="sc-eyebrow">🧩 Playable Scenario · Level 3</div>
-    <div class="sc-title-main">CxIO: The Invisible Patient</div>
-    <div class="sc-desc-main">You are the Chief Information Officer (CNIO, CMIO, or CAHPIO) at an NHS Mental Health Trust. The board wants AI-driven EIP pathway improvement. A junior clinician has flagged what might be a bias problem. You have to decide how hard to look — and what to do with what you find.</div>
-  </div>
+    <button class="scenario-card playable" role="listitem" onclick="startScenario('cnio')" aria-label="Start Chief Nursing Information Officer scenario">
+      <div class="sc-status-row">
+        <span class="sc-level">Scenario 02 · CNIO</span>
+        <span class="sc-badge live">Playable</span>
+      </div>
+      <div class="sc-title">The Adoption Gap</div>
+      <div class="sc-desc">An AI documentation tool stalled at 32% adoption. The Board wants ROI. The nursing workforce wants to be heard.</div>
+    </button>
 
-  <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:0.1em;">
-    HEALTHCARE AI FUTURES LAB · LEVEL 3 OF 7
-  </p>
-</div>
-
-<!-- ══════════════════════════════════════════════════════
-     BRIEFING SCREEN
-══════════════════════════════════════════════════════ -->
-
-<div id="screen-brief" class="screen">
-  <div class="breadcrumb">
-    <span>Healthcare AI Futures Lab</span> › Level 3 › CxIO
-  </div>
-
-  <div class="brief-role">🧠 Your Role: CxIO (CNIO / CMIO / CAHPIO)</div>
-  <h2 class="brief-title">The Invisible<br>Patient</h2>
-  <div class="brief-meta">
-    <span class="meta-pill">📅 Q1 2032</span>
-    <span class="meta-pill">🏥 NHS Mental Health Trust</span>
-    <span class="meta-pill">⏱ 4 Decision Rounds</span>
-    <span class="meta-pill">🧠 EIP Pathway AI</span>
-    <span class="meta-pill">⚖️ Algorithmic Equity</span>
-  </div>
-
-  <div class="brief-situation">
-    <h3>⚠ Situation Brief</h3>
-    <p>
-      Eight months ago, your Trust deployed <strong>PathwayIQ</strong> — an AI-assisted triage and referral prioritisation tool for your Early Intervention in Psychosis (EIP) service. The headline numbers are good: referral-to-treatment times have fallen by 22%, below the 2-week NHS standard for 91% of cases, up from 74%.
-    </p>
-    <p>
-      Two weeks ago, a newly qualified mental health nurse — Amara Osei — brought you an informal concern. Reviewing her own caseload, she noticed that <strong>several young Black men she referred with clear first-episode psychosis indicators were scored as low priority by PathwayIQ</strong>, causing delays. She has manually cross-checked 47 cases. Her analysis — informal, not validated — suggests the AI consistently scores this demographic group lower than clinical presentation would predict.
-    </p>
-    <p>
-      You have spoken informally to the vendor. Their response: <strong>"The model was trained on nationally representative NHS data and has been independently validated. Individual case reviews are not statistically meaningful."</strong>
-    </p>
-    <div class="equity-callout">
-      <strong>Context:</strong> Black and minoritised communities are already disproportionately routed to crisis care rather than early intervention in psychosis. The NHS long-term plan explicitly commits to closing this gap. If PathwayIQ is reproducing — or amplifying — historical inequity, the consequences extend far beyond this Trust.
-    </div>
-    <div class="alert-box">
-      <span class="alert-label">🔴 Emerging Pressure</span>
-      Amara has mentioned the issue to her supervisor. It is now known informally across two clinical teams. If you do not act visibly, she may escalate through formal channels — including the Trust's Freedom to Speak Up Guardian.
+    <div class="scenario-card locked" role="listitem">
+      <div class="sc-status-row">
+        <span class="sc-level">Scenario 03 · Trust Chief Executive</span>
+        <span class="sc-badge soon">Coming Soon</span>
+      </div>
+      <div class="sc-title">The Vendor Expansion</div>
+      <div class="sc-desc">A vendor wants to scale deployment across the ICS. A regulator is asking pointed questions.</div>
     </div>
   </div>
 
-  <div class="data-row">
-    <div class="data-card">
-      <div class="data-label">RTT Performance</div>
-      <div class="data-value up">91%</div>
-      <div class="data-sub">↑ from 74% pre-AI</div>
-    </div>
-    <div class="data-card">
-      <div class="data-label">Cases Flagged</div>
-      <div class="data-value warn">47</div>
-      <div class="data-sub">Informal review by nurse</div>
-    </div>
-    <div class="data-card">
-      <div class="data-label">Vendor Response</div>
-      <div class="data-value down" style="font-size:16px;padding-top:4px;">Disputed</div>
-      <div class="data-sub">Claims model validated</div>
-    </div>
-    <div class="data-card">
-      <div class="data-label">WRES Indicator</div>
-      <div class="data-value purple">⬇</div>
-      <div class="data-sub">EIP access gap widening</div>
-    </div>
-  </div>
+  <div class="title-foot">Proof of Concept · For NHS Clinical & Digital Leaders</div>
+</main>
 
-  <div style="display:flex;gap:12px;flex-wrap:wrap;">
+<!-- ═══════════ BRIEFING SCREEN ═══════════ -->
+
+<main id="screen-brief" class="screen" aria-labelledby="brief-title">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <span>Lab</span><span class="sep">/</span>
+    <span id="brief-scenario-name" class="crumb-current">Scenario</span>
+  </nav>
+
+  <div class="brief-role" id="brief-role">Your Role</div>
+  <h2 id="brief-title" class="brief-title">Scenario title</h2>
+
+  <div class="brief-meta" id="brief-meta"></div>
+
+  <section class="brief-situation" aria-labelledby="brief-sit-label">
+    <h3 id="brief-sit-label" class="label">Situation Brief</h3>
+    <div id="brief-situation-body"></div>
+    <div id="brief-alert" class="alert-box" hidden>
+      <div class="label">Critical Development</div>
+      <span id="brief-alert-body"></span>
+    </div>
+  </section>
+
+  <div class="data-row" id="brief-data-row"></div>
+
+  <div class="brief-actions">
     <button class="btn-primary" onclick="startGame()">Accept briefing →</button>
     <button class="btn-secondary" onclick="showScreen('screen-title')">← Back</button>
   </div>
-</div>
+</main>
 
-<!-- ══════════════════════════════════════════════════════
-     GAME SCREEN
-══════════════════════════════════════════════════════ -->
+<!-- ═══════════ GAME SCREEN ═══════════ -->
 
-<div id="screen-game" class="screen">
-
-  <div class="game-header">
+<main id="screen-game" class="screen" aria-labelledby="round-title">
+  <header class="game-header">
     <div>
-      <div class="game-role-label">🧠 CxIO · PathwayIQ · EIP Bias Investigation</div>
-      <div class="game-scenario-title" id="round-title">Round 1 of 4</div>
+      <div class="game-role-label" id="game-role-label">Your Role</div>
+      <div class="game-scenario-title" id="round-title">Round 1</div>
     </div>
-    <div class="quarter-tracker">
+    <div class="quarter-tracker" aria-label="Round progress">
       <div class="q-dot active" id="qdot-1"></div>
       <div class="q-dot" id="qdot-2"></div>
       <div class="q-dot" id="qdot-3"></div>
       <div class="q-dot" id="qdot-4"></div>
-      <div class="q-label" id="qlabel">R1</div>
+      <span class="q-label" id="qlabel">Q1</span>
     </div>
-  </div>
+  </header>
 
   <div class="progress-header">
     <div class="progress-line"><div class="progress-fill" id="progress-bar" style="width:25%"></div></div>
-    <div class="progress-pct" id="progress-pct">Round 1/4</div>
+    <div class="progress-pct" id="progress-pct">Round 1 / 4</div>
   </div>
 
-  <div class="dashboard">
+  <div class="dashboard" aria-label="Current metrics">
     <div class="metric-card safety">
       <div class="metric-name">Patient Safety</div>
-      <div class="metric-val" id="m-safety">62</div>
-      <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-safety" style="width:62%"></div></div>
+      <div class="metric-val" id="m-safety">0</div>
+      <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-safety"></div></div>
     </div>
-    <div class="metric-card equity">
-      <div class="metric-name">Equity &amp; Trust</div>
-      <div class="metric-val" id="m-equity">40</div>
-      <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-equity" style="width:40%"></div></div>
+    <div class="metric-card trust">
+      <div class="metric-name">Clinical Trust</div>
+      <div class="metric-val" id="m-trust">0</div>
+      <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-trust"></div></div>
     </div>
-    <div class="metric-card adoption">
-      <div class="metric-name">Clinical Adoption</div>
-      <div class="metric-val" id="m-adoption">71</div>
-      <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-adoption" style="width:71%"></div></div>
+    <div class="metric-card innovation">
+      <div class="metric-name">Innovation</div>
+      <div class="metric-val" id="m-innovation">0</div>
+      <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-innovation"></div></div>
     </div>
-    <div class="metric-card influence">
-      <div class="metric-name">System Influence</div>
-      <div class="metric-val" id="m-influence">55</div>
-      <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-influence" style="width:55%"></div></div>
+    <div class="metric-card finance">
+      <div class="metric-name">Financial</div>
+      <div class="metric-val" id="m-finance">0</div>
+      <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-finance"></div></div>
     </div>
   </div>
 
   <div class="game-columns">
     <div>
-      <div class="situation-panel">
+      <section class="panel situation-panel">
         <div class="panel-label">Situation</div>
-        <div class="situation-text" id="situation-text">Loading...</div>
-        <div id="situation-alert" style="display:none;margin-top:14px;"></div>
-      </div>
+        <div class="situation-text" id="situation-text"></div>
+        <div id="situation-alert" class="alert-box" hidden>
+          <div class="label">Alert</div>
+          <span id="situation-alert-body"></span>
+        </div>
+      </section>
 
-```
-  <div class="decisions-panel">
-    <div class="panel-label">Your Decision</div>
-    <div class="decision-cards" id="decision-cards"></div>
-    <div class="decision-actions">
-      <button class="btn-primary" id="confirm-btn" onclick="confirmDecision()" disabled>Confirm Decision →</button>
-      <span id="selection-hint" style="font-size:12px;color:var(--muted);">Select an option above</span>
+      <section class="panel" aria-labelledby="decision-label">
+        <div id="decision-label" class="panel-label">Your Decision</div>
+        <div class="decision-cards" id="decision-cards" role="radiogroup" aria-labelledby="decision-label"></div>
+        <div class="decision-actions">
+          <button class="btn-primary" id="confirm-btn" onclick="confirmDecision()" disabled>Confirm decision →</button>
+          <span id="selection-hint">Select an option above</span>
+        </div>
+      </section>
     </div>
+
+    <aside class="sidebar">
+      <section class="panel">
+        <div class="panel-label">Stakeholders</div>
+        <div class="stakeholder-list" id="stakeholder-list"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-label">Regulatory Status</div>
+        <div id="reg-list"></div>
+      </section>
+    </aside>
   </div>
-</div>
+</main>
 
-<div class="sidebar">
-  <div class="stakeholder-panel">
-    <div class="panel-label">Stakeholders</div>
-    <div class="stakeholder-item">
-      <div class="sh-icon">👩🏾‍⚕️</div>
-      <div><div class="sh-name">Amara Osei (MH Nurse)</div><div class="sh-status warn" id="sh-amara">Informal concern raised. Watching for your response.</div></div>
-    </div>
-    <div class="stakeholder-item">
-      <div class="sh-icon">🏛️</div>
-      <div><div class="sh-name">Trust CEO</div><div class="sh-status" id="sh-ceo">Proud of RTT improvement. Unaware of equity concern.</div></div>
-    </div>
-    <div class="stakeholder-item">
-      <div class="sh-icon">💼</div>
-      <div><div class="sh-name">PathwayIQ Vendor</div><div class="sh-status" id="sh-vendor">Defensive. Claims model validated. Resisting audit.</div></div>
-    </div>
-    <div class="stakeholder-item">
-      <div class="sh-icon">👥</div>
-      <div><div class="sh-name">Community / Lived Experience</div><div class="sh-status" id="sh-community">No formal engagement yet. High distrust of NHS data use.</div></div>
-    </div>
-    <div class="stakeholder-item">
-      <div class="sh-icon">⚖️</div>
-      <div><div class="sh-name">ICO / NHSE / CQC</div><div class="sh-status" id="sh-regulator">No active inquiry. UK GDPR Art.22 obligations in scope.</div></div>
-    </div>
-  </div>
+<!-- ═══════════ CONSEQUENCE SCREEN ═══════════ -->
 
-  <div class="reg-panel">
-    <div class="panel-label">Regulatory &amp; Ethical Status</div>
-    <div class="reg-item">
-      <div class="reg-status amber" id="reg-dcb"></div>
-      <div class="reg-name">DCB0129/0160</div>
-      <div class="reg-state" id="reg-dcb-state">Equity not in hazard log</div>
+<main id="screen-consequence" class="screen" aria-labelledby="c-title">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <span>Lab</span><span class="sep">/</span>
+    <span id="cons-scenario-name">Scenario</span><span class="sep">/</span>
+    <span class="crumb-current">Round Outcome</span>
+  </nav>
+
+  <div class="consequence-type" id="c-type">Outcome</div>
+  <h2 id="c-title" class="consequence-title">Decision processed</h2>
+  <p class="consequence-narrative" id="c-narrative"></p>
+
+  <div class="delta-grid" aria-label="Metric changes">
+    <div class="delta-card">
+      <div class="delta-label">Safety</div>
+      <div class="delta-val" id="d-safety">—</div>
     </div>
-    <div class="reg-item">
-      <div class="reg-status red" id="reg-gdpr"></div>
-      <div class="reg-name">UK GDPR Art.22</div>
-      <div class="reg-state" id="reg-gdpr-state">Automated decisions unreviewed</div>
+    <div class="delta-card">
+      <div class="delta-label">Trust</div>
+      <div class="delta-val" id="d-trust">—</div>
     </div>
-    <div class="reg-item">
-      <div class="reg-status amber" id="reg-psed"></div>
-      <div class="reg-name">Public Sector Equality Duty</div>
-      <div class="reg-state" id="reg-psed-state">Potential breach</div>
+    <div class="delta-card">
+      <div class="delta-label">Innovation</div>
+      <div class="delta-val" id="d-innovation">—</div>
     </div>
-    <div class="reg-item">
-      <div class="reg-status green" id="reg-ftsu"></div>
-      <div class="reg-name">Freedom to Speak Up</div>
-      <div class="reg-state" id="reg-ftsu-state">Not yet triggered</div>
-    </div>
-  </div>
-</div>
-```
-
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════
-     CONSEQUENCE SCREEN
-══════════════════════════════════════════════════════ -->
-
-<div id="screen-consequence" class="screen">
-  <div class="breadcrumb">
-    <span>Healthcare AI Futures Lab</span> › CxIO Scenario › Round Outcome
-  </div>
-
-  <div class="consequence-type" id="c-type">OUTCOME</div>
-  <h2 class="consequence-title" id="c-title">—</h2>
-  <p class="consequence-narrative" id="c-narrative">—</p>
-
-  <div class="delta-grid">
-    <div class="delta-card"><div class="delta-label">Patient Safety</div><div class="delta-val" id="d-safety">—</div></div>
-    <div class="delta-card"><div class="delta-label">Equity &amp; Trust</div><div class="delta-val" id="d-equity">—</div></div>
-    <div class="delta-card"><div class="delta-label">Clinical Adoption</div><div class="delta-val" id="d-adoption">—</div></div>
-    <div class="delta-card"><div class="delta-label">System Influence</div><div class="delta-val" id="d-influence">—</div></div>
-  </div>
-
-  <div class="stakeholder-reactions" id="reaction-list"></div>
-
-  <div id="event-reveal" style="display:none;margin-bottom:24px;">
-    <div style="background:rgba(255,107,53,0.07);border:1px solid rgba(255,107,53,0.25);border-radius:12px;padding:20px 24px;">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:8px;">⚡ Emerging Event</div>
-      <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:8px;" id="event-title"></div>
-      <div style="font-size:14px;color:var(--muted);line-height:1.65;" id="event-body"></div>
+    <div class="delta-card">
+      <div class="delta-label">Financial</div>
+      <div class="delta-val" id="d-finance">—</div>
     </div>
   </div>
 
-<button class="btn-primary" id="next-round-btn" onclick="nextRound()">Next Round →</button>
+  <section class="reaction-list" id="reaction-list" aria-label="Stakeholder reactions"></section>
 
-</div>
+  <section class="event-reveal" id="event-reveal" hidden>
+    <div class="label">Emerging Event</div>
+    <div class="event-title" id="event-title"></div>
+    <div class="event-body" id="event-body"></div>
+  </section>
 
-<!-- ══════════════════════════════════════════════════════
-     DEBRIEF SCREEN
-══════════════════════════════════════════════════════ -->
-
-<div id="screen-debrief" class="screen">
-  <div class="debrief-header">
-    <div class="debrief-label">📋 Simulation Complete · CxIO · Level 3</div>
-    <h2 class="debrief-title">Your PathwayIQ<br>Debrief</h2>
-    <p class="debrief-subtitle">Algorithmic equity is not an ethics add-on. It is a patient safety obligation.</p>
+  <div class="brief-actions">
+    <button class="btn-primary" id="next-round-btn" onclick="nextRound()">Next round →</button>
   </div>
+</main>
+
+<!-- ═══════════ DEBRIEF SCREEN ═══════════ -->
+
+<main id="screen-debrief" class="screen" aria-labelledby="debrief-title">
+  <header class="debrief-header">
+    <div class="debrief-label" id="debrief-role-label">Simulation Complete</div>
+    <h2 id="debrief-title" class="debrief-title">Debrief</h2>
+    <p class="debrief-subtitle">Review your decisions, their consequences, and the learning objectives they surfaced.</p>
+  </header>
 
   <div class="final-scores" id="final-scores"></div>
+
   <div class="outcome-banner" id="outcome-banner">
     <div class="outcome-name" id="outcome-name">—</div>
     <div class="outcome-desc" id="outcome-desc">—</div>
   </div>
 
-  <div class="decision-replay">
+  <section class="replay-block" aria-label="Decision log">
     <div class="replay-title">Your Decision Log</div>
     <div id="replay-items"></div>
-  </div>
+  </section>
 
-  <div class="learning-section">
-    <h3>🎓 Learning Points</h3>
+  <section class="learning-section">
+    <h3>Learning Points</h3>
     <div id="learning-items"></div>
-  </div>
+  </section>
 
   <div class="debrief-actions">
-    <button class="btn-primary" onclick="resetGame()">Play Again</button>
-    <button class="btn-secondary" onclick="showScreen('screen-title')">← Back to Level 3</button>
+    <button class="btn-primary" onclick="resetGame()">Replay scenario</button>
+    <button class="btn-secondary" onclick="showScreen('screen-title')">← Back to Lab</button>
   </div>
-</div>
+</main>
 
 <script>
-// ══════════════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════════════
-let state = {
-  round: 1,
-  totalRounds: 4,
-  metrics: { safety: 62, equity: 40, adoption: 71, influence: 55 },
-  initial: { safety: 62, equity: 40, adoption: 71, influence: 55 },
-  decisionLog: [],
-  selectedOption: null
+/* ═══════════════════════════════════════════════════════════════
+   HEALTHCARE AI FUTURES LAB — Decision Engine
+═══════════════════════════════════════════════════════════════ */
+
+const SCENARIOS = {
+
+  /* ──────────────────────────────────────────────────
+     SCENARIO 01 — CLINICAL SAFETY OFFICER
+  ────────────────────────────────────────────────── */
+  cso: {
+    id: 'cso',
+    name: 'Clinical Safety Officer',
+    icon: '🩺',
+    title: 'The Sepsis Signal Problem',
+    meta: ['Q1 · Acute Trust', '4 Decision Rounds', 'DCB0129 / DCB0160', 'Adapted from real NHS incidents'],
+    role: 'Your Role: Clinical Safety Officer',
+    briefIntro: [
+      'Twelve weeks ago, your Trust deployed <strong>SepsisAlert AI</strong>, a commercially procured sepsis prediction system. Initial results were promising — sepsis mortality fell by 11% in the first month.',
+      'Over the past four weeks, <strong>false positive rates have climbed from 12% to 34%</strong>. Ward nurses are dismissing alerts without escalating. This morning, a 67-year-old patient with sepsis was not escalated; the alert was treated as another false positive.',
+      'The patient is now in ICU. The vendor says the model is performing within contractual specification. Your Medical Director wants a decision by end of day.'
+    ],
+    briefAlert: 'The family of the deteriorated patient has contacted PALS. A health journalist is asking questions. You have 48 hours.',
+    briefData: [
+      { label: 'False Positive Rate', value: '34%', cls: 'warn', sub: 'Up from 12% at launch' },
+      { label: 'Alert Dismissal Rate', value: '71%', cls: 'down', sub: 'Without documented review' },
+      { label: 'Sepsis Mortality', value: '−11%', cls: 'up', sub: 'Since deployment' },
+      { label: 'Patients in Scope', value: '2,840', cls: '', sub: 'Per quarter' }
+    ],
+    startMetrics: { safety: 68, trust: 55, innovation: 72, finance: 60 },
+    stakeholders: [
+      { id: 'medical', icon: '👨‍⚕️', name: 'Medical Director', status: 'Awaiting your recommendation' },
+      { id: 'nurses',  icon: '👩‍⚕️', name: 'Ward Nursing Staff', status: 'Alert fatigue high. Morale low.' },
+      { id: 'vendor',  icon: '💼', name: 'Vendor (DataBio Ltd)', status: 'Claims spec compliance. Resisting review.' },
+      { id: 'family',  icon: '🧑‍🦳', name: 'Patient Family / PALS', status: 'Formal complaint filed. Media interest.' },
+      { id: 'reg',     icon: '⚖️', name: 'MHRA / CQC', status: 'No active inquiry yet.' }
+    ],
+    regulatory: [
+      { id: 'dcb129', name: 'DCB0129', status: 'amber', state: 'Review needed' },
+      { id: 'dcb160', name: 'DCB0160', status: 'red',   state: 'Breach risk' },
+      { id: 'mhra',   name: 'MHRA AIaMD', status: 'amber', state: 'Monitoring' },
+      { id: 'lfpse',  name: 'LFPSE', status: 'amber', state: 'Not yet reported' }
+    ],
+    rounds: [
+      {
+        title: 'Round 1 · Immediate Response',
+        situation: `The patient who deteriorated is stable but remains in ICU. You have confirmed the alert was generated at the correct time — the AI did its job. The failure was in the <strong>human response layer</strong>: nurses dismissed the alert as another false positive.<br><br>The Medical Director is outside your office. The journalist has sent an email asking for comment. Ward rounds begin in four hours.`,
+        alert: 'The LFPSE incident report has not yet been filed. Every hour without a report increases regulatory risk.',
+        options: [
+          {
+            id: 'A',
+            title: 'Suspend SepsisAlert immediately',
+            desc: 'Take the system offline pending full DCB0160 safety review. Proactively notify MHRA and CQC.',
+            deltas: { safety: 18, trust: 12, innovation: -22, finance: -15 },
+            type: 'good',
+            narrative: 'You suspend SepsisAlert and file an LFPSE report within the hour. The Medical Director supports the call. Nurses feel heard — the alert fatigue had been raised informally for weeks. The vendor is furious and threatens a breach-of-contract claim. The journalist runs a piece headlined "NHS Trust suspends AI safety tool after patient harmed." CQC acknowledge your proactive disclosure. Your DCB0129 hazard log is updated and stands up to scrutiny.',
+            reactions: [
+              { icon: '👨‍⚕️', who: 'Medical Director', says: 'Right call. The transparency protects us.' },
+              { icon: '👩‍⚕️', who: 'Ward Nurses', says: 'Finally. We have been raising this informally for weeks.' },
+              { icon: '💼', who: 'DataBio Ltd', says: 'This is a breach of contract. Our model is within spec.' },
+              { icon: '⚖️', who: 'MHRA', says: 'Proactive disclosure noted. We will review the hazard log.' }
+            ],
+            event: null,
+            regUpdate: { dcb160: { status: 'green', state: 'Suspended pending review' }, lfpse: { status: 'amber', state: 'Filed' } }
+          },
+          {
+            id: 'B',
+            title: 'Adjust alert threshold, continue deployment',
+            desc: 'Raise sensitivity threshold to reduce false positives. Maintain deployment with an enhanced escalation protocol.',
+            deltas: { safety: 5, trust: 8, innovation: 5, finance: 3 },
+            type: 'mixed',
+            narrative: 'You adjust the threshold and issue a nursing safety bulletin. Alert volumes fall by 40%. Short-term, things look better. But the threshold change has not been validated against the patient cohort — you have modified a regulated AI medical device without formal change control. Over the next six weeks, the model misses three true sepsis cases. A hidden problem has been papered over with a parameter shift.',
+            reactions: [
+              { icon: '👨‍⚕️', who: 'Medical Director', says: 'Pragmatic. We cannot be without the tool over winter.' },
+              { icon: '👩‍⚕️', who: 'Ward Nurses', says: 'Better. But are we sure this is safe?' },
+              { icon: '💼', who: 'DataBio Ltd', says: 'Any threshold changes must go through our formal change management process.' },
+              { icon: '⚖️', who: 'MHRA', says: 'Modifying AI medical device parameters requires formal change control under MDR 2002. Are you aware?' }
+            ],
+            event: { title: 'Unvalidated Change Flagged', body: 'The vendor\'s legal team notifies the Trust that the threshold modification constitutes an unauthorised change to a registered medical device. MHRA open a preliminary inquiry.' },
+            regUpdate: { dcb160: { status: 'amber', state: 'Modified without control' }, lfpse: { status: 'amber', state: 'Delayed' }, mhra: { status: 'red', state: 'Inquiry opened' } }
+          },
+          {
+            id: 'C',
+            title: 'Convene emergency clinical review',
+            desc: 'Pause for 48 hours. Bring together clinical leads, the vendor, and your safety team to formally assess the hazard.',
+            deltas: { safety: 10, trust: 6, innovation: -5, finance: -5 },
+            type: 'mixed',
+            narrative: 'The 48-hour review is clinically sound but the journalist breaks the story before it concludes. Headlines read: "NHS delays action after AI alert ignored." The family contacts their MP. Internally, the review produces a thorough hazard log that becomes the cornerstone of your DCB0129 documentation — but the reputational window has closed.',
+            reactions: [
+              { icon: '🧑‍🦳', who: 'Patient Family', says: 'A review? My mother is in ICU and they are having meetings.' },
+              { icon: '👨‍⚕️', who: 'Medical Director', says: 'The process is right. We needed faster communications.' },
+              { icon: '📰', who: 'Health Journalist', says: 'Story filed: NHS in 48-hour delay on AI safety response.' },
+              { icon: '⚖️', who: 'CQC', says: 'We note the Trust is reviewing internally. We will monitor.' }
+            ],
+            event: null,
+            regUpdate: { dcb160: { status: 'amber', state: 'Under review' }, lfpse: { status: 'amber', state: 'Pending' } }
+          }
+        ]
+      },
+      {
+        title: 'Round 2 · Vendor Relations',
+        situation: `Three weeks have passed. Your incident review is underway. DataBio Ltd has sent a legal letter arguing the system is performing within contractual specification — their contract defines performance as <strong>sensitivity ≥ 90%</strong>, which the model still achieves.<br><br>Your clinical review shows specificity has declined — the metric that determines false positives — and this was never defined in the contract. The Medical Director has escalated to the CEO. Procurement asks whether you have grounds to terminate.`,
+        options: [
+          {
+            id: 'A',
+            title: 'Invoke the DCB0129 safety case',
+            desc: 'Formally document the hazard. Argue the vendor\'s obligation is patient safety, not contractual KPI compliance. Escalate to MHRA.',
+            deltas: { safety: 15, trust: 10, innovation: -10, finance: -8 },
+            type: 'good',
+            narrative: 'Your safety case documentation is rigorous. MHRA begin a formal review of DataBio\'s post-market surveillance. The vendor\'s position weakens. Legal counsel advises strong grounds to claim material safety failure beyond contractual specification. The approach is cited in NHS England guidance later that year.',
+            reactions: [
+              { icon: '⚖️', who: 'MHRA', says: 'The safety case is well-constructed. We are opening a formal inquiry into the device\'s post-market surveillance.' },
+              { icon: '💼', who: 'DataBio Ltd', says: 'We dispute the safety case framing. Engaging our legal team.' },
+              { icon: '👨‍⚕️', who: 'Medical Director', says: 'Patient safety cannot be contracted away. This is the right approach.' },
+              { icon: '🏛️', who: 'NHS England', says: 'Trust to be cited as good practice in AI procurement guidance.' }
+            ],
+            event: null,
+            regUpdate: { dcb129: { status: 'green', state: 'Safety case filed' }, mhra: { status: 'amber', state: 'Under review' } }
+          },
+          {
+            id: 'B',
+            title: 'Negotiate a contractual amendment',
+            desc: 'Add specificity as a KPI and give the vendor 30 days to improve performance.',
+            deltas: { safety: 5, trust: 3, innovation: 8, finance: 5 },
+            type: 'mixed',
+            narrative: 'The negotiation buys time but weakens your position. The vendor agrees to the amendment but their 30-day improvement window runs through peak winter pressures. If they fail, you face the same decision under worse conditions — and with less legal standing, because you accepted their commercial framing.',
+            reactions: [
+              { icon: '💼', who: 'DataBio Ltd', says: 'We appreciate the constructive approach and commit to a model improvement sprint.' },
+              { icon: '👨‍⚕️', who: 'Medical Director', says: 'Pragmatic. Are we kicking this down the road?' },
+              { icon: '👩‍⚕️', who: 'Ward Nurses', says: 'So the system is staying on? The alerts are still coming.' },
+              { icon: '🧑‍🦳', who: 'Patient Family', says: 'They are still using the system that missed my mother\'s sepsis.' }
+            ],
+            event: { title: 'Winter Pressure Peaks', body: 'Bed occupancy reaches 98%. ED waits exceed 7 hours. The 30-day improvement window begins under the worst possible evaluation conditions.' },
+            regUpdate: { dcb129: { status: 'amber', state: 'Pending amendment' } }
+          },
+          {
+            id: 'C',
+            title: 'Terminate the contract',
+            desc: 'Advise the CEO to terminate on patient safety grounds. Begin emergency procurement or revert to manual sepsis screening.',
+            deltas: { safety: 10, trust: 5, innovation: -18, finance: -20 },
+            type: 'mixed',
+            narrative: 'Termination is bold and defensible on safety grounds. Manual sepsis screening during winter pressures results in two missed cases. The penalty clause is triggered. The CEO supports you; the CFO is alarmed. Within 60 days, a rival Trust\'s AI sepsis system posts 95% sensitivity with 8% false positives — a system you could have procured with better groundwork.',
+            reactions: [
+              { icon: '👨‍⚕️', who: 'Medical Director', says: 'Clinically right. The manual fallback is the risk now.' },
+              { icon: '💰', who: 'Trust CFO', says: 'The penalty clause is £180,000. We needed more legal groundwork first.' },
+              { icon: '👩‍⚕️', who: 'Ward Nurses', says: 'Back to manual screening during winter. This will be brutal.' },
+              { icon: '⚖️', who: 'CQC', says: 'Please submit a continuity-of-care report for the manual protocol.' }
+            ],
+            event: null,
+            regUpdate: { dcb129: { status: 'green', state: 'Closed' }, mhra: { status: 'green', state: 'No active AI device' } }
+          }
+        ]
+      },
+      {
+        title: 'Round 3 · Workforce & Culture',
+        situation: `Two months on, a new challenge emerges. A staff survey shows <strong>62% would be reluctant to act on an AI alert without physician review</strong>, even for high-confidence predictions. Your human factors lead calls this <strong>automation distrust</strong> — the opposite of automation bias, and equally dangerous.<br><br>A new ward manager recruited from a Trust with excellent AI adoption tells you: "The nurses here have been burned. They need to be brought along, not mandated." The Digital Transformation Director wants to launch mandatory AI literacy training. You disagree on the approach.`,
+        options: [
+          {
+            id: 'A',
+            title: 'Co-design a clinical AI compact',
+            desc: 'Work with nurses, doctors, and AHPs to co-produce a locally-agreed protocol for AI-assisted decisions. Bottom-up.',
+            deltas: { safety: 12, trust: 20, innovation: 5, finance: -5 },
+            type: 'good',
+            narrative: 'Six weeks of co-design produce a "Clinical AI Compact" — a shared agreement on when to act, when to escalate, and when to override. Staff participation reaches 78%. Alert response rates improve. The compact is later cited in a BMJ Open paper. The process takes longer than the Digital Director wanted but produces durable cultural change.',
+            reactions: [
+              { icon: '👩‍⚕️', who: 'Ward Nurses', says: 'We actually feel like our experience shaped this. That has not happened before with digital.' },
+              { icon: '👨‍⚕️', who: 'Medical Director', says: 'This is what genuine clinical engagement looks like.' },
+              { icon: '💻', who: 'Digital Director', says: 'Slower than I wanted, but I accept it produced better outcomes.' },
+              { icon: '🏛️', who: 'NHS England', says: 'Model cited in AI governance framework consultation.' }
+            ],
+            event: null,
+            regUpdate: { dcb129: { status: 'green', state: 'Updated with compact' }, lfpse: { status: 'green', state: 'No incidents' } }
+          },
+          {
+            id: 'B',
+            title: 'Mandate AI literacy training',
+            desc: 'Support the Digital Director\'s proposal. Roll out a 2-hour mandatory e-learning module for all clinical staff.',
+            deltas: { safety: 3, trust: -12, innovation: 10, finance: 5 },
+            type: 'mixed',
+            narrative: 'Completion rates hit 89% but post-training surveys show 71% felt it did not address their real concerns. A senior nurse posts on social: "Mandatory AI training. 2 hours to fix what 6 months of poor governance broke." The digital team are pleased with completion numbers. The culture problem has been papered over with a metric.',
+            reactions: [
+              { icon: '👩‍⚕️', who: 'Senior Nurse', says: '2-hour mandatory e-learning to fix what 6 months of bad governance broke. Feels about right.' },
+              { icon: '💻', who: 'Digital Director', says: '89% completion. Excellent result.' },
+              { icon: '👨‍⚕️', who: 'Medical Director', says: 'The metric looks good. I am not sure the culture has changed.' },
+              { icon: '📰', who: 'HSJ', says: 'Tick-box AI training fails to address clinical concerns, staff say.' }
+            ],
+            event: null,
+            regUpdate: { dcb129: { status: 'amber', state: 'Human factors unresolved' } }
+          },
+          {
+            id: 'C',
+            title: 'Embed clinical AI champions',
+            desc: 'Identify 8 clinical champions across wards. Give them protected time, training, and authority to shape AI use in their areas.',
+            deltas: { safety: 8, trust: 14, innovation: 12, finance: -8 },
+            type: 'good',
+            narrative: 'The champions programme creates a distributed network of clinical AI literacy. Within three months, two champions propose protocol improvements that reduce false positives by 18%. One champion is invited to speak at the NHS AI Summit. The upfront cost is higher than e-learning but the return on clinical trust is substantial.',
+            reactions: [
+              { icon: '👩‍⚕️', who: 'Ward Nurses', says: 'Having someone on our ward who understands both sides is transformative.' },
+              { icon: '💰', who: 'Trust CFO', says: 'Protected time costs are above budget but the safety dividend is hard to argue with.' },
+              { icon: '💻', who: 'Digital Director', says: 'This is what good clinical digital transformation looks like.' },
+              { icon: '🏛️', who: 'NHS England', says: 'Champions model to be shared across ICS.' }
+            ],
+            event: null,
+            regUpdate: { dcb129: { status: 'green', state: 'Champions active' }, lfpse: { status: 'green', state: 'No incidents' } }
+          }
+        ]
+      },
+      {
+        title: 'Round 4 · The Strategic Question',
+        situation: `Six months have passed. The Trust Board is reviewing the AI programme. As CSO, you must provide a formal written recommendation on the safety implications of three future paths.<br><br>This shapes the Trust\'s approach for three years. Your recommendation goes to the Board, MHRA, and NHS England as part of a pilot governance framework submission.`,
+        alert: 'Your recommendation becomes part of your formal DCB0129 safety case submission.',
+        options: [
+          {
+            id: 'A',
+            title: 'Recommend a staged AI adoption framework',
+            desc: 'No new AI deployed without: clinical validation, hazard log, post-market surveillance plan, and a pre-agreed suspension protocol.',
+            deltas: { safety: 20, trust: 10, innovation: -10, finance: 5 },
+            type: 'good',
+            narrative: 'Your framework is adopted by the Board and submitted to NHS England. It becomes a model for three other Trusts. A year later, it forms part of the baseline for an NHSE AI governance guidance document. Innovation slows temporarily but the Trust records zero AI-related serious incidents in the following 12 months. You are invited to speak at a national patient safety conference.',
+            reactions: [
+              { icon: '🏛️', who: 'NHS England', says: 'Framework adopted as part of national AI governance pilot. Trust cited as exemplar.' },
+              { icon: '👨‍⚕️', who: 'Medical Director', says: 'This approach will stand the test of time.' },
+              { icon: '💼', who: 'Vendors', says: 'Stringent but fair. We know exactly what is required.' },
+              { icon: '⚖️', who: 'MHRA', says: 'Aligned with our post-market surveillance expectations.' }
+            ],
+            event: null,
+            regUpdate: { dcb129: { status: 'green', state: 'Framework adopted' }, dcb160: { status: 'green', state: 'Compliant' }, mhra: { status: 'green', state: 'Satisfied' } }
+          },
+          {
+            id: 'B',
+            title: 'Recommend an AI innovation accelerator',
+            desc: 'Fast-track pathway for AI adoption with lighter-touch governance. Prioritise benefit realisation and post-deployment learning.',
+            deltas: { safety: -5, trust: -3, innovation: 25, finance: 15 },
+            type: 'mixed',
+            narrative: 'The accelerator drives impressive innovation metrics. Seven new AI tools deployed in 12 months; three show genuine patient benefit. But a fourth — an AI-assisted prescribing tool — generates a serious incident. The light-touch governance means the safety case documentation is insufficient for investigation. You are summoned to the Quality and Safety Committee to explain the gap.',
+            reactions: [
+              { icon: '💻', who: 'Digital Director', says: 'Seven deployments in 12 months. This is the pace NHS patients deserve.' },
+              { icon: '⚖️', who: 'CQC', says: 'Governance documentation for the prescribing AI incident is inadequate.' },
+              { icon: '🧑‍🦳', who: 'Patient Safety Commissioner', says: 'Speed cannot be prioritised over safety architecture.' },
+              { icon: '📰', who: 'HSJ', says: 'NHS Trust\'s AI rush leads to safety governance gaps, inquiry finds.' }
+            ],
+            event: { title: 'Prescribing AI Incident', body: 'An AI-assisted prescribing tool deployed under the accelerator generates a dosing error in a renally-impaired patient. Without a pre-agreed hazard log, the investigation cannot determine proximate cause.' },
+            regUpdate: { dcb129: { status: 'red', state: 'Incident under review' }, dcb160: { status: 'red', state: 'Potential breach' }, mhra: { status: 'red', state: 'Inquiry opened' } }
+          },
+          {
+            id: 'C',
+            title: 'Recommend a shared ICS governance model',
+            desc: 'Trust leads a system-wide AI governance framework across the ICS. Pool clinical safety resource, vendor due diligence, and incident reporting.',
+            deltas: { safety: 15, trust: 12, innovation: 10, finance: 5 },
+            type: 'good',
+            narrative: 'The ICS model takes 6 months to establish but creates a genuinely powerful governance structure. Shared vendor due diligence saves each Trust an estimated £40,000 annually. A common hazard taxonomy emerges that feeds into NHSE\'s national AI harm registry. You are appointed ICS Clinical AI Safety Lead — a role that did not previously exist.',
+            reactions: [
+              { icon: '🏛️', who: 'ICB Chief Executive', says: 'This is system thinking applied to AI safety.' },
+              { icon: '👨‍⚕️', who: 'Medical Director', says: 'Leading this positions us well nationally and protects us locally.' },
+              { icon: '💼', who: 'Vendors', says: 'A single ICS standard is easier for us than five different Trust requirements.' },
+              { icon: '⚖️', who: 'MHRA', says: 'The shared surveillance model is one we would like to see replicated.' }
+            ],
+            event: null,
+            regUpdate: { dcb129: { status: 'green', state: 'ICS standard adopted' }, dcb160: { status: 'green', state: 'Compliant' }, mhra: { status: 'green', state: 'Commended' } }
+          }
+        ]
+      }
+    ],
+    learning: [
+      { tag: 'Patient Safety', tagCls: 'risk', title: 'Safety cases must precede, not follow, incidents', body: 'DCB0129 requires hazard identification before deployment. When you encountered the sepsis alert crisis, the absence of pre-defined thresholds for what constitutes a safety failure created ambiguity that benefited the vendor, not the patient.' },
+      { tag: 'Human Factors', tagCls: '', title: 'Automation distrust is as dangerous as automation bias', body: 'Clinical AI failure often occurs not because the AI is wrong, but because the human-AI interaction layer breaks down. Alarm fatigue, dismissal culture, and low psychological safety around escalation are human factors risks no algorithm can solve.' },
+      { tag: 'DCB0129/0160', tagCls: 'reg', title: 'Contractual compliance ≠ regulatory compliance', body: 'Vendors can meet contractual KPIs while the AI creates patient harm. DCB0129 places the safety case obligation on the deploying organisation — not the vendor. Accountability stays with you, regardless of contract terms.' },
+      { tag: 'Co-design', tagCls: '', title: 'Clinical adoption is a cultural, not a technical, problem', body: 'Training completion rates and interface quality are necessary but not sufficient. Sustainable AI adoption requires clinical ownership. Co-design approaches consistently outperform mandated rollouts on both safety and trust metrics.' },
+      { tag: 'Systems Thinking', tagCls: 'eth', title: 'Every safety decision ripples across the system', body: 'Your decisions affected vendor relations, staff morale, media coverage, regulatory posture, and finances simultaneously. Clinical AI governance requires literacy across all these domains — not just clinical risk management.' },
+      { tag: 'Post-Market Surveillance', tagCls: 'reg', title: 'Deployment is the start of governance, not the end', body: 'SepsisAlert passed pre-deployment validation but developed safety-critical failure modes in the real clinical environment. Specificity drift, alert fatigue, and dismissal culture must be contractually and clinically monitored after go-live.' }
+    ]
+  },
+
+  /* ──────────────────────────────────────────────────
+     SCENARIO 02 — CHIEF NURSING INFORMATION OFFICER
+  ────────────────────────────────────────────────── */
+  cnio: {
+    id: 'cnio',
+    name: 'Chief Nursing Information Officer',
+    icon: '📝',
+    title: 'The Adoption Gap',
+    meta: ['Q3 · Acute Trust', '4 Decision Rounds', 'NMC · RCN · Topol Review', 'Workforce & culture focus'],
+    role: 'Your Role: Chief Nursing Information Officer',
+    briefIntro: [
+      'Six months ago, your Trust deployed <strong>Nightingale Notes</strong> — an ambient AI documentation tool for nursing assessments. The business case promised 90 minutes saved per shift on documentation, freeing nurses for direct care.',
+      'Adoption has stalled at <strong>32% against an 80% Board target</strong>. The vendor blames "change management". The frontline blames "another digital thing done to us, not with us". The Board reviews the programme at the end of Q3 — six weeks away.',
+      'A Florence Nightingale Foundation fellow has just published a piece in <em>Nursing Standard</em> arguing AVT tools risk eroding the therapeutic narrative skills that define expert practice. The RCN regional officer has formally requested a meeting.'
+    ],
+    briefAlert: 'The CFO is briefing the Board that the £1.2m investment is "underperforming". The CNO has asked for your recommendation by Friday.',
+    briefData: [
+      { label: 'Adoption Rate', value: '32%', cls: 'down', sub: 'Against 80% target' },
+      { label: 'Time Saved (Users)', value: '47 min', cls: 'up', sub: 'Per shift, self-reported' },
+      { label: 'Staff Confidence', value: '41%', cls: 'warn', sub: 'Trust AI for clinical docs' },
+      { label: 'Investment', value: '£1.2m', cls: '', sub: '3-year contract' }
+    ],
+    startMetrics: { safety: 75, trust: 42, innovation: 65, finance: 55 },
+    stakeholders: [
+      { id: 'nurses',  icon: '👩‍⚕️', name: 'Frontline Nurses', status: 'Mixed feelings. Tired of pilots.' },
+      { id: 'cno',     icon: '👩‍💼', name: 'Chief Nursing Officer', status: 'Wants adoption — and credibility.' },
+      { id: 'rcn',     icon: '🏛️', name: 'RCN Regional Officer', status: 'Requesting formal meeting.' },
+      { id: 'vendor',  icon: '💼', name: 'Vendor (Lumen Health)', status: 'Eager to expand. Defensive on adoption data.' },
+      { id: 'board',   icon: '📊', name: 'Trust Board', status: 'Watching ROI. Q3 review imminent.' }
+    ],
+    regulatory: [
+      { id: 'dcb129', name: 'DCB0129',  status: 'green', state: 'Filed at deployment' },
+      { id: 'dcb160', name: 'DCB0160',  status: 'amber', state: 'Live monitoring' },
+      { id: 'dtac',   name: 'DTAC',     status: 'green', state: 'Compliant' },
+      { id: 'nmc',    name: 'NMC Code', status: 'amber', state: 'Professional risk flagged' }
+    ],
+    rounds: [
+      {
+        title: 'Round 1 · Diagnosing the Gap',
+        situation: `Before recommending action, you need to know <strong>why</strong> adoption has stalled. The vendor sends weekly engagement dashboards showing the same 32% figure. Three competing explanations are circulating: workflow misfit, professional identity threat, and "another top-down digital thing".<br><br>You have two weeks before the CNO needs a position paper. The Digital Director suggests sending a survey. The new ward sister on Acute Medical Unit suggests you "come up to the ward and watch what happens at handover".`,
+        options: [
+          {
+            id: 'A',
+            title: 'Commission a rapid mixed-methods enquiry',
+            desc: 'Two weeks. Ethnographic observation across 4 wards plus quantitative usage analysis. NMC and RCN representation on the steering group.',
+            deltas: { safety: 8, trust: 15, innovation: 6, finance: -8 },
+            type: 'good',
+            narrative: 'You commission the enquiry with a clinical academic from the local university nursing school. Observers find that night-shift nurses prefer the tool but day-shift staff feel it interrupts handover ritual. The vendor\'s assumption that "free text dictation = faster documentation" is wrong — nurses use documentation as a thinking process, not just a recording one. The findings are uncomfortable for the vendor but rich for redesign. RCN appreciates being at the table from the start.',
+            reactions: [
+              { icon: '👩‍⚕️', who: 'Ward Sister, AMU', says: 'Someone finally came and watched what we actually do. That changes things.' },
+              { icon: '🏛️', who: 'RCN Regional Officer', says: 'Steering group representation matters. We will engage constructively.' },
+              { icon: '💼', who: 'Lumen Health', says: 'We share concerns about the enquiry scope. Our product is performing to specification.' },
+              { icon: '👩‍💼', who: 'CNO', says: 'You are buying credibility, which we need more than a quick number.' }
+            ],
+            event: null,
+            regUpdate: { nmc: { status: 'green', state: 'Engaged with enquiry' } }
+          },
+          {
+            id: 'B',
+            title: 'Mandate use through e-roster',
+            desc: 'Make Nightingale Notes the default documentation route. Lock the alternative paper-based workflow behind escalation approval.',
+            deltas: { safety: -3, trust: -22, innovation: 5, finance: 8 },
+            type: 'bad',
+            narrative: 'Adoption jumps to 71% in week one. By week three it collapses to 38% as nurses develop workarounds, write paper notes "as backup", and document twice. Two near-miss incidents are reported where dictation transcription errors entered formal records. An RCN safety bulletin is issued. The CNO is called to explain the policy to the Director of Nursing & Midwifery Education.',
+            reactions: [
+              { icon: '🏛️', who: 'RCN Regional Officer', says: 'This is the opposite of what professional regulation looks like. We are escalating.' },
+              { icon: '👩‍⚕️', who: 'Frontline Nurses', says: 'So they decided we cannot be trusted with our own documentation. Brilliant.' },
+              { icon: '👩‍💼', who: 'CNO', says: 'This was a misjudgement. I am hearing from RCN at national level now.' },
+              { icon: '⚖️', who: 'NMC', says: 'Professional accountability for documentation rests with the nurse, not the system. Be careful.' }
+            ],
+            event: { title: 'Double-Documentation Detected', body: 'Audit reveals 23% of nurses are documenting both on Nightingale Notes and on paper as a personal safety net. Total documentation time has increased, not decreased. The business case is unravelling publicly.' },
+            regUpdate: { nmc: { status: 'red', state: 'Escalation under review' }, dcb160: { status: 'red', state: 'Risk profile worsened' } }
+          },
+          {
+            id: 'C',
+            title: 'Run a vendor-led adoption sprint',
+            desc: 'Accept the vendor\'s offer of a 6-week "engagement accelerator" with their customer success team embedded.',
+            deltas: { safety: 0, trust: -8, innovation: 8, finance: 3 },
+            type: 'mixed',
+            narrative: 'The vendor team is professional and produces a slick adoption playbook focused on champion videos and gamified leaderboards. Adoption rises to 41%. But the playbook does not address the deeper professional identity questions raised by frontline staff. Nurses describe it as "sales energy wrapped in a lanyard". RCN remains unimpressed. The data is good for a vendor case study; it does not move the dial on the underlying culture.',
+            reactions: [
+              { icon: '💼', who: 'Lumen Health', says: 'Excellent progress. We will write this up as a case study for our customer summit.' },
+              { icon: '👩‍⚕️', who: 'Frontline Nurses', says: 'They are nice. They are also not nurses. It shows.' },
+              { icon: '🏛️', who: 'RCN Regional Officer', says: 'Engagement marketing is not engagement. We are still requesting that meeting.' },
+              { icon: '👩‍💼', who: 'CNO', says: 'The number moved but I am not sure we learned anything.' }
+            ],
+            event: null,
+            regUpdate: {}
+          }
+        ]
+      },
+      {
+        title: 'Round 2 · The Deskilling Question',
+        situation: `The <em>Nursing Standard</em> piece on therapeutic narrative skills has gone wider than expected. A senior charge nurse forwards it to the whole Trust nursing leadership group with the comment: <em>"This is what we have been trying to say."</em><br><br>You agree with the central concern: nursing documentation is a thinking artefact, not just a record. But you also see real benefit in the tool for tired nurses on long shifts. The CNO asks: <strong>"What is our professional position?"</strong>`,
+        options: [
+          {
+            id: 'A',
+            title: 'Co-produce an NMC-aligned competency framework',
+            desc: 'Work with NMC, RCN, and frontline nurses to articulate which documentation skills must remain human-led, and when AI assistance is appropriate.',
+            deltas: { safety: 14, trust: 22, innovation: 8, finance: -6 },
+            type: 'good',
+            narrative: 'Eight weeks of structured co-production produce a framework that distinguishes three tiers: skills always nurse-authored (assessments requiring clinical judgement), skills AI-assisted with nurse verification (routine observations), and skills AI-drafted with nurse approval (admin communications). NMC endorse the framework. The Florence Nightingale Foundation cites it as best practice. Nurses describe feeling, for the first time, that "digital is being designed around our profession, not over it".',
+            reactions: [
+              { icon: '⚖️', who: 'NMC', says: 'This is what professional regulation in the AI era should look like.' },
+              { icon: '🏛️', who: 'RCN Regional Officer', says: 'We will champion this nationally.' },
+              { icon: '👩‍⚕️', who: 'Frontline Nurses', says: 'Finally — a framework that recognises our judgement matters.' },
+              { icon: '👩‍💼', who: 'CNO', says: 'You have given me something I can defend at any forum in the country.' }
+            ],
+            event: null,
+            regUpdate: { nmc: { status: 'green', state: 'Framework endorsed' } }
+          },
+          {
+            id: 'B',
+            title: 'Defer to vendor training materials',
+            desc: 'Roll out the vendor\'s "AI for Nurses" e-learning module. 90 minutes mandatory. Track completion.',
+            deltas: { safety: 0, trust: -10, innovation: 5, finance: 4 },
+            type: 'mixed',
+            narrative: 'Completion reaches 94% (mandatory works). Post-training surveys show 68% of nurses found the content "patronising" and 52% felt their concerns were not represented. A junior nurse posts a thread on social: "90 minutes of being told what AI is by a company selling it to us." The deskilling question is unaddressed. The vendor is happy with the metric.',
+            reactions: [
+              { icon: '💼', who: 'Lumen Health', says: '94% completion. Excellent uptake.' },
+              { icon: '👩‍⚕️', who: 'Frontline Nurses', says: 'Patronising. None of our real concerns were addressed.' },
+              { icon: '🏛️', who: 'RCN Regional Officer', says: 'Vendor-authored education is a conflict of interest. Why was this not co-produced?' },
+              { icon: '👩‍💼', who: 'CNO', says: 'The CNO at our peer Trust has just asked me how we got it so wrong.' }
+            ],
+            event: null,
+            regUpdate: { nmc: { status: 'amber', state: 'Professional concern unresolved' } }
+          },
+          {
+            id: 'C',
+            title: 'Pilot deliberate AI-free shifts',
+            desc: 'On two wards, designate one shift per week as "narrative documentation only" — no AI tool — to maintain core competency.',
+            deltas: { safety: 10, trust: 12, innovation: 4, finance: -10 },
+            type: 'good',
+            narrative: 'The AI-free shifts initially feel novel, then become formative. Senior nurses use them to coach juniors on assessment narrative. The vendor objects ("This undermines our value proposition"). The pilot generates rich qualitative data on what nursing thinking actually looks like when documented in full. It becomes the empirical backbone for a later national competency framework.',
+            reactions: [
+              { icon: '👩‍⚕️', who: 'Senior Nurses', says: 'These shifts have become our best teaching opportunity in years.' },
+              { icon: '💼', who: 'Lumen Health', says: 'This undermines the case for our product. We need to discuss.' },
+              { icon: '🏛️', who: 'RCN Regional Officer', says: 'Innovative, professionally grounded. We support this approach.' },
+              { icon: '👩‍💼', who: 'CNO', says: 'You have created a research opportunity that goes well beyond this Trust.' }
+            ],
+            event: null,
+            regUpdate: { nmc: { status: 'green', state: 'Competency maintained' } }
+          }
+        ]
+      },
+      {
+        title: 'Round 3 · The ROI Question',
+        situation: `Three weeks to the Board review. The CFO has prepared a paper titled <em>"Nightingale Notes: A £1.2m Investment Under Review"</em>. Her analysis: at 32% adoption, the actual time saved per shift across the workforce is closer to 15 minutes than the promised 90. She projects a 7-year payback rather than the contracted 2.<br><br>The CNO asks for your recommended counter-position. The Digital Director says: "Just commission a time-and-motion study. Give them the number they want." Your instinct says the framing is wrong.`,
+        alert: 'Whatever you recommend will define how the Trust talks about AI ROI for the next three years.',
+        options: [
+          {
+            id: 'A',
+            title: 'Reframe ROI around safety, retention, and quality',
+            desc: 'Argue that "minutes saved" is the wrong primary metric for clinical AI. Reframe around documentation quality, near-miss reduction, and nursing retention.',
+            deltas: { safety: 12, trust: 14, innovation: 10, finance: -3 },
+            type: 'good',
+            narrative: 'Your paper to the Board argues, with evidence, that nursing AI tools fail when measured purely on productivity because they ignore the relational and cognitive work of nursing. You present three alternative metrics: documentation quality (audit-rated), near-miss reduction, and nurse retention at six months. The CFO pushes back but the Chair sides with you. The Board approves a revised KPI set. NHS England later cites the reframing in national guidance on AI evaluation in nursing.',
+            reactions: [
+              { icon: '📊', who: 'Trust Chair', says: 'You have given the Board a more honest set of numbers. That is what we needed.' },
+              { icon: '💰', who: 'Trust CFO', says: 'I do not entirely agree, but the case is well-made. Let us evaluate over 12 months.' },
+              { icon: '👩‍💼', who: 'CNO', says: 'You have just protected nursing leadership influence in this Trust for years.' },
+              { icon: '🏛️', who: 'NHS England', says: 'Reframing of ROI cited in national AI evaluation guidance.' }
+            ],
+            event: null,
+            regUpdate: {}
+          },
+          {
+            id: 'B',
+            title: 'Commission the time-and-motion study',
+            desc: 'Give the CFO the productivity number she wants. Run a four-week structured observation study.',
+            deltas: { safety: 0, trust: -6, innovation: 3, finance: 8 },
+            type: 'mixed',
+            narrative: 'The study returns a figure of 23 minutes saved per shift across the workforce. Better than the CFO\'s 15, worse than the contracted 90. The number is defensible but the framing entrenches the idea that nursing AI is about productivity. Two years later, when a more sophisticated tool comes to market, the Trust struggles to evaluate it because its evaluation infrastructure is locked to time-and-motion metrics.',
+            reactions: [
+              { icon: '💰', who: 'Trust CFO', says: 'Useful data. The contract value still does not stack up.' },
+              { icon: '👩‍⚕️', who: 'Frontline Nurses', says: 'They are timing us with stopwatches now. This is going well.' },
+              { icon: '👩‍💼', who: 'CNO', says: 'You gave the CFO what she asked for. I wish you had given us what we needed.' },
+              { icon: '💼', who: 'Lumen Health', says: 'A defensible study. We will reference it in future tenders.' }
+            ],
+            event: null,
+            regUpdate: {}
+          },
+          {
+            id: 'C',
+            title: 'Recommend pausing the rollout',
+            desc: 'Advise the Board to pause Nightingale Notes for six months. Reassess once the competency framework matures.',
+            deltas: { safety: 5, trust: 4, innovation: -18, finance: -15 },
+            type: 'mixed',
+            narrative: 'The Board accepts the pause but it is professionally costly for you. The CFO triggers a contractual review with the vendor. The Digital Director is publicly frustrated. While the pause is professionally defensible, it creates a six-month hole in the Trust\'s digital nursing portfolio and you spend that time defending the decision in forums you would rather not be in. The reframing argument you could have made never enters the public record.',
+            reactions: [
+              { icon: '💰', who: 'Trust CFO', says: 'The pause may end up costing more than the deployment. The contract penalty is significant.' },
+              { icon: '👩‍⚕️', who: 'Frontline Nurses', says: 'At least we feel heard. Was it the right time though?' },
+              { icon: '💼', who: 'Lumen Health', says: 'Pause clauses trigger renegotiation. Our legal team will be in touch.' },
+              { icon: '👩‍💼', who: 'CNO', says: 'Career-defining call. I support you, but the politics will be difficult.' }
+            ],
+            event: { title: 'Contract Penalty Triggered', body: 'The pause activates a £180,000 minimum-usage clause in the Lumen contract. The Trust must absorb the cost or renegotiate from a weakened position.' },
+            regUpdate: {}
+          }
+        ]
+      },
+      {
+        title: 'Round 4 · The Strategic Path',
+        situation: `Six months later. The Board reviews three strategic options for the Trust\'s nursing AI programme. Your recommendation will shape investment for three years and is being closely watched by peer CNIOs. The CNO has briefed the Chair: <em>"Listen to what our CNIO says — she has earned this."</em>`,
+        alert: 'NHS England has invited the Trust to submit its approach as a candidate exemplar in their national AI Nursing Framework. Your recommendation becomes the submission.',
+        options: [
+          {
+            id: 'A',
+            title: 'Scale up with mandatory adoption targets',
+            desc: 'Push adoption to 90%. Tie ward-level performance reviews to AI tool usage. Renew and expand vendor contract.',
+            deltas: { safety: -8, trust: -22, innovation: 14, finance: 10 },
+            type: 'bad',
+            narrative: 'You hit 88% adoption within six months — through pressure rather than persuasion. Three RCN safety bulletins follow. A respected ward manager resigns publicly with a viral letter citing the AI mandate as her reason. Two nurses are referred to NMC fitness-to-practise after documentation incidents linked to over-reliance on the tool. The Trust is named in a Nursing Times investigation. The £1.2m investment has become a national case study in how not to do clinical AI adoption.',
+            reactions: [
+              { icon: '🏛️', who: 'RCN Regional Officer', says: 'You have set nursing professional autonomy back by years.' },
+              { icon: '⚖️', who: 'NMC', says: 'Two fitness-to-practise referrals linked to tool over-reliance. This requires urgent review.' },
+              { icon: '📰', who: 'Nursing Times', says: 'NHS Trust\'s AI mandate sparks resignation and union escalation.' },
+              { icon: '👩‍💼', who: 'CNO', says: 'I cannot defend this. I am sorry.' }
+            ],
+            event: { title: 'NMC Inquiry Opened', body: 'NMC have written to the Trust formally requesting all documentation linking the AI mandate to the two fitness-to-practise cases. Your safety case will be central to the inquiry.' },
+            regUpdate: { nmc: { status: 'red', state: 'Inquiry opened' }, dcb160: { status: 'red', state: 'Breach review' } }
+          },
+          {
+            id: 'B',
+            title: 'Phase to opt-in with deep clinical involvement',
+            desc: 'Make the tool opt-in. Build the NMC-aligned competency framework into preceptorship. Accept lower adoption as the price of cultural sustainability.',
+            deltas: { safety: 14, trust: 22, innovation: 6, finance: -8 },
+            type: 'good',
+            narrative: 'Adoption settles at 58% — well below the Board\'s original target, but uptake is now driven by genuine workflow fit. Nurses who use the tool report higher job satisfaction. Those who do not are not penalised. Documentation quality scores rise across both groups, because the competency framework lifts the whole profession. Six months later, the model is featured in a BMJ Leader article. Two peer Trusts adopt your approach.',
+            reactions: [
+              { icon: '👩‍⚕️', who: 'Frontline Nurses', says: 'You actually listened. That is rare.' },
+              { icon: '🏛️', who: 'RCN Regional Officer', says: 'A landmark example of how to integrate AI with professional values intact.' },
+              { icon: '👩‍💼', who: 'CNO', says: 'You have positioned this Trust as a national leader. Genuinely well done.' },
+              { icon: '🏛️', who: 'NHS England', says: 'Approach selected as candidate exemplar in national AI Nursing Framework.' }
+            ],
+            event: null,
+            regUpdate: { nmc: { status: 'green', state: 'Framework cited nationally' } }
+          },
+          {
+            id: 'C',
+            title: 'Propose a system-wide ICS evaluation programme',
+            desc: 'Lead an ICS-wide, academically-evaluated programme. Pool data across Trusts. Generate the evidence the sector needs.',
+            deltas: { safety: 12, trust: 14, innovation: 18, finance: 4 },
+            type: 'good',
+            narrative: 'The ICS programme takes 12 months to set up but produces the first robust mixed-methods evaluation of nursing AI at scale in the NHS. It informs NICE technology appraisal methods. You are appointed ICS Chief Nursing Informatics Lead. The Trust\'s standing in national nursing AI policy is permanently elevated. The downside: the work is exhausting and you spend more time in NHSE meetings than you wanted.',
+            reactions: [
+              { icon: '🏛️', who: 'ICB Chief Executive', says: 'This is what regional nursing leadership should look like.' },
+              { icon: '🎓', who: 'University Nursing Dean', says: 'The methodology you have established will shape doctoral programmes for years.' },
+              { icon: '🏛️', who: 'NHS England', says: 'Programme adopted as the national methodology for nursing AI evaluation.' },
+              { icon: '👩‍💼', who: 'CNO', says: 'You have built something that outlasts any of us.' }
+            ],
+            event: null,
+            regUpdate: { nmc: { status: 'green', state: 'National evaluation underway' } }
+          }
+        ]
+      }
+    ],
+    learning: [
+      { tag: 'Co-production', tagCls: '', title: 'Adoption is not a marketing problem', body: 'Stalled clinical AI adoption is almost never solved by better communication, gamification, or mandates. It is solved by understanding the work as it is actually done, and designing for the cognitive and relational reality of clinical practice — not the vendor\'s idealised workflow.' },
+      { tag: 'NMC / Regulation', tagCls: 'reg', title: 'Professional accountability does not delegate to tools', body: 'The NMC Code places documentation accountability on the nurse. Trusts that mandate AI tools without addressing professional autonomy create a regulatory hazard for individual practitioners — and a fitness-to-practise risk that the Trust ultimately owns.' },
+      { tag: 'Workforce', tagCls: 'eth', title: 'Deskilling is a slow safety risk', body: 'Therapeutic narrative skills, clinical reasoning expressed in writing, and assessment artistry are nursing competencies that erode silently when displaced by AI. The Topol Review warned that workforce development must precede technology deployment. This scenario reflects what happens when it does not.' },
+      { tag: 'ROI Framing', tagCls: '', title: 'Productivity is the wrong primary metric for nursing AI', body: 'Time-and-motion ROI models incentivise the procurement of tools that may erode clinical quality. Sustainable AI evaluation in nursing must include safety, quality, retention, and professional confidence — not just minutes saved.' },
+      { tag: 'Co-design', tagCls: '', title: 'RCN and NMC are partners, not stakeholders to manage', body: 'Engaging professional bodies early — at design rather than rollout — converts a political risk into a strategic asset. Across this scenario, the most durable outcomes consistently came from co-production with RCN and NMC alignment.' },
+      { tag: 'System Leadership', tagCls: 'reg', title: 'CNIO influence extends beyond the Trust', body: 'The decisions you make in a single Trust shape national nursing AI policy. ICS-level and NHSE-level decision-makers watch how senior nursing informatics leaders frame trade-offs. Your evidence is their evidence.' }
+    ]
+  }
 };
 
-// ══════════════════════════════════════════════════════
-// SCENARIO DATA
-// ══════════════════════════════════════════════════════
-const ROUNDS = [
-  {
-    id: 1,
-    title: "Round 1 of 4 · The First Decision",
-    situation: `Amara's informal review has flagged 47 cases. You have read through her analysis. It is methodologically limited — a single clinician, unblinded, no comparator group — but her clinical reasoning is <strong>credible and specific</strong>. Three of the cases involve documented delays to first contact that exceeded the NHS standard.<br><br>The vendor has dismissed the concern via email. The CEO does not know. You must decide how to respond to Amara and what investigation, if any, to initiate.`,
-    alertText: `<span class="warn-label">⚠ CxIO Dilemma</span>Investigating formally means slowing the AI programme the board is proud of. Not investigating means risking harm to a group already underserved by mental health services.`,
-    alertType: "warn",
-    options: [
-      {
-        id: "A",
-        title: "Commission a formal equity audit",
-        desc: "Instruct your clinical informatics team to conduct a demographically stratified analysis of PathwayIQ outputs across the full patient dataset. Engage the vendor formally. Brief the CEO.",
-        impacts: [
-          { label: "+18 Safety", cls: "pos" },
-          { label: "+22 Equity", cls: "pur" },
-          { label: "−10 Adoption", cls: "neg" },
-          { label: "+15 Influence", cls: "pos" }
-        ],
-        deltas: { safety: 18, equity: 22, adoption: -10, influence: 15 },
-        type: "good",
-        narrative: "The audit takes six weeks. The findings are unambiguous: PathwayIQ scores Black male patients aged 16–35 an average of 1.4 priority bands lower than clinical presentation predicts, across 312 cases over 8 months. The model was trained on a dataset that underrepresented first-episode presentations in this demographic — because those patients historically accessed crisis care, not EIP. The AI has learned, and reinforced, the inequity it was meant to solve. You brief the CEO. She is shaken. The vendor's legal team contacts yours. Amara is formally recognised for raising the concern.",
-        reactions: [
-          { icon: "👩🏾‍⚕️", who: "Amara Osei", says: "I was terrified to raise this. The fact that it was taken seriously matters more than I can say." },
-          { icon: "🏛️", who: "Trust CEO", says: "This is deeply concerning. We need to notify NHSE and consider what we owe those patients." },
-          { icon: "💼", who: "PathwayIQ Vendor", says: "We dispute the methodology of your audit. Our validation study remains valid." },
-          { icon: "⚖️", who: "ICO", says: "You are advised to consider your obligations under UK GDPR Article 22 regarding automated decision-making affecting protected characteristics." }
-        ],
-        event: null
-      },
-      {
-        id: "B",
-        title: "Request a vendor-led review",
-        desc: "Write formally to PathwayIQ requesting they conduct an internal performance review by protected characteristic. Give them 30 days to respond.",
-        impacts: [
-          { label: "+5 Safety", cls: "pos" },
-          { label: "+8 Equity", cls: "pur" },
-          { label: "+3 Adoption", cls: "pos" },
-          { label: "−5 Influence", cls: "neg" }
-        ],
-        deltas: { safety: 5, equity: 8, adoption: 3, influence: -5 },
-        type: "mixed",
-        narrative: "The vendor responds after 28 days with a 4-page summary concluding their model 'shows no statistically significant differential impact across protected characteristics.' The methodology is opaque. They have not shared their training data, the comparator group used, or the statistical test applied. You cannot verify the claim. Amara reads the response and feels dismissed. She contacts the Freedom to Speak Up Guardian.",
-        reactions: [
-          { icon: "💼", who: "PathwayIQ Vendor", says: "Our internal review is complete. No differential impact was found. We consider the matter closed." },
-          { icon: "👩🏾‍⚕️", who: "Amara Osei", says: "A vendor reviewing their own bias concern. I don't think I can leave this here." },
-          { icon: "🏛️", who: "Trust CEO", says: "The vendor says it's fine. Is that enough for us?" },
-          { icon: "⚖️", who: "Freedom to Speak Up Guardian", says: "A formal concern has been raised. I will be in touch with you directly." }
-        ],
-        event: { title: "FTSU Concern Formally Logged", body: "Amara Osei has raised a formal Freedom to Speak Up concern. The FTSU Guardian is now required to investigate and report to the board. The matter is no longer informal. You will be asked to account for your response to the original concern." }
-      },
-      {
-        id: "C",
-        title: "Acknowledge and monitor — no formal action yet",
-        desc: "Thank Amara for raising the concern. Note it informally. Request that the clinical team log any further suspected cases. Review in 3 months.",
-        impacts: [
-          { label: "−5 Safety", cls: "neg" },
-          { label: "−15 Equity", cls: "neg" },
-          { label: "+5 Adoption", cls: "pos" },
-          { label: "−10 Influence", cls: "neg" }
-        ],
-        deltas: { safety: -5, equity: -15, adoption: 5, influence: -10 },
-        type: "bad",
-        narrative: "Over the following 6 weeks, three more patients experience delayed EIP access. Amara contacts a health equity advocacy organisation she is connected to through community work. They in turn contact NHS England's Health Inequalities team. The story reaches a trade journal. The headline: 'NHS Mental Health Trust ignored AI bias warning from frontline nurse.' The CEO calls you at 7am.",
-        reactions: [
-          { icon: "👩🏾‍⚕️", who: "Amara Osei", says: "I raised this in good faith. I expected leadership to at least look. I was wrong." },
-          { icon: "🏛️", who: "Trust CEO", says: "You were aware of this concern and took no formal action. Explain to me why." },
-          { icon: "📰", who: "HSJ", says: "'Trust ignored AI bias warning, nurse says' — frontpage digital edition." },
-          { icon: "👥", who: "Community Advocates", says: "This is exactly the pattern we warned about when the NHS said it would use AI to improve mental health equity." }
-        ],
-        event: { title: "Media Escalation", body: "The health equity concern has reached NHS England's Health Inequalities directorate. A formal inquiry into the Trust's AI governance processes has been opened. The CEO has requested an extraordinary board meeting." }
-      }
-    ]
-  },
-  {
-    id: 2,
-    title: "Round 2 of 4 · The Audit Findings",
-    situation: `The equity audit (or its equivalent) has concluded. The evidence is now clear: PathwayIQ has been producing lower priority scores for young Black men at first presentation. The gap is clinically significant in 22% of affected cases — meaning real patients experienced delayed care.<br><br>You must now decide what to do with the findings. The CEO has asked for a recommendation. The vendor's legal team is engaged. NHSE have been informally notified. Three options are on the table.`,
-    alertText: `<span class="alert-label">🔴 Legal Pressure</span>The vendor has sent a legal letter asserting that publication of the audit findings would constitute breach of commercial confidentiality. Your legal team says this claim is not straightforward.`,
-    alertType: "alert",
-    options: [
-      {
-        id: "A",
-        title: "Notify affected patients and NHSE — publish findings",
-        desc: "Proactively contact patients whose care may have been affected. Notify NHS England. Publish a summary of findings on the Trust's transparency portal. Engage the ICO regarding UK GDPR Article 22.",
-        impacts: [
-          { label: "+20 Safety", cls: "pos" },
-          { label: "+28 Equity", cls: "pur" },
-          { label: "−8 Adoption", cls: "neg" },
-          { label: "+20 Influence", cls: "pos" }
-        ],
-        deltas: { safety: 20, equity: 28, adoption: -8, influence: 20 },
-        type: "good",
-        narrative: "The notification process is difficult and distressing for some patients and families. A formal duty of candour process is initiated for three cases. The vendor threatens litigation but does not pursue it. NHSE commission a review of PathwayIQ's deployment across 14 other Trusts — discovering similar patterns in two. Your Trust is nationally recognised for the transparency of its response. A patient safety award follows. Amara is invited to co-author a journal paper on algorithmic equity in mental health.",
-        reactions: [
-          { icon: "👥", who: "Affected Patients", says: "We deserved to know this. It still hurts — but being told matters." },
-          { icon: "🏛️", who: "NHS England", says: "This is the standard we expect. We are reviewing deployment across the system." },
-          { icon: "💼", who: "PathwayIQ Vendor", says: "We strongly dispute the framing of these findings and reserve our legal position." },
-          { icon: "⚖️", who: "ICO", says: "The Trust's engagement with Article 22 obligations is noted as a model response." }
-        ],
-        event: null
-      },
-      {
-        id: "B",
-        title: "Suspend PathwayIQ and redesign the equity protocol",
-        desc: "Pause deployment. Work with the vendor contractually to retrain the model using a more equitable dataset. Re-deploy only once equity validation has been completed.",
-        impacts: [
-          { label: "+12 Safety", cls: "pos" },
-          { label: "+15 Equity", cls: "pur" },
-          { label: "−20 Adoption", cls: "neg" },
-          { label: "+8 Influence", cls: "pos" }
-        ],
-        deltas: { safety: 12, equity: 15, adoption: -20, influence: 8 },
-        type: "mixed",
-        narrative: "The suspension causes immediate disruption. RTT performance drops back toward pre-AI levels within 6 weeks. The board is alarmed. The vendor disputes the retraining requirement and the timeline slips. Nine months later, a revised model is deployed with an equity validation layer. Performance recovers. The gap is eliminated. The process was painful and expensive but the outcome is clinically and ethically sound.",
-        reactions: [
-          { icon: "🏛️", who: "Trust CEO", says: "Nine months back to manual. The board is unhappy but I support the principle." },
-          { icon: "👩🏾‍⚕️", who: "Amara Osei", says: "This is the right thing. It was never about stopping AI — it was about making it actually fair." },
-          { icon: "💼", who: "PathwayIQ Vendor", says: "Retraining will take 9-12 months and is not covered under the current contract." },
-          { icon: "👩‍⚕️", who: "Clinical Staff", says: "We're back to paper processes through winter. This is going to be hard." }
-        ],
-        event: { title: "Winter Pressure Coincides with Suspension", body: "The suspension period overlaps with peak referral season. Two patients experience delayed EIP access during the manual interim period. The suspension decision is questioned publicly. A balance must be struck between AI equity and the harms of no AI at all." }
-      },
-      {
-        id: "C",
-        title: "Apply a manual equity override layer",
-        desc: "Keep PathwayIQ running. Implement a mandatory clinical review for all patients scoring low priority who are Black or Mixed ethnicity. A workaround, not a fix.",
-        impacts: [
-          { label: "+8 Safety", cls: "pos" },
-          { label: "+6 Equity", cls: "pur" },
-          { label: "+5 Adoption", cls: "pos" },
-          { label: "−12 Influence", cls: "neg" }
-        ],
-        deltas: { safety: 8, equity: 6, adoption: 5, influence: -12 },
-        type: "mixed",
-        narrative: "The override reduces harm in the short term but creates a new problem: you are now operating a system where clinical staff are required to apply different processes based on a patient's ethnicity. A specialist equality law firm advises this may itself raise Equality Act concerns depending on implementation. The ICO asks for a Data Protection Impact Assessment. The vendor notes that the override 'introduces human bias into a validated algorithm.' You have fixed the symptom without addressing the cause.",
-        reactions: [
-          { icon: "⚖️", who: "Equality Law Specialist", says: "A process that applies different clinical protocols based on ethnicity requires very careful legal framing to avoid its own discrimination risk." },
-          { icon: "💼", who: "PathwayIQ Vendor", says: "The introduction of a manual override layer compromises the integrity of the validated model." },
-          { icon: "👩‍⚕️", who: "Clinical Staff", says: "We're now running two different processes. Which one is clinically authoritative?" },
-          { icon: "⚖️", who: "ICO", says: "A DPIA is required for this modified processing arrangement within 28 days." }
-        ],
-        event: null
-      }
-    ]
-  },
-  {
-    id: 3,
-    title: "Round 3 of 4 · System Leadership",
-    situation: `You have been contacted by two neighbouring Trust CxIOs. They have heard about the PathwayIQ situation and want to understand whether they have the same problem — both Trusts use PathwayIQ or comparable products. NHS England's Health Inequalities directorate has also asked whether you would be willing to lead a system-wide algorithmic equity review for mental health AI across the ICS.<br><br>Meanwhile, a community mental health advocate — representing service user groups, many from Black and minoritised communities — has requested a meeting. They want to know what role the community should play in AI governance.`,
-    alertText: `<span class="warn-label">⚠ CxIO Dilemma</span>System leadership here is an opportunity. But it comes with accountability. If you lead and the ICS review finds widespread harm, you own the findings — and the response.`,
-    alertType: "warn",
-    options: [
-      {
-        id: "A",
-        title: "Lead an ICS-wide algorithmic equity review",
-        desc: "Accept NHS England's invitation. Commission a cross-Trust equity audit of mental health AI tools across the ICS. Co-produce the methodology with the community advocate.",
-        impacts: [
-          { label: "+10 Safety", cls: "pos" },
-          { label: "+18 Equity", cls: "pur" },
-          { label: "+5 Adoption", cls: "pos" },
-          { label: "+22 Influence", cls: "pos" }
-        ],
-        deltas: { safety: 10, equity: 18, adoption: 5, influence: 22 },
-        type: "good",
-        narrative: "The ICS review takes four months and examines seven AI tools across three Trusts. It finds equity concerns in three. A shared algorithmic equity standard emerges, co-produced with service users. NHS England funds a dedicated AI equity team. You are appointed as the ICS Clinical AI Ethics Lead — a new role created around your work. The community advocate becomes a standing member of the AI governance board. The work is cited in the NHS England AI framework update.",
-        reactions: [
-          { icon: "🏛️", who: "NHS England", says: "This is exactly the system-level thinking that was missing from NHS AI deployment. We want to fund this nationally." },
-          { icon: "👥", who: "Community Advocate", says: "Finally. We have been asking to be at this table since the first AI deployment. Not consulted — present." },
-          { icon: "👩🏾‍⚕️", who: "Amara Osei", says: "One informal caseload review became a national standard. I still can't quite believe it." },
-          { icon: "🏥", who: "Neighbouring Trust CxIO", says: "We needed someone to lead this. We'll follow your framework." }
-        ],
-        event: null
-      },
-      {
-        id: "B",
-        title: "Share your findings — decline the leadership role",
-        desc: "Provide your audit methodology and findings to neighbouring Trusts freely. Decline the NHS England invitation — your Trust needs your focus right now, not a system role.",
-        impacts: [
-          { label: "+5 Safety", cls: "pos" },
-          { label: "+8 Equity", cls: "pur" },
-          { label: "+8 Adoption", cls: "pos" },
-          { label: "−5 Influence", cls: "neg" }
-        ],
-        deltas: { safety: 5, equity: 8, adoption: 8, influence: -5 },
-        type: "mixed",
-        narrative: "A pragmatic call. Your Trust stabilises and internal adoption recovers. The neighbouring Trusts use your methodology but without consistent leadership, the ICS review stalls. NHS England commissions an external consultant instead — at significant cost — producing a report that is technically sound but lacks clinical credibility. The community advocate is not engaged. The opportunity for genuinely co-produced governance is missed.",
-        reactions: [
-          { icon: "🏛️", who: "NHS England", says: "We understand. The external review will proceed but we had hoped for your involvement." },
-          { icon: "👥", who: "Community Advocate", says: "The meeting was helpful. But without formal inclusion in the governance structure, I'm not sure how much changes." },
-          { icon: "🏥", who: "Neighbouring Trust CxIO", says: "We've used your framework. It's good. But the ICS consistency isn't there without coordination." },
-          { icon: "🏛️", who: "Trust CEO", says: "Sensible. Your first obligation is to this Trust." }
-        ],
-        event: null
-      },
-      {
-        id: "C",
-        title: "Establish a Community AI Ethics Panel at Trust level",
-        desc: "Focus at home. Create a formal service user and community panel to advise on AI deployment decisions at your Trust. Invite the community advocate to chair it.",
-        impacts: [
-          { label: "+8 Safety", cls: "pos" },
-          { label: "+20 Equity", cls: "pur" },
-          { label: "+10 Adoption", cls: "pos" },
-          { label: "+8 Influence", cls: "pos" }
-        ],
-        deltas: { safety: 8, equity: 20, adoption: 10, influence: 8 },
-        type: "good",
-        narrative: "The panel — called the 'Lived Experience AI Advisory Board' — meets quarterly. Its first act is to require plain-English summaries of all AI tools in the Trust's clinical pathway. Its second is to veto a new AI risk stratification tool that community members identify as replicating problematic risk factors used historically in mental health detention decisions. The panel becomes a nationally cited model. NHS England requests a site visit.",
-        reactions: [
-          { icon: "👥", who: "Community Advocate", says: "Being asked to chair, not just attend. That's the difference. That's co-production." },
-          { icon: "🏛️", who: "Trust CEO", says: "I was sceptical about how this would work in practice. I was wrong to be." },
-          { icon: "👩‍⚕️", who: "Clinical Staff", says: "The panel raised something about the risk tool that none of us had seen. Having that perspective is clinically valuable, not just ethically right." },
-          { icon: "🏛️", who: "NHS England", says: "Model for community AI governance. Requesting site visit to learn from your approach." }
-        ],
-        event: null
-      }
-    ]
-  },
-  {
-    id: 4,
-    title: "Round 4 of 4 · The Policy Moment",
-    situation: `You have been invited to give evidence to an NHS England policy working group reviewing the use of AI in mental health services. They are developing national guidance on algorithmic equity, procurement standards, and community governance for mental health AI.<br><br>Your experience with PathwayIQ — the bias finding, the response, and the system-level work — has given you a genuine evidence base. What you recommend will shape how the NHS approaches mental health AI equity for the next decade.<br><br>You have three positions you could advance.`,
-    alertText: `<span class="warn-label">⚠ CxIO Obligation</span>This is where your CxIO role extends beyond your Trust. The choices you make here have the potential — or failure — to protect future patients you will never meet.`,
-    alertType: "warn",
-    options: [
-      {
-        id: "A",
-        title: "Recommend mandatory pre-deployment equity validation",
-        desc: "Argue that no AI tool should be deployed in mental health services without a prospective equity validation study, stratified by ethnicity, age, gender, and deprivation. Vendors should bear the cost.",
-        impacts: [
-          { label: "+18 Safety", cls: "pos" },
-          { label: "+20 Equity", cls: "pur" },
-          { label: "−8 Adoption", cls: "neg" },
-          { label: "+18 Influence", cls: "pos" }
-        ],
-        deltas: { safety: 18, equity: 20, adoption: -8, influence: 18 },
-        type: "good",
-        narrative: "The recommendation is adopted into the NHS England Mental Health AI Procurement Framework. Several smaller vendors protest the cost burden — two withdraw products from the NHS market. This is initially seen as a loss but the products that remain are demonstrably more equitable. Five years later, the framework is cited in a Lancet paper as the most rigorous national standard for AI equity in healthcare.",
-        reactions: [
-          { icon: "🏛️", who: "NHS England Policy Lead", says: "This is the right standard. It will be hard to implement but we cannot set a lower bar." },
-          { icon: "💼", who: "AI Vendors", says: "The compliance cost is prohibitive for smaller innovators. This will reduce the market." },
-          { icon: "👥", who: "Community Advocate", says: "We have been asking for this since the first AI deployment. The NHS is finally listening." },
-          { icon: "⚖️", who: "CQC", says: "Equity validation will be incorporated into our inspection framework for digital mental health services." }
-        ],
-        event: null
-      },
-      {
-        id: "B",
-        title: "Recommend a lived experience co-design standard",
-        desc: "Argue that community and service user involvement must be mandatory — not optional — at every stage of mental health AI development, procurement, and governance.",
-        impacts: [
-          { label: "+10 Safety", cls: "pos" },
-          { label: "+25 Equity", cls: "pur" },
-          { label: "+8 Adoption", cls: "pos" },
-          { label: "+15 Influence", cls: "pos" }
-        ],
-        deltas: { safety: 10, equity: 25, adoption: 8, influence: 15 },
-        type: "good",
-        narrative: "The co-design standard transforms procurement processes nationally. Mental health Trusts are required to evidence community engagement before new AI tools receive sign-off. A national Lived Experience AI Advisory Network is established, paid and resourced. It identifies four equity concerns in nationally procured tools within 18 months — before harm occurs. The NHS credits this as the most consequential governance reform in mental health AI.",
-        reactions: [
-          { icon: "👥", who: "National Lived Experience Network", says: "Mandatory. Not consulted. Not informed after the fact. Mandatory. That word means everything." },
-          { icon: "🏛️", who: "NHS England", says: "This reframes AI governance in mental health from technical assurance to democratic accountability." },
-          { icon: "👩🏾‍⚕️", who: "Amara Osei", says: "This started with one nurse reviewing 47 cases. Now it is national policy. I still find it hard to believe." },
-          { icon: "🌍", who: "WHO Digital Health Division", says: "The UK mental health AI co-design standard is being reviewed as a global model." }
-        ],
-        event: null
-      },
-      {
-        id: "C",
-        title: "Recommend a post-market equity surveillance requirement",
-        desc: "Argue for mandatory ongoing monitoring of AI tools in deployment — reporting equity metrics by protected characteristic quarterly to NHSE and making results publicly available.",
-        impacts: [
-          { label: "+15 Safety", cls: "pos" },
-          { label: "+18 Equity", cls: "pur" },
-          { label: "+5 Adoption", cls: "pos" },
-          { label: "+12 Influence", cls: "pos" }
-        ],
-        deltas: { safety: 15, equity: 18, adoption: 5, influence: 12 },
-        type: "good",
-        narrative: "The post-market surveillance requirement is adopted as a condition of NHS AI Framework approval. Trusts submit quarterly equity dashboards. In the first year, two Trusts self-identify equity drift in deployed tools before harm escalates — a direct result of having the monitoring infrastructure. The transparency creates healthy pressure on vendors to maintain equitable performance. A national algorithmic equity data repository is established at NHSE.",
-        reactions: [
-          { icon: "🏛️", who: "NHS England", says: "Transparency is the foundation of trust. This requirement will drive equitable performance more effectively than any pre-deployment standard alone." },
-          { icon: "💼", who: "AI Vendors", says: "Quarterly public reporting is a significant burden, but we accept that equity performance must be demonstrable." },
-          { icon: "⚖️", who: "Patient Safety Commissioner", says: "This is the missing piece. Pre-deployment validation tells you what the AI can do. Post-market surveillance tells you what it actually does." },
-          { icon: "👥", who: "Community Groups", says: "Public dashboards mean we can hold the NHS to account without needing to be insiders. That matters." }
-        ],
-        event: null
-      }
-    ]
-  }
-];
+/* ═══════════════════════════════════════════════════════════════
+   GAME STATE
+═══════════════════════════════════════════════════════════════ */
 
-const LEARNING_POINTS = [
-  {
-    tag: "Algorithmic Equity",
-    tagCls: "eth",
-    title: "AI trained on biased data reproduces biased outcomes",
-    body: "PathwayIQ was trained on NHS data that underrepresented early-intervention presentations from Black and minoritised communities — because those patients historically accessed crisis care, not EIP. The AI learned historical inequity as if it were clinical truth. This is not a fringe risk: it is the default outcome when equity is not explicitly built into training data and validation."
-  },
-  {
-    tag: "Speak Up Culture",
-    tagCls: "",
-    title: "Frontline staff are your most important AI safety signal",
-    body: "Amara Osei's informal review of 47 cases identified a systemic equity failure that no automated monitoring caught. The CxIO's first obligation was to take that signal seriously. Organisations that create psychological safety around AI concerns will detect problems earlier and at lower cost than those that don't."
-  },
-  {
-    tag: "UK GDPR Art.22",
-    tagCls: "reg",
-    title: "Automated prioritisation affecting protected characteristics requires legal review",
-    body: "PathwayIQ's outputs were being used to determine clinical priority without consistent human review. This falls within the scope of UK GDPR Article 22 — automated decision-making with significant effect — and additionally engages the Public Sector Equality Duty under the Equality Act 2010. These are not optional considerations for a CxIO: they are legal obligations."
-  },
-  {
-    tag: "Community Governance",
-    tagCls: "",
-    title: "Co-production is not consultation. It changes the outcome.",
-    body: "Where community and lived experience voices were genuinely embedded in AI governance — not informed after decisions, not consulted in token focus groups — they identified risks that clinical and technical teams missed. The Lived Experience AI Advisory Board vetoed a risk stratification tool that reproduced historically discriminatory criteria. Co-production is a safety mechanism, not a PR exercise."
-  },
-  {
-    tag: "System Leadership",
-    tagCls: "safety",
-    title: "The CxIO's accountability extends beyond their own organisation",
-    body: "The CxIO role carries influence at system level. When a Trust identifies an AI equity failure, the obligation to share findings, shape procurement standards, and influence national guidance is not optional. The harm PathwayIQ caused was not unique to one Trust — and the response could not be contained to one Trust either."
-  },
-  {
-    tag: "Post-Market Surveillance",
-    tagCls: "reg",
-    title: "Equity drift can occur after a clean pre-deployment validation",
-    body: "PathwayIQ passed pre-deployment validation. The equity failure emerged at scale, in the real clinical environment, over months. This is characteristic of algorithmic performance drift — particularly when a model encounters patient cohorts underrepresented in its training data. Ongoing equity monitoring is not a quality assurance nicety. It is clinically essential."
-  }
-];
+let state = {
+  scenarioId: null,
+  scenario: null,
+  round: 1,
+  totalRounds: 4,
+  metrics: {},
+  initialMetrics: {},
+  selectedOption: null,
+  decisionLog: [],
+  stakeholders: [],
+  regulatory: []
+};
 
-// ══════════════════════════════════════════════════════
-// ENGINE
-// ══════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   UTILITY
+═══════════════════════════════════════════════════════════════ */
+
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
-function startGame() {
-  state = {
-    round: 1,
-    totalRounds: 4,
-    metrics: { safety: 62, equity: 40, adoption: 71, influence: 55 },
-    initial: { safety: 62, equity: 40, adoption: 71, influence: 55 },
-    decisionLog: [],
-    selectedOption: null
-  };
-  renderRound();
-  showScreen('screen-game');
-}
-
-function resetGame() { startGame(); }
 
 function updateMetric(key, delta) {
   state.metrics[key] = Math.min(100, Math.max(0, state.metrics[key] + delta));
@@ -1407,23 +1857,106 @@ function updateMetric(key, delta) {
   if (bar) bar.style.width = Math.round(state.metrics[key]) + '%';
 }
 
-function formatDelta(val) {
-  if (val > 0) return { text: `+${val}`, cls: "pos" };
-  if (val < 0) return { text: `${val}`, cls: "neg" };
-  return { text: "—", cls: "neu" };
+function setMetric(key, value) {
+  state.metrics[key] = value;
+  const el = document.getElementById(`m-${key}`);
+  const bar = document.getElementById(`bar-${key}`);
+  if (el) el.textContent = Math.round(value);
+  if (bar) bar.style.width = Math.round(value) + '%';
 }
 
+function formatDelta(val) {
+  if (val > 0) return { text: `+${val}`, cls: 'pos' };
+  if (val < 0) return { text: `${val}`, cls: 'neg' };
+  return { text: '—', cls: 'neu' };
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCENARIO START
+═══════════════════════════════════════════════════════════════ */
+
+function startScenario(id) {
+  const scenario = SCENARIOS[id];
+  if (!scenario) return;
+
+  state.scenarioId = id;
+  state.scenario = scenario;
+
+  // Render briefing
+  document.getElementById('brief-scenario-name').textContent = scenario.name;
+  document.getElementById('brief-role').textContent = scenario.role;
+  document.getElementById('brief-title').textContent = scenario.title;
+
+  // Meta pills
+  const metaEl = document.getElementById('brief-meta');
+  metaEl.innerHTML = scenario.meta.map(m => `<span class="meta-pill">${m}</span>`).join('');
+
+  // Intro paragraphs
+  document.getElementById('brief-situation-body').innerHTML =
+    scenario.briefIntro.map(p => `<p>${p}</p>`).join('');
+
+  // Alert
+  if (scenario.briefAlert) {
+    document.getElementById('brief-alert').hidden = false;
+    document.getElementById('brief-alert-body').textContent = scenario.briefAlert;
+  } else {
+    document.getElementById('brief-alert').hidden = true;
+  }
+
+  // Data row
+  document.getElementById('brief-data-row').innerHTML = scenario.briefData.map(d => `
+    <div class="data-card">
+      <div class="data-label">${d.label}</div>
+      <div class="data-value ${d.cls}">${d.value}</div>
+      <div class="data-sub">${d.sub}</div>
+    </div>
+  `).join('');
+
+  showScreen('screen-brief');
+}
+
+function startGame() {
+  const scenario = state.scenario;
+  state.round = 1;
+  state.totalRounds = scenario.rounds.length;
+  state.metrics = { ...scenario.startMetrics };
+  state.initialMetrics = { ...scenario.startMetrics };
+  state.selectedOption = null;
+  state.decisionLog = [];
+  state.stakeholders = JSON.parse(JSON.stringify(scenario.stakeholders));
+  state.regulatory = JSON.parse(JSON.stringify(scenario.regulatory));
+
+  // Game header role label
+  document.getElementById('game-role-label').textContent = `${scenario.icon} ${scenario.role}`;
+  document.getElementById('cons-scenario-name').textContent = scenario.name;
+  document.getElementById('debrief-role-label').textContent = `Simulation Complete · ${scenario.name}`;
+
+  renderRound();
+  showScreen('screen-game');
+}
+
+function resetGame() {
+  startGame();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER ROUND
+═══════════════════════════════════════════════════════════════ */
+
 function renderRound() {
-  const round = ROUNDS[state.round - 1];
+  const scenario = state.scenario;
+  const round = scenario.rounds[state.round - 1];
   state.selectedOption = null;
 
   document.getElementById('round-title').textContent = round.title;
-  document.getElementById('qlabel').textContent = `R${state.round}`;
+  document.getElementById('qlabel').textContent = `Q${state.round}`;
 
+  // Progress
   const pct = (state.round / state.totalRounds) * 100;
   document.getElementById('progress-bar').style.width = pct + '%';
-  document.getElementById('progress-pct').textContent = `Round ${state.round}/${state.totalRounds}`;
+  document.getElementById('progress-pct').textContent = `Round ${state.round} / ${state.totalRounds}`;
 
+  // Round dots
   for (let i = 1; i <= 4; i++) {
     const dot = document.getElementById(`qdot-${i}`);
     dot.classList.remove('done', 'active');
@@ -1431,66 +1964,111 @@ function renderRound() {
     if (i === state.round) dot.classList.add('active');
   }
 
-  ['safety','equity','adoption','influence'].forEach(k => {
-    document.getElementById(`m-${k}`).textContent = Math.round(state.metrics[k]);
-    document.getElementById(`bar-${k}`).style.width = Math.round(state.metrics[k]) + '%';
-  });
+  // Metrics
+  ['safety', 'trust', 'innovation', 'finance'].forEach(k => setMetric(k, state.metrics[k]));
 
+  // Situation text
   document.getElementById('situation-text').innerHTML = round.situation;
-
   const alertEl = document.getElementById('situation-alert');
-  if (round.alertText) {
-    alertEl.style.display = 'block';
-    alertEl.className = round.alertType === 'alert' ? 'alert-box' : 'warn-box';
-    alertEl.innerHTML = round.alertText;
+  if (round.alert) {
+    alertEl.hidden = false;
+    document.getElementById('situation-alert-body').textContent = round.alert;
   } else {
-    alertEl.style.display = 'none';
+    alertEl.hidden = true;
   }
 
+  // Decision cards (no impact pills shown — pure judgement)
   const container = document.getElementById('decision-cards');
   container.innerHTML = '';
   round.options.forEach(opt => {
-    const card = document.createElement('div');
+    const card = document.createElement('button');
     card.className = 'decision-card';
     card.id = `dc-${opt.id}`;
+    card.setAttribute('role', 'radio');
+    card.setAttribute('aria-checked', 'false');
     card.onclick = () => selectOption(opt.id);
     card.innerHTML = `
       <div class="dc-option">Option ${opt.id}</div>
       <div class="dc-title">${opt.title}</div>
       <div class="dc-desc">${opt.desc}</div>
-      <div class="dc-impacts">
-        ${opt.impacts.map(i => `<span class="impact-pill ${i.cls}">${i.label}</span>`).join('')}
-      </div>
     `;
     container.appendChild(card);
   });
 
+  // Stakeholders
+  renderStakeholders();
+  renderRegulatory();
+
+  // Reset confirm button
   document.getElementById('confirm-btn').disabled = true;
   document.getElementById('selection-hint').textContent = 'Select an option above';
 }
 
+function renderStakeholders() {
+  const container = document.getElementById('stakeholder-list');
+  container.innerHTML = state.stakeholders.map(s => `
+    <div class="stakeholder-item">
+      <div class="sh-icon" aria-hidden="true">${s.icon}</div>
+      <div>
+        <div class="sh-name">${s.name}</div>
+        <div class="sh-status">${s.status}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderRegulatory() {
+  const container = document.getElementById('reg-list');
+  container.innerHTML = state.regulatory.map(r => `
+    <div class="reg-item">
+      <div class="reg-status ${r.status}"></div>
+      <div class="reg-name">${r.name}</div>
+      <div class="reg-state">${r.state}</div>
+    </div>
+  `).join('');
+}
+
 function selectOption(id) {
   state.selectedOption = id;
-  document.querySelectorAll('.decision-card').forEach(c => c.classList.remove('selected','selected-bad','selected-warn'));
-  const round = ROUNDS[state.round - 1];
-  const opt = round.options.find(o => o.id === id);
+  document.querySelectorAll('.decision-card').forEach(c => {
+    c.classList.remove('selected');
+    c.setAttribute('aria-checked', 'false');
+  });
   const card = document.getElementById(`dc-${id}`);
-  if (opt.type === 'good') card.classList.add('selected');
-  else if (opt.type === 'bad') card.classList.add('selected-bad');
-  else card.classList.add('selected-warn');
+  card.classList.add('selected');
+  card.setAttribute('aria-checked', 'true');
 
   document.getElementById('confirm-btn').disabled = false;
   document.getElementById('selection-hint').textContent = `Option ${id} selected`;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   CONFIRM & CONSEQUENCE
+═══════════════════════════════════════════════════════════════ */
+
 function confirmDecision() {
-  const round = ROUNDS[state.round - 1];
+  const round = state.scenario.rounds[state.round - 1];
   const opt = round.options.find(o => o.id === state.selectedOption);
   if (!opt) return;
 
-  state.decisionLog.push({ round: state.round, roundTitle: round.title.split(' · ')[1], option: opt.title, type: opt.type });
+  // Log
+  state.decisionLog.push({
+    round: state.round,
+    roundTitle: round.title.split(' · ')[1] || round.title,
+    option: opt.title,
+    type: opt.type
+  });
 
+  // Apply deltas
   Object.entries(opt.deltas).forEach(([k, v]) => updateMetric(k, v));
+
+  // Apply regulatory updates
+  if (opt.regUpdate) {
+    Object.entries(opt.regUpdate).forEach(([regId, change]) => {
+      const reg = state.regulatory.find(r => r.id === regId);
+      if (reg) Object.assign(reg, change);
+    });
+  }
 
   renderConsequence(round, opt);
   showScreen('screen-consequence');
@@ -1498,48 +2076,55 @@ function confirmDecision() {
 
 function renderConsequence(round, opt) {
   const typeEl = document.getElementById('c-type');
-  if (opt.type === 'good') { typeEl.textContent = '✅ OUTCOME'; typeEl.className = 'consequence-type good'; }
-  else if (opt.type === 'bad') { typeEl.textContent = '🔴 CONSEQUENCE'; typeEl.className = 'consequence-type bad'; }
-  else { typeEl.textContent = '⚠ MIXED OUTCOME'; typeEl.className = 'consequence-type mixed'; }
+  const typeMap = {
+    good: { text: 'Strong Outcome', cls: 'good' },
+    mixed: { text: 'Mixed Outcome', cls: 'mixed' },
+    bad: { text: 'High-Risk Outcome', cls: 'bad' }
+  };
+  const t = typeMap[opt.type] || typeMap.mixed;
+  typeEl.textContent = t.text;
+  typeEl.className = `consequence-type ${t.cls}`;
 
   document.getElementById('c-title').textContent = opt.title;
   document.getElementById('c-narrative').innerHTML = opt.narrative;
 
-  const metricKeys = ['safety','equity','adoption','influence'];
-  metricKeys.forEach(k => {
-    const v = opt.deltas[k];
-    const d = formatDelta(v);
+  // Deltas
+  ['safety', 'trust', 'innovation', 'finance'].forEach(k => {
+    const d = formatDelta(opt.deltas[k] || 0);
     const el = document.getElementById(`d-${k}`);
     if (el) { el.textContent = d.text; el.className = `delta-val ${d.cls}`; }
   });
 
+  // Reactions
   const rl = document.getElementById('reaction-list');
   rl.innerHTML = `<div class="panel-label">Stakeholder Reactions</div>` +
     opt.reactions.map(r => `
       <div class="reaction-item">
-        <div class="reaction-icon">${r.icon}</div>
+        <div class="reaction-icon" aria-hidden="true">${r.icon}</div>
         <div>
           <div class="reaction-who">${r.who}</div>
-          <div class="reaction-says">"${r.says}"</div>
+          <div class="reaction-says">&ldquo;${r.says}&rdquo;</div>
         </div>
       </div>
     `).join('');
 
+  // Event
   const evEl = document.getElementById('event-reveal');
   if (opt.event) {
-    evEl.style.display = 'block';
+    evEl.hidden = false;
     document.getElementById('event-title').textContent = opt.event.title;
     document.getElementById('event-body').textContent = opt.event.body;
   } else {
-    evEl.style.display = 'none';
+    evEl.hidden = true;
   }
 
+  // Next button
   const nextBtn = document.getElementById('next-round-btn');
   if (state.round >= state.totalRounds) {
-    nextBtn.textContent = 'View Debrief →';
+    nextBtn.textContent = 'View debrief →';
     nextBtn.onclick = showDebrief;
   } else {
-    nextBtn.textContent = 'Next Round →';
+    nextBtn.textContent = 'Next round →';
     nextBtn.onclick = nextRound;
   }
 }
@@ -1550,66 +2135,80 @@ function nextRound() {
   showScreen('screen-game');
 }
 
-function showDebrief() {
-  const scoresEl = document.getElementById('final-scores');
-  const metricLabels = { safety: 'Patient Safety', equity: 'Equity & Trust', adoption: 'Clinical Adoption', influence: 'System Influence' };
-  const metricColors = { safety: 'var(--safety)', equity: 'var(--equity)', adoption: 'var(--adoption)', influence: 'var(--influence)' };
+/* ═══════════════════════════════════════════════════════════════
+   DEBRIEF
+═══════════════════════════════════════════════════════════════ */
 
-  scoresEl.innerHTML = Object.keys(state.metrics).map(k => {
+function showDebrief() {
+  const labels = { safety: 'Patient Safety', trust: 'Clinical Trust', innovation: 'Innovation', finance: 'Financial' };
+  const colorVars = { safety: 'safety', trust: 'trust', innovation: 'innovation', finance: 'finance' };
+
+  document.getElementById('final-scores').innerHTML = ['safety', 'trust', 'innovation', 'finance'].map(k => {
     const final = Math.round(state.metrics[k]);
-    const delta = final - state.initial[k];
+    const initial = state.initialMetrics[k];
+    const delta = final - initial;
     const d = formatDelta(delta);
     return `
       <div class="final-score-card">
-        <div class="fs-label">${metricLabels[k]}</div>
-        <div class="fs-val" style="color:${metricColors[k]}">${final}</div>
+        <div class="fs-label">${labels[k]}</div>
+        <div class="fs-val" style="color:var(--${colorVars[k]})">${final}</div>
         <div class="fs-change ${d.cls}">${d.text} from start</div>
       </div>
     `;
   }).join('');
 
-  const equity = state.metrics.equity;
-  const safety = state.metrics.safety;
-  const avg = Object.values(state.metrics).reduce((a, b) => a + b, 0) / 4;
-
+  const { safety, trust, innovation, finance } = state.metrics;
+  const avg = (safety + trust + innovation + finance) / 4;
   const banner = document.getElementById('outcome-banner');
   const outName = document.getElementById('outcome-name');
   const outDesc = document.getElementById('outcome-desc');
 
-  if (equity >= 80 && safety >= 80 && avg >= 75) {
+  if (safety >= 80 && trust >= 70 && avg >= 70) {
     banner.className = 'outcome-banner good';
-    outName.textContent = '🌟 Equitable Transformation';
-    outDesc.textContent = 'You confronted the bias, protected affected patients, built genuine community governance, and shaped national policy. This is what leadership at the intersection of clinical informatics and AI safety looks like when it works. The patients who will never know your name are safer because of it.';
-  } else if (equity >= 65 && safety >= 65) {
-    banner.className = 'outcome-banner mixed';
-    outName.textContent = '⚖️ Partial Progress';
-    outDesc.textContent = 'The bias was identified and some harm was reduced. But the systemic response was incomplete — either the community voice was not fully embedded, or the national influence moment was missed. A defensible outcome. Not a transformative one.';
-  } else if (equity < 50) {
+    outName.textContent = 'System Leadership';
+    outDesc.textContent = 'You balanced safety, clinical trust, innovation, and sustainability. Your approach is being studied as a national model. This is the optimum outcome — rare, hard-won, replicable.';
+  } else if (safety >= 70 && trust >= 60 && avg >= 60) {
+    banner.className = 'outcome-banner good';
+    outName.textContent = 'Defensible Governance';
+    outDesc.textContent = 'You produced a credible, evidence-grounded approach. Safety and clinical trust held. The Trust is in a stronger position than before — and you are positioned for system-level influence.';
+  } else if (innovation >= 80 && safety < 65) {
     banner.className = 'outcome-banner bad';
-    outName.textContent = '🔴 Equity Failure';
-    outDesc.textContent = 'The AI continued operating in a way that compounded existing inequity. Whether through inaction, vendor pressure, or operational compromise, the patients most harmed were those already most marginalised. The NHS will repeat this if the lessons are not learned.';
+    outName.textContent = 'Innovation Outpaced Governance';
+    outDesc.textContent = 'Speed exceeded safety architecture. Innovations produced measurable gains but the foundations could not withstand failure. The Trust faces regulatory and reputational consequences.';
+  } else if (trust < 50) {
+    banner.className = 'outcome-banner bad';
+    outName.textContent = 'Clinical Trust Failure';
+    outDesc.textContent = 'Clinical staff have lost confidence. Even good AI is being ignored or worked around. The cultural damage will take years to repair — and no further technology investment will fix it.';
+  } else if (safety >= 70 && avg < 60) {
+    banner.className = 'outcome-banner mixed';
+    outName.textContent = 'Safe but Cautious';
+    outDesc.textContent = 'Patient safety held firm and serious incidents were avoided. Innovation and financial sustainability were sacrificed. A defensible outcome — not yet an exemplary one.';
   } else {
     banner.className = 'outcome-banner mixed';
-    outName.textContent = '📊 Functional but Incomplete';
-    outDesc.textContent = 'The service is running and RTT performance is maintained. But the deeper equity question was addressed technically rather than structurally. The pathway works — for most patients. That is not enough.';
+    outName.textContent = 'Stable but Unsustainable';
+    outDesc.textContent = 'Safety was preserved and major incidents avoided. But the Trust is treading water — innovation has stalled, financial pressure is mounting, and peers are pulling ahead.';
   }
 
-  const replayEl = document.getElementById('replay-items');
-  replayEl.innerHTML = state.decisionLog.map(d => `
+  // Decision log
+  document.getElementById('replay-items').innerHTML = state.decisionLog.map(d => `
     <div class="replay-item">
       <div class="replay-q">R${d.round}</div>
       <div>
         <div class="replay-choice">${d.option}</div>
-        <div class="replay-note">${d.roundTitle} · ${d.type === 'good' ? '✅ Strong governance choice' : d.type === 'bad' ? '🔴 High risk — significant patient harm potential' : '⚠ Compromise — review equity trade-offs'}</div>
+        <div class="replay-note">${d.roundTitle} · ${
+          d.type === 'good' ? 'Strong governance choice' :
+          d.type === 'mixed' ? 'Compromise — trade-offs to review' :
+          'High risk — alternative worth considering'
+        }</div>
       </div>
     </div>
   `).join('');
 
-  const learnEl = document.getElementById('learning-items');
-  learnEl.innerHTML = LEARNING_POINTS.map(p => `
+  // Learning items
+  document.getElementById('learning-items').innerHTML = state.scenario.learning.map(p => `
     <div class="learning-item">
       <div class="li-tag ${p.tagCls}">${p.tag}</div>
-      <div>
+      <div class="li-content">
         <div class="li-title">${p.title}</div>
         <div class="li-body">${p.body}</div>
       </div>
@@ -1618,6 +2217,25 @@ function showDebrief() {
 
   showScreen('screen-debrief');
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   KEYBOARD ACCESSIBILITY
+═══════════════════════════════════════════════════════════════ */
+
+document.addEventListener('keydown', (e) => {
+  // Number keys 1-3 select options on game screen
+  if (document.getElementById('screen-game').classList.contains('active')) {
+    if (['1', '2', '3'].includes(e.key)) {
+      const map = { '1': 'A', '2': 'B', '3': 'C' };
+      const card = document.getElementById(`dc-${map[e.key]}`);
+      if (card) selectOption(map[e.key]);
+    }
+    if (e.key === 'Enter' && !document.getElementById('confirm-btn').disabled) {
+      confirmDecision();
+    }
+  }
+});
+
 </script>
 
 </body>
