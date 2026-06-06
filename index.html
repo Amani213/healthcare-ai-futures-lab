@@ -578,8 +578,8 @@ body::before {
   </h1>
 
   <p class="title-sub">
-   Four playable scenarios. Four decision rounds each. Every choice ripples across patient safety,
-    clinical trust, equity, innovation and accountability. There are no perfect answers — only defensible ones.
+    Four playable scenarios. Four decision rounds each. Every choice ripples across patient safety,
+    clinical trust, equity, innovation, and accountability. There are no perfect answers — only defensible ones.
   </p>
 
   <div class="scenario-grid" role="list">
@@ -610,14 +610,14 @@ body::before {
       <div class="sc-desc">An EIP triage AI is improving referral times — but appears to under-flag young Black men at first episode. Algorithmic equity meets system accountability.</div>
     </button>
 
-    <div class="scenario-card locked" role="listitem">
+    <button class="scenario-card playable" role="listitem" onclick="startScenario('ceo')" aria-label="Start Trust Chief Executive scenario">
       <div class="sc-status-row">
         <span class="sc-level">Scenario 04 · Trust Chief Executive</span>
-        <span class="sc-badge soon">Coming Soon</span>
+        <span class="sc-badge live">Playable</span>
       </div>
       <div class="sc-title">The Vendor Expansion</div>
-      <div class="sc-desc">A vendor wants to scale AI across the ICS. CQC is asking about equity. Parliament wants written evidence.</div>
-    </div>
+      <div class="sc-desc">A vendor wants to scale AI across the ICS. CQC is asking about equity. Parliament wants written evidence. Personal accountability is on the table.</div>
+    </button>
   </div>
 
   <div class="title-foot">Proof of Concept · For NHS Clinical & Digital Leaders</div>
@@ -1614,6 +1614,273 @@ const SCENARIOS = {
       { tag: 'Community Governance', tagCls: '', title: 'Co-production is not consultation. It changes the outcome.', body: 'Where community and lived experience voices were genuinely embedded in AI governance — not informed after decisions, not consulted in token focus groups — they identified risks that clinical and technical teams missed. The Lived Experience AI Advisory Board vetoed a risk stratification tool that reproduced historically discriminatory criteria. Co-production is a safety mechanism, not a PR exercise.' },
       { tag: 'System Leadership', tagCls: 'safety', title: 'The CxIO\'s accountability extends beyond their own organisation', body: 'The CxIO role carries influence at system level. When a Trust identifies an AI equity failure, the obligation to share findings, shape procurement standards, and influence national guidance is not optional. The harm PathwayIQ caused was not unique to one Trust — and the response could not be contained to one Trust either.' },
       { tag: 'Post-Market Surveillance', tagCls: 'reg', title: 'Equity drift can occur after a clean pre-deployment validation', body: 'PathwayIQ passed pre-deployment validation. The equity failure emerged at scale, in the real clinical environment, over months. This is characteristic of algorithmic performance drift — particularly when a model encounters patient cohorts underrepresented in its training data. Ongoing equity monitoring is not a quality assurance nicety. It is clinically essential.' }
+    ]
+  },
+  /* ──────────────────────────────────────────────────
+     SCENARIO 04 — TRUST CHIEF EXECUTIVE
+  ────────────────────────────────────────────────── */
+  ceo: {
+    id: 'ceo',
+    name: 'Trust Chief Executive',
+    icon: '👔',
+    title: 'The Vendor Expansion',
+    meta: ['Q3 · Acute Trust + ICS', '4 Decision Rounds', 'ICS-Wide AI Procurement', 'CQC · Parliament · Vendor Conduct'],
+    role: 'Your Role: Trust Chief Executive',
+    briefIntro: [
+      'Twelve months ago, your Trust adopted <strong>Veridian Health</strong>\'s AI clinical decision support platform. Outcomes have improved measurably: a 14% reduction in avoidable acute admissions, a 9% reduction in length of stay for two surgical pathways. Your CMO and CSO have both signed off the year-one safety case. You are the Trust that NHSE points to when journalists ask whether NHS AI deployment is going well.',
+      'Two weeks ago, Veridian\'s UK CEO approached you with a proposal: scale the platform across all <strong>seven Trusts in your ICS</strong> through a single regional licence, at a 40% per-Trust discount — with you positioned as the clinical and operational sponsor. Your ICB Chief Executive wants your view by Friday. Procurement is excited about £2.8M annual savings. Your CMO has flagged that scaling a vendor across seven Trusts is "a different governance question" than single-Trust adoption.',
+      'You are 18 months into your tenure as Trust CEO. The Board values your AI track record. Your reputation across the ICS is strong. <em>Whatever you decide here will define how the next decade of NHS AI procurement runs in this region — and quite possibly nationally.</em>'
+    ],
+    briefAlert: 'The Veridian UK CEO has invited you to dinner with three Senior Independent Directors from neighbouring Trusts. You have not yet responded. Your General Counsel has reminded you informally that personal hospitality from a current vendor during active procurement requires Board declaration.',
+    briefData: [
+      { label: 'Current Coverage', value: '1 Trust', cls: '',     sub: 'Your Trust, 12 months' },
+      { label: 'Proposed Scale',  value: '7 Trusts', cls: 'warn', sub: 'ICS-wide licence' },
+      { label: 'Projected Savings', value: '£2.8M', cls: 'up',    sub: 'Per year, ICS-wide' },
+      { label: 'Independent DD',  value: 'None', cls: 'down',     sub: 'At ICS scale' }
+    ],
+    startMetrics: { safety: 65, trust: 62, innovation: 70, finance: 68 },
+    stakeholders: [
+      { id: 'chair',  icon: '👔', name: 'Trust Chair', status: 'Supportive but watching closely. Wants Board sight.' },
+      { id: 'cmo',    icon: '👨‍⚕️', name: 'Chief Medical Officer', status: 'Cautiously supportive. Insists on multi-Trust DD.' },
+      { id: 'icb',    icon: '🏛️', name: 'ICB Chief Executive', status: 'Looks to you for the system view. Wants a clear answer.' },
+      { id: 'vendor', icon: '💼', name: 'Veridian Health (UK CEO)', status: 'Charming. Well-connected. Pushing hard for Friday.' },
+      { id: 'reg',    icon: '⚖️', name: 'CQC / Select Committee / Press', status: 'Inactive at present. AI governance under scrutiny nationally.' }
+    ],
+    regulatory: [
+      { id: 'cqc',  name: 'CQC Well-Led',          status: 'amber', state: 'AI inspection framework live' },
+      { id: 'dcb',  name: 'DCB0129 (Trust-wide)',  status: 'amber', state: 'Single-Trust scope only' },
+      { id: 'nhse', name: 'NHSE AI Framework',     status: 'green', state: 'Compliant' },
+      { id: 'parl', name: 'Select Committee',      status: 'green', state: 'No active inquiry' }
+    ],
+    rounds: [
+      {
+        title: 'Round 1 · The Vendor\'s Proposal',
+        situation: `The ICB Chief wants your written view by Friday. Procurement have already drafted the heads of terms. Veridian have offered <strong>three NHS reference visits</strong> — but only to Trusts they have selected.<br><br>Your CMO has been quietly contacted by a clinician at one of those reference Trusts who says <em>"their experience is not what's being reported."</em> The clinician is unwilling to be named. The information is real but unverifiable through formal channels.<br><br>You must decide what to recommend.`,
+        alert: 'A handwritten note from your Trust Chair sits on your desk: "Whatever you decide, the Board must see your reasoning. Don\'t commit by email."',
+        options: [
+          {
+            id: 'A',
+            title: 'Sponsor the deal — with structural conditions',
+            desc: 'Commit to sponsoring the ICS-wide procurement, contingent on three non-negotiables: independent multi-Trust due diligence; shared safety governance arrangements across the seven Trusts; contractually mandated equity reporting stratified by ethnicity, age, and deprivation.',
+            deltas: { safety: 8, trust: 12, innovation: 18, finance: 5 },
+            type: 'good',
+            narrative: 'The ICB Chief is impressed by the structured approach and presents your conditions as the ICS\'s formal position. Veridian initially resist the equity reporting clause but accept once your ICB Chief privately tells them it is a deal-breaker. The independent DD takes eight weeks and identifies two material issues at multi-Trust scale — both addressable. The deal closes. You are seen across the ICS as a CEO who can deliver scale without sacrificing rigour. Three other ICSs ask for your DD methodology.',
+            reactions: [
+              { icon: '🏛️', who: 'ICB Chief Executive', says: 'This is the framework I needed. You\'ve given me a system-level answer, not a Trust-level one.' },
+              { icon: '👨‍⚕️', who: 'CMO', says: 'The conditions are non-trivial but defensible. I can stand behind this clinically.' },
+              { icon: '💼', who: 'Veridian UK CEO', says: 'The equity reporting clause is operationally burdensome but we accept the principle.' },
+              { icon: '👔', who: 'Trust Chair', says: 'This is the kind of paper I want to see at Board. Process visible, judgment shown.' }
+            ],
+            event: null,
+            regUpdate: { dcb: { status: 'green', state: 'Multi-Trust framework agreed' }, nhse: { status: 'green', state: 'Procurement model commended' } }
+          },
+          {
+            id: 'B',
+            title: 'Commission an ICS-wide review before any decision',
+            desc: 'Pause Veridian\'s proposal. Ask the ICB to commission a system-wide review of how AI procurement should work at ICS scale, with Veridian as a case study. No commitment either way until the review reports.',
+            deltas: { safety: 15, trust: 6, innovation: -10, finance: -5 },
+            type: 'mixed',
+            narrative: 'The slowdown frustrates Veridian, who escalate to NHSE Commercial Directorate complaining of "anti-competitive delay." The review takes five months and produces a thorough framework. But in the meantime, two of the seven Trusts have moved ahead with alternative vendors — fragmenting the ICS digital estate before the review concludes. The framework is excellent. The opportunity for genuine ICS-wide scale is gone. You did the rigorous thing and got a structurally weaker outcome. The framework itself becomes nationally cited.',
+            reactions: [
+              { icon: '🏛️', who: 'ICB Chief Executive', says: 'I supported the pause. I underestimated how fast the field would move without us leading it.' },
+              { icon: '💼', who: 'Veridian UK CEO', says: 'We are disappointed by the process delay and have raised concerns with NHSE.' },
+              { icon: '👨‍⚕️', who: 'CMO', says: 'Slow and principled. I would rather defend this in five years than the alternative.' },
+              { icon: '🏥', who: 'Neighbouring Trust CEO', says: 'We couldn\'t wait. We\'ve gone with another platform. Sorry — operational pressure.' }
+            ],
+            event: null,
+            regUpdate: { dcb: { status: 'green', state: 'Framework developed' } }
+          },
+          {
+            id: 'C',
+            title: 'Decline to sponsor — let each Trust decide independently',
+            desc: 'Take the position that ICS-wide procurement is the ICB\'s role, not a Trust CEO\'s. Decline to be the clinical/operational sponsor. Offer to share single-Trust experience as a reference.',
+            deltas: { safety: 0, trust: -8, innovation: -15, finance: -10 },
+            type: 'bad',
+            narrative: 'The decision is defensible on paper but plays badly. The ICB Chief reads it as you ducking accountability for a question only a Trust CEO with your track record could have answered credibly. Veridian work the room without your conditions and three other Trusts sign up under significantly weaker governance terms than you would have insisted on. Six months later, one of those Trusts has a clinical incident with the platform — proper DD might have prevented it. You are not implicated but you are not credited either. Your Board notes a "loss of system positioning" in their quarterly review.',
+            reactions: [
+              { icon: '🏛️', who: 'ICB Chief Executive', says: 'I needed your judgment. I got procedural caution. I\'ll remember this.' },
+              { icon: '💼', who: 'Veridian UK CEO', says: 'We respect your position. Three of your neighbours have proceeded. The momentum is regional.' },
+              { icon: '👔', who: 'Trust Chair', says: 'This was your moment. I supported the decision but the Board will ask why we didn\'t lead.' },
+              { icon: '🏥', who: 'Neighbouring Trust CEO', says: 'We followed Veridian\'s standard terms. Wish you\'d been at the table — would\'ve trusted your conditions.' }
+            ],
+            event: { title: 'Sub-Optimal ICS Contract Signed', body: 'Within 60 days, three ICS Trusts sign Veridian contracts with no shared safety governance and no mandated equity reporting. The contracts will not be easily renegotiated. The system-level safety case across the ICS is now materially weaker than it would have been under your sponsorship.' },
+            regUpdate: { dcb: { status: 'red', state: 'System-level case absent' }, nhse: { status: 'amber', state: 'ICS fragmentation noted' } }
+          }
+        ]
+      },
+      {
+        title: 'Round 2 · CQC Comes Calling',
+        situation: `Two weeks ago, CQC announced an unannounced inspection of your Trust\'s AI governance under their new "well-led with digital" framework. They have specifically requested evidence on three points: <strong>(a)</strong> clinical safety case authorship for the Veridian platform, <strong>(b)</strong> equity monitoring of AI-influenced clinical pathways, and <strong>(c)</strong> board-level oversight of AI deployment.<br><br>Your CSO can produce (a) cleanly. Your Trust has been monitoring overall Veridian outcomes but <strong>not stratified by ethnicity or deprivation</strong>. Your Board has had AI as a "noting item" in three recent meetings — no decisions, no scrutiny.<br><br>The inspection is in nine days.`,
+        alert: 'A national equity advocacy organisation has filed a Freedom of Information request asking for Trust-level data on AI equity monitoring across all NHS Trusts. Your name will be on the public list of Trusts that do not have this data.',
+        options: [
+          {
+            id: 'A',
+            title: 'Pause new deployments, brief Board fully, engage CQC proactively',
+            desc: 'Take the equity gap to the Board as a formal item, not a notation. Pause new Veridian clinical pathway deployments pending stratified equity audit. Brief the CQC inspector before they arrive about what you have, what you don\'t, and what you\'re doing about it.',
+            deltas: { safety: 18, trust: 15, innovation: -12, finance: -8 },
+            type: 'good',
+            narrative: 'The CQC inspector responds well to the candid pre-brief. The Well-Led inspection report cites your Trust as an example of "honest governance maturity." The pause causes six weeks of operational disruption. The audit identifies one Veridian pathway with a modest but real equity signal — you redesign the protocol. Your Board Chair tells you privately this was the moment she realised "we\'d been letting digital fly under the radar." The FOI response, when it comes, is something you can stand behind. The CMO publicly credits the decision as protecting clinical autonomy.',
+            reactions: [
+              { icon: '⚖️', who: 'CQC Inspector', says: 'The pre-brief approach is unusual. It changes what good looks like in this inspection.' },
+              { icon: '👔', who: 'Trust Chair', says: 'You should have brought this to Board sooner. But the response is right.' },
+              { icon: '👨‍⚕️', who: 'CMO', says: 'Pausing deployment protects clinical staff. I will defend this publicly if I need to.' },
+              { icon: '📰', who: 'HSJ', says: '"NHS Trust pauses AI deployment over equity concerns — chief executive named as setting new standard."' }
+            ],
+            event: null,
+            regUpdate: { cqc: { status: 'green', state: 'Exemplar finding' }, dcb: { status: 'green', state: 'Equity hazard logged' } }
+          },
+          {
+            id: 'B',
+            title: 'Quietly run an equity audit, present findings positively if possible',
+            desc: 'Don\'t pause deployment. Run an internal audit, fast. If findings are positive, share with CQC during inspection. If negative, defer the question with operational pressure framing.',
+            deltas: { safety: 5, trust: -5, innovation: 3, finance: -3 },
+            type: 'mixed',
+            narrative: 'The audit takes four weeks. Findings are inconclusive — the methodology is rushed and sample sizes are inadequate for clear conclusions. The CQC inspector asks pointed questions and you give pointed but defensive answers. The Well-Led inspection report cites "limited equity assurance" and notes "board-level oversight requires strengthening." Not a critical finding but a noted one. Your Board Chair asks in private session why she heard about the equity question from CQC rather than from you.',
+            reactions: [
+              { icon: '⚖️', who: 'CQC Inspector', says: 'The data you\'ve presented does not yet provide assurance on the equity question.' },
+              { icon: '👔', who: 'Trust Chair', says: 'I should have known about this before the inspector did. We need to talk about how AI governance reaches the Board.' },
+              { icon: '👨‍⚕️', who: 'CMO', says: 'A rushed audit was worse than no audit. The findings won\'t stand up to scrutiny.' },
+              { icon: '💼', who: 'Veridian UK CEO', says: 'We can support a more rigorous audit — it would be in everyone\'s interest.' }
+            ],
+            event: null,
+            regUpdate: { cqc: { status: 'amber', state: 'Limited assurance noted' } }
+          },
+          {
+            id: 'C',
+            title: 'Present existing outcome data; frame equity monitoring as "in development"',
+            desc: 'Brief CQC on the strong overall outcome data. Acknowledge equity stratification as "an active workstream." Avoid the word "gap." Maintain operational momentum.',
+            deltas: { safety: -8, trust: -15, innovation: 0, finance: -5 },
+            type: 'bad',
+            narrative: 'CQC are not satisfied. The Well-Led inspection report includes a <strong>critical finding</strong> on AI equity oversight. The findings are published 8 weeks later. The HSJ runs a piece: "CQC flags AI equity blind spot at NHS Trust." Your CMO submits her resignation citing "the Trust\'s framing of equity as optional." She is persuaded to stay but the relationship is materially damaged. Your senior medical leadership group writes a formal letter to the Board.',
+            reactions: [
+              { icon: '⚖️', who: 'CQC Inspector', says: 'The framing of equity as "in development" is not an answer to a regulatory question. It is a deferral.' },
+              { icon: '👨‍⚕️', who: 'CMO', says: 'I cannot stand behind the position the Trust took today. We will speak privately.' },
+              { icon: '👔', who: 'Trust Chair', says: 'This was avoidable. The senior medical letter is on my desk. We need an extraordinary session.' },
+              { icon: '📰', who: 'HSJ', says: '"CQC flags AI equity blind spot — Trust framing criticised, CMO understood to be reviewing position."' }
+            ],
+            event: { title: 'CMO Resignation Letter', body: 'Your CMO\'s resignation letter cites the Trust\'s framing of algorithmic equity as a workstream rather than a clinical safety question. The letter has been shared with the Trust Chair. She has agreed to remain in post for 60 days to support transition. The clinical leadership cohort is unsettled.' },
+            regUpdate: { cqc: { status: 'red', state: 'Critical finding issued' }, parl: { status: 'amber', state: 'Press attention growing' } }
+          }
+        ]
+      },
+      {
+        title: 'Round 3 · Parliament Wants Evidence',
+        situation: `The Health and Social Care Select Committee is conducting an inquiry into NHS AI deployment. They have written to your Trust requesting written evidence within four weeks. They have also invited you to give <strong>oral evidence</strong> on a panel with one other Trust CEO and a vendor CEO (your office suspects, but cannot confirm, it will be Veridian\'s UK CEO).<br><br>Your Director of Communications says: <em>"decline both — there is no upside, only risk."</em> Your CMO says: <em>"your Trust is far enough ahead that engaging will define the conversation rather than be defined by it."</em> Your Trust Chair has asked for your view by Monday.<br><br>The Select Committee Chair is a former GP, known to be tough on vendors and respectful of clinicians-as-leaders.`,
+        alert: 'The Veridian UK CEO has called your office "for a friendly chat about Select Committee positioning." You have not yet returned the call. Your General Counsel advises that taking the call before evidence is submitted is unwise.',
+        options: [
+          {
+            id: 'A',
+            title: 'Submit substantive written evidence; accept oral evidence',
+            desc: 'Provide detailed, frank written evidence covering both what has worked and what has not — including any CQC findings. Accept oral evidence. Decline the Veridian call until after written evidence is submitted.',
+            deltas: { safety: 5, trust: 18, innovation: 20, finance: 15 },
+            type: 'good',
+            narrative: 'Your written evidence is widely cited in the Committee\'s interim report — particularly your candour on what AI governance has not yet solved. The oral evidence session is challenging. The Chair questions you on the equity audit findings; you answer them directly. You are credited as one of the few NHS witnesses who "did not arrive trained." The Veridian UK CEO gives evidence that contradicts your account on one factual point; the Committee notes the discrepancy on the record. Two months later, the Committee\'s report cites your Trust as evidence that "rigorous AI governance is possible at scale." NHSE invite you to a national CEO roundtable on AI strategy.',
+            reactions: [
+              { icon: '⚖️', who: 'Select Committee Chair', says: 'You answered the question I asked. Several of your peers answered the question they had prepared for. I will remember the difference.' },
+              { icon: '👔', who: 'Trust Chair', says: 'The Board is proud of how you handled this. You positioned the Trust at national level without overclaiming.' },
+              { icon: '🏛️', who: 'NHS England', says: 'Your evidence shaped the Committee\'s thinking. We\'d like you involved in the national AI strategy refresh.' },
+              { icon: '💼', who: 'Veridian UK CEO', says: 'Your evidence created some difficulty for our position. We should speak when it suits you.' }
+            ],
+            event: null,
+            regUpdate: { parl: { status: 'green', state: 'Cited as exemplar' } }
+          },
+          {
+            id: 'B',
+            title: 'Submit limited written evidence; decline oral evidence',
+            desc: 'Provide factual written evidence covering scope and outcomes only — no commentary on systemic governance questions. Decline oral evidence citing operational pressures.',
+            deltas: { safety: 0, trust: 0, innovation: -3, finance: -3 },
+            type: 'mixed',
+            narrative: 'Your written evidence is referenced in passing in the Committee\'s report. Veridian\'s UK CEO gives oral evidence unopposed by Trust voices and frames the vendor relationship in terms favourable to commercial interests. The Committee report contains no specific criticism of your Trust — and no specific recognition either. You have neither gained nor lost. You will not be invited back. NHSE\'s national strategy refresh proceeds without your input.',
+            reactions: [
+              { icon: '⚖️', who: 'Select Committee Chair', says: 'Your written evidence was useful. We had hoped to test it in oral session.' },
+              { icon: '👨‍⚕️', who: 'CMO', says: 'I think we missed the window. Veridian framed the day; we framed a footnote.' },
+              { icon: '👔', who: 'Trust Chair', says: 'A defensible position. Not a defining one.' },
+              { icon: '📰', who: 'HSJ', says: '"Veridian framing dominates Select Committee session — Trust voices largely absent."' }
+            ],
+            event: null,
+            regUpdate: {}
+          },
+          {
+            id: 'C',
+            title: 'Decline both written and oral evidence citing operational pressures',
+            desc: 'Politely decline both invitations. Submit a brief courtesy letter explaining operational demands and offering to engage at a later date.',
+            deltas: { safety: -3, trust: -10, innovation: -10, finance: -8 },
+            type: 'bad',
+            narrative: 'The Committee Chair notes publicly that your Trust "declined to provide evidence to a parliamentary inquiry into NHS AI deployment." This is reported by HSJ and the Health Foundation in their inquiry coverage. Internally, your CMO and Director of Strategy are visibly demoralised. The Committee report makes recommendations affecting AI procurement across the NHS — and you had no voice in shaping them. Your ICB Chief asks why you didn\'t engage. Your Board Chair signals that she will want a future Board discussion about the Trust\'s public posture on national policy.',
+            reactions: [
+              { icon: '⚖️', who: 'Select Committee Chair', says: 'It is noted that the most credentialled Trust on AI declined to give evidence. Future witnesses may infer.' },
+              { icon: '👨‍⚕️', who: 'CMO', says: 'I don\'t understand. We had something to say. Why did we say nothing?' },
+              { icon: '🏛️', who: 'ICB Chief Executive', says: 'Your absence from that inquiry is felt across the region. We needed your voice.' },
+              { icon: '📰', who: 'HSJ', says: '"NHS Trust absent from landmark AI inquiry — CEO\'s rationale unclear."' }
+            ],
+            event: { title: 'Reputational Loss', body: 'A subsequent HSJ profile of "Trusts shaping NHS AI policy" omits your Trust entirely — despite your operational track record. The omission is noticed inside the organisation. A senior director comments at a leadership awayday: "We did the work. We let others tell the story."' },
+            regUpdate: { parl: { status: 'red', state: 'Trust absent from inquiry' } }
+          }
+        ]
+      },
+      {
+        title: 'Round 4 · The ICS Future',
+        situation: `Six months have passed. The Veridian platform now operates across five of the seven ICS Trusts. Your equity audit methodology has become an informal regional standard.<br><br>The ICB has proposed nominating you as <strong>Senior Responsible Officer (SRO) for ICS Digital and AI Strategy</strong> — a 0.4 WTE secondment, three days a week alongside the CEO role. The position would give you significant influence over how the next decade of NHS AI is procured and governed across the region.<br><br>Separately and confidentially: an internal source in your finance team has shared partial documents suggesting Veridian\'s UK CEO has been involved in <strong>concerning procurement conduct at another NHS Trust</strong>. No evidence implicates your Trust. The source is anonymous. Your General Counsel says: <em>"if true, this is serious; if you don\'t act, you are complicit; if you act on partial information, you risk a defamation claim."</em>`,
+        alert: 'The documents have not yet been shared with anyone outside your office. The decision on what to do — and when — is yours alone. If you decline both questions, the moment passes.',
+        options: [
+          {
+            id: 'A',
+            title: 'Accept SRO role; escalate Veridian intelligence formally to NHSE',
+            desc: 'Take the regional leadership role. Refer the Veridian intelligence formally to NHSE\'s Commercial Directorate, framed as "concerning conduct requiring investigation, not as allegations." Engage your General Counsel and Trust Chair in the referral before submission.',
+            deltas: { safety: 12, trust: 18, innovation: 20, finance: 15 },
+            type: 'good',
+            narrative: 'NHSE Commercial Directorate take the matter seriously. An investigation is launched. Veridian\'s UK CEO steps aside pending review. The platform itself continues running — the issue was with the executive, not the technology. In your SRO role, you lead the design of a new NHS AI Vendor Conduct Framework that becomes national policy within 18 months. Five years later, an HSJ profile describes you as "the CEO who showed that institutional courage and operational delivery are not in tension." You are invited to give the keynote at NHS ConfedExpo on AI leadership.',
+            reactions: [
+              { icon: '🏛️', who: 'NHSE Commercial Directorate', says: 'The way this was referred is exactly the standard we want to see. It will shape how we handle vendor intelligence going forward.' },
+              { icon: '👔', who: 'Trust Chair', says: 'You spoke to me before NHSE. That mattered. The Board stands behind this entirely.' },
+              { icon: '🏛️', who: 'ICB Chief Executive', says: 'The SRO appointment is the right one. The region needs your judgment at this level.' },
+              { icon: '📰', who: 'HSJ', says: '"NHS Trust CEO leads design of new vendor conduct standards — five years on, framework is national."' }
+            ],
+            event: null,
+            regUpdate: { nhse: { status: 'green', state: 'Vendor conduct framework launched' } }
+          },
+          {
+            id: 'B',
+            title: 'Accept SRO role; pursue Veridian intelligence quietly via your ICB Chief',
+            desc: 'Take the regional role. Share the Veridian intelligence privately with the ICB Chief Executive to handle through informal channels. Preserve relationships. Avoid a formal NHSE referral that might politicise the appointment.',
+            deltas: { safety: 5, trust: 5, innovation: 8, finance: 3 },
+            type: 'mixed',
+            narrative: 'The ICB Chief receives the intelligence professionally but the informal channel produces no formal investigation. Veridian\'s UK CEO remains in post. Eight months later, a similar issue is reported at a different Trust and an investigation is launched anyway — your earlier role in surfacing it is not visible. You retain the SRO role and do good work in it, but the moment to define yourself as a system-level integrity figure has passed. Within the ICB executive team, the decision is quietly noted.',
+            reactions: [
+              { icon: '🏛️', who: 'ICB Chief Executive', says: 'I will handle it through my channels. Thank you for trusting me with this.' },
+              { icon: '👨‍⚕️', who: 'CMO', says: 'I understand the institutional logic. I think you chose the safer path over the right one.' },
+              { icon: '👔', who: 'Trust Chair', says: 'You weighed it. I don\'t second-guess your call. But I would have done it differently.' },
+              { icon: '⚖️', who: 'General Counsel', says: 'You\'ve protected the Trust legally. Whether you\'ve protected the system is a different question.' }
+            ],
+            event: null,
+            regUpdate: {}
+          },
+          {
+            id: 'C',
+            title: 'Decline SRO role; raise Veridian intelligence formally',
+            desc: 'Decline the secondment — your Trust needs your full attention. Raise the Veridian intelligence formally to NHSE Commercial Directorate. Choose institutional integrity over system positioning.',
+            deltas: { safety: 8, trust: 10, innovation: -8, finance: 0 },
+            type: 'mixed',
+            narrative: 'The investigation proceeds. Your name is associated with raising it but you are not in a system role to shape what follows. The SRO role is offered to another Trust CEO with weaker AI credentials. They make a series of well-intentioned but flawed system-level decisions over the following 18 months. Patients are not harmed but the regional progress is slower and less rigorous than it could have been. Your own Trust thrives — the workforce respect your judgment to focus locally. The system muddles. You sleep well.',
+            reactions: [
+              { icon: '🏛️', who: 'ICB Chief Executive', says: 'I respect the decision. The region loses something with you not in the SRO chair.' },
+              { icon: '👔', who: 'Trust Chair', says: 'Your call. The Board appreciates the discipline of staying focused on this Trust.' },
+              { icon: '🏛️', who: 'NHSE Commercial', says: 'The referral was clean and well-evidenced. Investigation proceeds.' },
+              { icon: '👨‍⚕️', who: 'CMO', says: 'You did the right thing on Veridian. I wish you had taken the SRO role too — both were possible.' }
+            ],
+            event: null,
+            regUpdate: { nhse: { status: 'amber', state: 'Vendor conduct under review' } }
+          }
+        ]
+      }
+    ],
+    learning: [
+      { tag: 'CEO Accountability', tagCls: 'safety', title: 'CEO accountability for AI is non-delegable', body: 'Specific delegation to CSO, CMO and CNIO is essential. But the Trust CEO owns the organisation\'s overall AI posture in front of CQC, Parliament, the press, and the Board. The Vendor Expansion scenario shows what happens when ICS-scale AI decisions are treated as procurement transactions rather than as institutional governance commitments. The Trust CEO is the only person who can credibly own the system-level safety case.' },
+      { tag: 'Scaled Safety Case', tagCls: 'risk', title: 'A single-Trust safety case does not scale to an ICS', body: 'Multi-Trust deployment of a single AI platform creates qualitatively different hazards: heterogeneous data flows, drift across different patient populations, vendor capacity to support seven Trusts simultaneously, shared incident response. The CEO who signs the ICS-wide deal owns the system-level safety case regardless of how the contract is structured. Single-Trust DCB0129 documentation is necessary but never sufficient for ICS-scale deployment.' },
+      { tag: 'CQC Well-Led', tagCls: 'reg', title: 'Honest engagement with regulators outperforms defensive engagement', body: 'The Trusts cited as exemplars under CQC\'s "well-led with digital" framework are not the Trusts with the most polished position papers. They are the Trusts that brief their inspector in advance about what they have, what they don\'t, and what they\'re doing about it. Defensive framing produces critical findings; candid framing produces development findings. The CEO who treats CQC as an adversary creates the inspection outcome they feared.' },
+      { tag: 'Parliamentary Engagement', tagCls: 'eth', title: 'Parliament is positioning, not optional', body: 'Trust CEOs who decline to give evidence to Select Committee inquiries vacate the field to vendors and to less rigorous Trust voices. The price of decision-making influence at national level is the discomfort of being challenged on the record. Trust CEOs are uniquely placed to bring real operational evidence to parliamentary inquiries — and almost none do. The Committee\'s assessment of who is shaping NHS AI policy is shaped by who shows up.' },
+      { tag: 'Vendor Lock-In', tagCls: '', title: 'ICS-scale procurement compounds lock-in geometrically', body: 'Single-Trust vendor relationships are recoverable in 18–24 months. ICS-wide relationships are not. When seven Trusts share a platform, the marginal cost of changing vendors rises non-linearly: shared data architectures, retrained workforces, embedded clinical workflows, and renegotiated savings models. CEOs should approach ICS-wide deals with the assumption that contract terms must protect the system in perpetuity — including data portability clauses, exit cost ceilings, and mandated equity reporting.' },
+      { tag: 'Vendor Conduct Intelligence', tagCls: '', title: 'CEO judgment on vendor conduct intelligence is rarely tidy', body: 'Information about vendor executive conduct rarely arrives as evidence. It arrives as fragments — anonymous, partial, plausible. The CEO who waits for formal evidence often waits too long; the CEO who acts on rumour exposes the Trust to defamation. The judgment is whether the information rises to "concerning conduct requiring investigation" and whether the matter is best handled through formal national channels (NHSE Commercial Directorate) or informal local ones (ICB Chief). The wrong default is silence. Institutional integrity at this level is owned by the CEO alone.' }
     ]
   },
 
