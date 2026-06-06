@@ -7,318 +7,292 @@
 <meta name="description" content="Healthcare AI Futures Lab — decision simulations for NHS clinical and digital leaders.">
 <title>Healthcare AI Futures Lab</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Hanken+Grotesk:wght@300;400;500;600&family=IBM+Plex+Mono:wght@300;400;500&display=swap');
 
 :root {
-  --bg: #f7f8f7;
-  --surface: #ffffff;
-  --surface-2: #f1f4f2;
-  --border: #e2e8e4;
-  --border-strong: #cbd5cf;
+  /* Editorial paper palette — matched to sarahamani.vercel.app */
+  --bg: #f3f1ea;
+  --surface: #fbfaf6;
+  --surface-2: #ece9df;
+  --border: #ddd8c9;
+  --border-strong: #c7c0ad;
 
-  --accent: #00a884;
-  --accent-soft: #d4f0e8;
-  --accent-deep: #006d56;
-  --indigo: #4f46e5;
-  --amber: #d97706;
-  --danger: #dc2626;
+  --ink: #1b1812;
+  --text: #1b1812;
+  --text-muted: #6c665a;
+  --text-faint: #9a9384;
 
-  --text: #0f172a;
-  --text-muted: #475569;
-  --text-faint: #94a3b8;
+  --accent: #c0512b;          /* warm vermilion — the one signal colour */
+  --accent-soft: #f0ddd3;
+  --accent-deep: #8f3a1e;
 
-  --safety: #00a884;
-  --trust: #4f46e5;
-  --innovation: #d97706;
-  --finance: #0284c7;
+  --danger: #a62f28;
+  --warn: #b9822b;
+  --good: #2f7d5b;
+
+  /* metric / data palette (kept distinct from accent & danger) */
+  --safety: #2f7d5b;
+  --trust: #4a45b0;
+  --innovation: #b9822b;
+  --finance: #2f6f8f;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 
-  --radius-sm: 8px;
-  --radius: 12px;
-  --radius-lg: 16px;
+  --radius-sm: 3px;
+  --radius: 5px;
+  --radius-lg: 8px;
+
+  --maxw: 1080px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { background: var(--bg); }
+html { background: var(--bg); -webkit-text-size-adjust: 100%; }
+
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
   font-weight: 400;
   font-size: 15px;
-  line-height: 1.55;
+  line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
+/* faint paper grain + hairline frame */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(0, 168, 132, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 168, 132, 0.04) 1px, transparent 1px);
-  background-size: 48px 48px;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(192,81,43,0.025), transparent 45%),
+    radial-gradient(circle at 85% 90%, rgba(47,111,143,0.03), transparent 50%);
   pointer-events: none;
   z-index: 0;
 }
 
-/* ─── SHARED TYPOGRAPHY ─── */
+::selection { background: var(--accent); color: #fff; }
 
-.display { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: -0.02em; }
-.mono { font-family: 'IBM Plex Mono', monospace; }
-.label {
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; position: relative; z-index: 1; }
+.screen.active { display: block; animation: rise .5s var(--ease-out); }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* shared editorial label */
+.label, .panel-label {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  font-weight: 400;
+  font-size: 10.5px;
+  font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: none;
-  background: none;
-}
-
-/* ─── SCREENS ─── */
-
-.screen {
-  display: none;
-  position: relative;
-  z-index: 1;
-  animation: fadeIn 320ms var(--ease-out);
-}
-.screen.active { display: block; }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ─── BUTTONS ─── */
-
-.btn-primary {
-  background: var(--accent-deep);
-  color: #fff;
-  border-radius: 10px;
-  padding: 14px 28px;
-  font-family: 'Syne', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  transition: background 180ms var(--ease-out), transform 120ms var(--ease-out);
-}
-.btn-primary:hover:not(:disabled) { background: #005a47; }
-.btn-primary:active:not(:disabled) { transform: scale(0.98); }
-.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
-
-.btn-secondary {
-  background: transparent;
-  color: var(--text-muted);
-  border: 1px solid var(--border-strong);
-  border-radius: 10px;
-  padding: 13px 26px;
-  font-size: 14px;
-  transition: all 180ms var(--ease-out);
-}
-.btn-secondary:hover {
-  border-color: var(--text);
-  color: var(--text);
-}
-
-/* ═══════════════════════════════════════════
-   TITLE SCREEN
-═══════════════════════════════════════════ */
-
+/* ════════════ TITLE SCREEN ════════════ */
 #screen-title {
-  min-height: 100vh;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 56px 24px;
-  text-align: center;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(40px, 8vw, 96px) 24px 64px;
 }
-#screen-title.active { display: flex; }
+#screen-title.active { display: block; }
 
 .lab-wordmark {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
-  letter-spacing: 0.28em;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: var(--accent-deep);
-  margin-bottom: 28px;
+  color: var(--accent);
+  padding-bottom: 18px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
 }
-.lab-wordmark::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 4px rgba(0, 168, 132, 0.18);
+.lab-wordmark::after {
+  content: '[ NHS · CLINICAL AI · GOVERNANCE ]';
+  float: right;
+  color: var(--text-faint);
+  letter-spacing: 0.18em;
 }
 
 .title-hero {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: clamp(42px, 7.5vw, 78px);
-  line-height: 0.98;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: clamp(38px, 8vw, 88px);
+  line-height: 0.96;
   letter-spacing: -0.025em;
-  margin-bottom: 24px;
-  max-width: 800px;
+  text-transform: uppercase;
+  max-width: 14ch;
+  margin-bottom: 28px;
 }
 .title-hero em {
   font-style: normal;
-  background: linear-gradient(120deg, var(--accent-deep), var(--indigo));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--accent);
+  position: relative;
+}
+.title-hero em::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0.08em;
+  height: 0.06em;
+  background: var(--accent);
+  opacity: 0.35;
 }
 
 .title-sub {
-  font-size: 17px;
+  font-size: clamp(15px, 1.7vw, 18px);
+  font-weight: 300;
   color: var(--text-muted);
-  max-width: 540px;
-  line-height: 1.65;
-  margin-bottom: 56px;
+  max-width: 56ch;
+  line-height: 1.7;
+  margin-bottom: 52px;
 }
 
+/* scenario grid */
 .scenario-grid {
   display: grid;
-  gap: 14px;
-  width: 100%;
-  max-width: 560px;
-  margin-bottom: 44px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  border-top: 1px solid var(--border-strong);
+  border-left: 1px solid var(--border-strong);
 }
-
 .scenario-card {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 22px 24px;
   text-align: left;
-  background: var(--surface);
-  transition: border-color 180ms var(--ease-out), transform 180ms var(--ease-out), box-shadow 180ms var(--ease-out);
-  display: block;
-  width: 100%;
-  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--border-strong);
+  border-bottom: 1px solid var(--border-strong);
+  padding: 28px 26px 30px;
+  font: inherit;
+  color: inherit;
   position: relative;
+  transition: background .25s var(--ease-out);
+  min-height: 188px;
+  display: flex;
+  flex-direction: column;
 }
-.scenario-card.playable:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px -10px rgba(0, 168, 132, 0.3);
+.scenario-card.playable { cursor: pointer; }
+.scenario-card.playable:hover { background: var(--surface); }
+.scenario-card.playable::after {
+  content: '↗';
+  position: absolute;
+  top: 24px; right: 24px;
+  font-size: 18px;
+  color: var(--text-faint);
+  transition: color .2s, transform .25s var(--ease-out);
 }
-.scenario-card.locked { opacity: 0.5; cursor: not-allowed; }
+.scenario-card.playable:hover::after { color: var(--accent); transform: translate(2px, -2px); }
+.scenario-card.locked { opacity: 0.55; }
 
 .sc-status-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  gap: 10px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
 }
 .sc-level {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 10px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--text-faint);
+  color: var(--text-muted);
 }
 .sc-badge {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 9px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  padding: 3px 9px;
-  border-radius: 100px;
-}
-.sc-badge.live {
-  background: var(--accent-soft);
-  color: var(--accent-deep);
-}
-.sc-badge.soon {
-  background: var(--surface-2);
-  color: var(--text-faint);
-}
-.sc-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 19px;
-  font-weight: 700;
-  margin-bottom: 6px;
-  letter-spacing: -0.01em;
-}
-.sc-desc { font-size: 14px; color: var(--text-muted); line-height: 1.55; }
-
-.title-foot {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  color: var(--text-faint);
-}
-
-/* ═══════════════════════════════════════════
-   BRIEFING SCREEN
-═══════════════════════════════════════════ */
-
-#screen-brief {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 56px 24px;
-}
-
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--text-faint);
-  margin-bottom: 36px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  border: 1px solid currentColor;
 }
-.breadcrumb .crumb-current { color: var(--accent-deep); }
-.breadcrumb .sep { opacity: 0.5; }
+.sc-badge.live { color: var(--good); }
+.sc-badge.soon { color: var(--text-faint); }
+
+.sc-title {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+  margin-top: auto;
+}
+.sc-desc {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  font-weight: 300;
+}
+
+.title-foot {
+  margin-top: 36px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* ════════════ BREADCRUMB ════════════ */
+.breadcrumb {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.breadcrumb .sep { color: var(--border-strong); }
+.breadcrumb .crumb-current { color: var(--accent); }
+
+/* ════════════ BRIEFING ════════════ */
+#screen-brief { max-width: 800px; margin: 0 auto; padding: clamp(36px,6vw,64px) 24px 80px; }
 
 .brief-role {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
-  letter-spacing: 0.22em;
+  font-size: 11px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--accent-deep);
+  color: var(--accent);
   margin-bottom: 14px;
 }
 .brief-title {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(30px, 5vw, 46px);
+  font-family: 'Archivo', sans-serif;
   font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  font-size: clamp(30px, 5.5vw, 54px);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
   margin-bottom: 22px;
 }
-
-.brief-meta {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 32px;
-}
+.brief-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
 .meta-pill {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  padding: 5px 12px;
-  border-radius: 100px;
-  border: 1px solid var(--border);
-  color: var(--text-muted);
+  font-size: 10.5px;
   letter-spacing: 0.05em;
+  padding: 5px 11px;
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  color: var(--text-muted);
 }
 
 .brief-situation {
@@ -329,721 +303,267 @@ button {
   padding: 26px 30px;
   margin-bottom: 24px;
 }
-.brief-situation .label { margin-bottom: 16px; color: var(--accent-deep); }
-.brief-situation p {
-  font-size: 15px;
-  line-height: 1.75;
-  color: #334155;
-  margin-bottom: 12px;
-}
+.brief-situation .label { margin-bottom: 16px; display: block; color: var(--accent); }
+.brief-situation p { font-size: 15.5px; line-height: 1.78; color: #34302a; margin-bottom: 14px; }
 .brief-situation p:last-child { margin-bottom: 0; }
-.brief-situation strong { color: var(--text); font-weight: 500; }
+.brief-situation strong { font-weight: 600; color: var(--ink); }
 
 .alert-box {
-  background: rgba(220, 38, 38, 0.05);
-  border: 1px solid rgba(220, 38, 38, 0.22);
+  background: rgba(166,47,40,0.06);
+  border: 1px solid rgba(166,47,40,0.22);
   border-radius: var(--radius-sm);
-  padding: 14px 18px;
+  padding: 13px 16px;
   margin-top: 16px;
   font-size: 13.5px;
-  color: #b91c1c;
-  line-height: 1.55;
+  color: var(--danger);
+  line-height: 1.6;
 }
-.alert-box .label { color: var(--danger); margin-bottom: 6px; }
+.alert-box .label { color: var(--danger); display: block; margin-bottom: 5px; font-size: 9px; }
+.alert-box[hidden] { display: none; }
 
 .data-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 10px;
-  margin-bottom: 32px;
-}
-.data-card {
-  background: var(--surface);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1px;
+  background: var(--border);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 16px 18px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 30px;
 }
+.data-card { background: var(--surface); padding: 18px 20px; }
 .data-label {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.18em;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-faint);
-  margin-bottom: 10px;
+  color: var(--text-muted);
+  margin-bottom: 9px;
 }
-.data-value {
-  font-family: 'Syne', sans-serif;
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1;
-}
-.data-value.warn { color: var(--amber); }
+.data-value { font-family: 'Archivo', sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+.data-value.up { color: var(--good); }
 .data-value.down { color: var(--danger); }
-.data-value.up { color: var(--accent-deep); }
-.data-sub { font-size: 11.5px; color: var(--text-faint); margin-top: 6px; }
+.data-value.warn { color: var(--warn); }
+.data-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 4px; font-weight: 300; }
 
-.brief-actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+.brief-actions, .decision-actions, .debrief-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.brief-actions { margin-top: 4px; }
+
+/* ════════════ BUTTONS ════════════ */
+.btn-primary {
+  background: var(--ink);
+  color: #fbfaf6;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 14px 28px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .2s var(--ease-out);
 }
+.btn-primary:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+.btn-primary:disabled { opacity: 0.32; cursor: not-allowed; }
 
-/* ═══════════════════════════════════════════
-   GAME SCREEN
-═══════════════════════════════════════════ */
-
-#screen-game {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 32px 20px 56px;
+.btn-secondary {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 14px 24px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .2s var(--ease-out);
 }
+.btn-secondary:hover { border-color: var(--ink); color: var(--ink); }
+
+/* ════════════ GAME SCREEN ════════════ */
+#screen-game { max-width: var(--maxw); margin: 0 auto; padding: 28px 22px 72px; }
 
 .game-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 28px;
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 14px; flex-wrap: wrap; margin-bottom: 22px;
+  padding-bottom: 18px; border-bottom: 1px solid var(--border);
 }
 .game-role-label {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--accent-deep);
-  margin-bottom: 6px;
+  font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 6px;
 }
-.game-scenario-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
+.game-scenario-title { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: -0.01em; }
 
-.quarter-tracker {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.q-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--border);
-  transition: background 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
-}
-.q-dot.done { background: var(--accent-deep); }
-.q-dot.active {
-  background: var(--accent);
-  box-shadow: 0 0 0 4px rgba(0, 168, 132, 0.2);
-}
-.q-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-left: 6px;
-}
+.quarter-tracker { display: flex; align-items: center; gap: 7px; }
+.q-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border-strong); transition: all .3s; }
+.q-dot.done { background: var(--good); }
+.q-dot.active { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.q-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-muted); margin-left: 5px; }
 
-.progress-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 28px;
-}
-.progress-line {
-  flex: 1;
-  height: 2px;
-  background: var(--border);
-  border-radius: 2px;
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--indigo));
-  border-radius: 2px;
-  transition: width 480ms var(--ease-out);
-}
-.progress-pct {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  color: var(--text-faint);
-  letter-spacing: 0.08em;
-}
+.progress-header { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
+.progress-line { flex: 1; height: 2px; background: var(--border); overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent); transition: width .5s var(--ease-out); }
+.progress-pct { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.08em; color: var(--text-muted); white-space: nowrap; text-transform: uppercase; }
 
-/* DASHBOARD */
-.dashboard {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 28px;
-}
-@media (max-width: 700px) {
-  .dashboard { grid-template-columns: repeat(2, 1fr); }
-}
-
-.metric-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 14px 16px;
-  position: relative;
-  overflow: hidden;
-}
-.metric-card::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-}
+/* dashboard */
+.dashboard { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 26px; }
+@media (max-width: 700px) { .dashboard { grid-template-columns: repeat(2,1fr); } }
+.metric-card { background: var(--surface); padding: 15px 17px; position: relative; }
+.metric-card::after { content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; }
 .metric-card.safety::after { background: var(--safety); }
 .metric-card.trust::after { background: var(--trust); }
 .metric-card.innovation::after { background: var(--innovation); }
 .metric-card.finance::after { background: var(--finance); }
-
-.metric-name {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-}
-.metric-val {
-  font-family: 'Syne', sans-serif;
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  margin-bottom: 8px;
-  transition: color 400ms var(--ease-out);
-}
+.metric-name { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 9px; min-height: 22px; }
+.metric-val { font-family: 'Archivo', sans-serif; font-size: 30px; font-weight: 800; line-height: 1; margin-bottom: 8px; letter-spacing: -0.02em; }
 .metric-card.safety .metric-val { color: var(--safety); }
 .metric-card.trust .metric-val { color: var(--trust); }
 .metric-card.innovation .metric-val { color: var(--innovation); }
 .metric-card.finance .metric-val { color: var(--finance); }
-
-.metric-bar-bg {
-  height: 4px;
-  background: var(--border);
-  border-radius: 4px;
-  overflow: hidden;
-}
-.metric-bar-fill {
-  height: 100%;
-  border-radius: 4px;
-  transition: width 600ms var(--ease-out);
-}
+.metric-bar-bg { height: 3px; background: var(--border); overflow: hidden; }
+.metric-bar-fill { height: 100%; transition: width .6s var(--ease-out); }
 .safety .metric-bar-fill { background: var(--safety); }
 .trust .metric-bar-fill { background: var(--trust); }
 .innovation .metric-bar-fill { background: var(--innovation); }
 .finance .metric-bar-fill { background: var(--finance); }
 
-/* GAME COLUMNS */
-.game-columns {
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 20px;
-  align-items: start;
-}
-@media (max-width: 920px) {
-  .game-columns { grid-template-columns: 1fr; }
-}
+/* layout columns */
+.game-columns { display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
+@media (max-width: 900px) { .game-columns { grid-template-columns: 1fr; } }
 
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px 26px;
-}
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 18px; }
+.panel-label { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.panel-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-.panel-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.panel-label::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
+.situation-text { font-size: 15px; line-height: 1.78; color: #34302a; }
+.situation-text strong { color: var(--ink); font-weight: 600; }
 
-.situation-panel { margin-bottom: 20px; }
-.situation-text {
-  font-size: 15px;
-  line-height: 1.75;
-  color: #334155;
-}
-.situation-text strong { color: var(--text); font-weight: 500; }
+.sidebar { display: flex; flex-direction: column; gap: 0; }
+.sidebar .panel { margin-bottom: 18px; }
 
-.decision-cards { display: flex; flex-direction: column; gap: 12px; }
-
+/* decision cards */
+.decision-cards { display: flex; flex-direction: column; gap: 11px; }
 .decision-card {
-  border: 1px solid var(--border);
+  text-align: left; font: inherit; color: inherit; width: 100%;
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
-  padding: 18px 20px;
-  background: var(--surface-2);
-  text-align: left;
-  width: 100%;
+  padding: 17px 19px 17px 22px;
+  cursor: pointer;
+  background: var(--surface);
   position: relative;
-  transition: border-color 180ms var(--ease-out), transform 180ms var(--ease-out), background 180ms var(--ease-out);
+  transition: all .18s var(--ease-out);
 }
-.decision-card::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  border-radius: 3px 0 0 3px;
-  background: var(--border);
-  transition: background 180ms var(--ease-out);
-}
-.decision-card:hover {
-  border-color: var(--border-strong);
-  transform: translateX(2px);
-}
-.decision-card:hover::before { background: var(--text-muted); }
-.decision-card.selected {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-}
+.decision-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--border-strong); transition: background .18s; }
+.decision-card:hover { border-color: var(--accent); }
+.decision-card:hover::before { background: var(--accent); }
+.decision-card.selected { border-color: var(--accent); background: var(--accent-soft); }
 .decision-card.selected::before { background: var(--accent); }
-.decision-card:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
+.dc-option { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+.dc-title { font-family: 'Archivo', sans-serif; font-size: 16px; font-weight: 700; line-height: 1.2; margin-bottom: 6px; letter-spacing: -0.01em; }
+.dc-desc { font-size: 13px; color: var(--text-muted); line-height: 1.55; font-weight: 300; }
 
-.dc-option {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text-faint);
-  margin-bottom: 8px;
-}
-.dc-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 6px;
-  letter-spacing: -0.005em;
-}
-.dc-desc {
-  font-size: 13.5px;
-  color: var(--text-muted);
-  line-height: 1.55;
-}
+.decision-actions { margin-top: 18px; }
+#selection-hint { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: var(--text-faint); text-transform: uppercase; }
 
-.decision-actions {
-  display: flex;
-  gap: 14px;
-  margin-top: 22px;
-  align-items: center;
-}
-#selection-hint {
-  font-size: 12.5px;
-  color: var(--text-faint);
-}
-
-/* SIDEBAR */
-.sidebar { display: flex; flex-direction: column; gap: 16px; }
-
+/* stakeholders */
 .stakeholder-list { display: flex; flex-direction: column; gap: 8px; }
-.stakeholder-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
-  background: var(--surface-2);
-  border: 1px solid transparent;
-}
-.sh-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  flex-shrink: 0;
-  background: var(--surface);
-  border: 1px solid var(--border);
-}
-.sh-name { font-size: 12.5px; font-weight: 500; margin-bottom: 3px; }
-.sh-status { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
+.stakeholder-item { display: flex; align-items: flex-start; gap: 11px; padding: 9px 10px; background: var(--surface-2); border-radius: var(--radius-sm); }
+.sh-icon { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; background: var(--bg); border: 1px solid var(--border); }
+.sh-name { font-size: 12.5px; font-weight: 600; margin-bottom: 2px; }
+.sh-status { font-size: 11.5px; color: var(--text-muted); line-height: 1.45; font-weight: 300; }
 
-.reg-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 0;
-  border-bottom: 1px solid var(--border);
-}
-.reg-item:last-child { border-bottom: none; }
-.reg-status {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  transition: background 300ms var(--ease-out);
-}
-.reg-status.green { background: var(--accent); }
-.reg-status.amber { background: var(--amber); }
-.reg-status.red { background: var(--danger); }
-.reg-name {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  flex: 1;
-}
-.reg-state { font-size: 11px; color: var(--text-faint); }
+/* regulatory */
+.reg-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.reg-item:last-child { border-bottom: 0; }
+.reg-status { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.reg-status.green { background: var(--good); box-shadow: 0 0 0 3px rgba(47,125,91,0.14); }
+.reg-status.amber { background: var(--warn); box-shadow: 0 0 0 3px rgba(185,130,43,0.14); }
+.reg-status.red { background: var(--danger); box-shadow: 0 0 0 3px rgba(166,47,40,0.14); }
+.reg-name { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.04em; flex: 1; }
+.reg-state { font-size: 11px; color: var(--text-muted); text-align: right; font-weight: 300; }
 
-/* ═══════════════════════════════════════════
-   CONSEQUENCE SCREEN
-═══════════════════════════════════════════ */
-
-#screen-consequence {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 56px 24px;
-}
-
-.consequence-type {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  margin-bottom: 14px;
-}
-.consequence-type.good { color: var(--accent-deep); }
-.consequence-type.mixed { color: var(--amber); }
+/* ════════════ CONSEQUENCE ════════════ */
+#screen-consequence { max-width: 800px; margin: 0 auto; padding: clamp(36px,6vw,64px) 24px 80px; }
+.consequence-type { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 12px; }
+.consequence-type.good { color: var(--good); }
 .consequence-type.bad { color: var(--danger); }
+.consequence-type.mixed { color: var(--warn); }
+.consequence-title { font-family: 'Archivo', sans-serif; font-size: clamp(24px,4.5vw,42px); font-weight: 800; line-height: 1.08; letter-spacing: -0.025em; margin-bottom: 18px; }
+.consequence-narrative { font-size: 15.5px; line-height: 1.82; color: #34302a; margin-bottom: 28px; }
 
-.consequence-title {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(26px, 4vw, 38px);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  margin-bottom: 20px;
-}
-
-.consequence-narrative {
-  font-size: 15.5px;
-  line-height: 1.78;
-  color: #334155;
-  margin-bottom: 28px;
-}
-
-.delta-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 28px;
-}
-@media (max-width: 600px) {
-  .delta-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-.delta-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 14px 16px;
-  text-align: center;
-}
-.delta-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9.5px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-faint);
-  margin-bottom: 10px;
-}
-.delta-val {
-  font-family: 'Syne', sans-serif;
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-}
-.delta-val.pos { color: var(--accent-deep); }
+.delta-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 28px; }
+@media (max-width: 600px) { .delta-grid { grid-template-columns: repeat(2,1fr); } }
+.delta-card { background: var(--surface); padding: 15px 16px; text-align: center; }
+.delta-label { font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+.delta-val { font-family: 'Archivo', sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+.delta-val.pos { color: var(--good); }
 .delta-val.neg { color: var(--danger); }
 .delta-val.neu { color: var(--text-faint); }
 
-.reaction-list {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 22px 24px;
-  margin-bottom: 28px;
-}
-.reaction-item {
-  display: flex;
-  gap: 14px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--border);
-}
-.reaction-item:last-child { border-bottom: none; }
-.reaction-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  flex-shrink: 0;
-}
-.reaction-who { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+.reaction-list { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 24px; }
+.reaction-list .panel-label { margin-bottom: 14px; }
+.reaction-item { display: flex; gap: 13px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.reaction-item:last-child { border-bottom: 0; }
+.reaction-icon { width: 34px; height: 34px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.reaction-who { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
 .reaction-says { font-size: 13.5px; color: var(--text-muted); line-height: 1.55; font-style: italic; }
 
-.event-reveal {
-  background: rgba(217, 119, 6, 0.06);
-  border: 1px solid rgba(217, 119, 6, 0.22);
-  border-radius: var(--radius);
-  padding: 20px 24px;
-  margin-bottom: 28px;
-}
-.event-reveal .label { color: var(--amber); margin-bottom: 10px; }
-.event-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-.event-body { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+.event-reveal { background: rgba(192,81,43,0.05); border: 1px solid rgba(192,81,43,0.22); border-left: 3px solid var(--accent); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 28px; }
+.event-reveal[hidden] { display: none; }
+.event-reveal .label { color: var(--accent); display: block; margin-bottom: 9px; }
+.event-title { font-family: 'Archivo', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 7px; letter-spacing: -0.01em; }
+.event-body { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
 
-/* ═══════════════════════════════════════════
-   DEBRIEF SCREEN
-═══════════════════════════════════════════ */
+/* ════════════ DEBRIEF ════════════ */
+#screen-debrief { max-width: 840px; margin: 0 auto; padding: clamp(36px,6vw,64px) 24px 96px; }
+.debrief-header { margin-bottom: 44px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+.debrief-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+.debrief-title { font-family: 'Archivo', sans-serif; font-size: clamp(30px,5.5vw,56px); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; margin-bottom: 14px; }
+.debrief-subtitle { font-size: 15px; color: var(--text-muted); line-height: 1.6; font-weight: 300; max-width: 60ch; }
 
-#screen-debrief {
-  max-width: 820px;
-  margin: 0 auto;
-  padding: 56px 24px 88px;
-}
-
-.debrief-header {
-  text-align: center;
-  margin-bottom: 48px;
-}
-.debrief-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--accent-deep);
-  margin-bottom: 14px;
-}
-.debrief-title {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(30px, 5vw, 48px);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  margin-bottom: 14px;
-}
-.debrief-subtitle {
-  font-size: 15px;
-  color: var(--text-muted);
-  line-height: 1.6;
-  max-width: 540px;
-  margin: 0 auto;
-}
-
-.final-scores {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 36px;
-}
-@media (max-width: 600px) {
-  .final-scores { grid-template-columns: repeat(2, 1fr); }
-}
-
-.final-score-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 22px 16px;
-  text-align: center;
-}
-.fs-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-faint);
-  margin-bottom: 12px;
-}
-.fs-val {
-  font-family: 'Syne', sans-serif;
-  font-size: 36px;
-  font-weight: 800;
-  margin-bottom: 6px;
-  letter-spacing: -0.02em;
-}
-.fs-change { font-size: 12px; }
-.fs-change.pos { color: var(--accent-deep); }
+.final-scores { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 32px; }
+@media (max-width: 600px) { .final-scores { grid-template-columns: repeat(2,1fr); } }
+.final-score-card { background: var(--surface); padding: 22px 16px; text-align: center; }
+.fs-label { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; min-height: 24px; }
+.fs-val { font-family: 'Archivo', sans-serif; font-size: 40px; font-weight: 900; line-height: 1; margin-bottom: 6px; letter-spacing: -0.03em; }
+.fs-change { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.03em; }
+.fs-change.pos { color: var(--good); }
 .fs-change.neg { color: var(--danger); }
 .fs-change.neu { color: var(--text-faint); }
 
-.outcome-banner {
-  border-radius: var(--radius);
-  padding: 28px 32px;
-  margin-bottom: 36px;
-  text-align: center;
-}
-.outcome-banner.good {
-  background: var(--accent-soft);
-  border: 1px solid rgba(0, 168, 132, 0.3);
-}
-.outcome-banner.mixed {
-  background: rgba(217, 119, 6, 0.08);
-  border: 1px solid rgba(217, 119, 6, 0.25);
-}
-.outcome-banner.bad {
-  background: rgba(220, 38, 38, 0.06);
-  border: 1px solid rgba(220, 38, 38, 0.25);
-}
-.outcome-name {
-  font-family: 'Syne', sans-serif;
-  font-size: 24px;
-  font-weight: 800;
-  margin-bottom: 8px;
-  letter-spacing: -0.01em;
-}
-.outcome-banner.good .outcome-name { color: var(--accent-deep); }
-.outcome-banner.mixed .outcome-name { color: var(--amber); }
+.outcome-banner { border-radius: var(--radius); padding: 30px 32px; margin-bottom: 36px; border: 1px solid var(--border); }
+.outcome-banner.good { background: rgba(47,125,91,0.06); border-color: rgba(47,125,91,0.28); }
+.outcome-banner.mixed { background: rgba(185,130,43,0.06); border-color: rgba(185,130,43,0.28); }
+.outcome-banner.bad { background: rgba(166,47,40,0.05); border-color: rgba(166,47,40,0.24); }
+.outcome-name { font-family: 'Archivo', sans-serif; font-size: 25px; font-weight: 800; margin-bottom: 9px; letter-spacing: -0.02em; }
+.outcome-banner.good .outcome-name { color: var(--good); }
+.outcome-banner.mixed .outcome-name { color: var(--warn); }
 .outcome-banner.bad .outcome-name { color: var(--danger); }
-.outcome-desc {
-  font-size: 14.5px;
-  color: var(--text-muted);
-  line-height: 1.65;
-}
+.outcome-desc { font-size: 14.5px; color: var(--text-muted); line-height: 1.7; }
 
-.replay-block {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 22px 24px;
-  margin-bottom: 32px;
-}
-.replay-title {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 16px;
-}
-.replay-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 13.5px;
-}
-.replay-item:last-child { border-bottom: none; }
-.replay-q {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  color: var(--accent-deep);
-  width: 24px;
-  flex-shrink: 0;
-  padding-top: 1px;
-  letter-spacing: 0.05em;
-}
-.replay-choice { color: var(--text); flex: 1; line-height: 1.5; }
-.replay-note { font-size: 11.5px; color: var(--text-faint); margin-top: 3px; }
+.replay-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 36px; }
+.replay-title { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+.replay-item { display: flex; align-items: flex-start; gap: 13px; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.replay-item:last-child { border-bottom: 0; }
+.replay-q { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--accent); width: 22px; flex-shrink: 0; padding-top: 2px; letter-spacing: 0.05em; }
+.replay-choice { color: var(--ink); flex: 1; font-weight: 500; }
+.replay-note { font-size: 11.5px; color: var(--text-muted); margin-top: 3px; font-weight: 300; }
 
-.learning-section { margin-bottom: 36px; }
-.learning-section h3 {
-  font-family: 'Syne', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 18px;
-  letter-spacing: -0.01em;
-}
+.learning-section { margin-bottom: 38px; }
+.learning-section h3 { font-family: 'Archivo', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 18px; }
+.learning-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 10px; display: flex; gap: 16px; align-items: flex-start; }
+.li-tag { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; padding: 5px 10px; border-radius: 2px; background: var(--surface-2); color: var(--text-muted); white-space: nowrap; flex-shrink: 0; letter-spacing: 0.05em; text-transform: uppercase; margin-top: 1px; }
+.li-tag.safety { background: rgba(47,125,91,0.1); color: var(--good); }
+.li-tag.risk { background: rgba(166,47,40,0.08); color: var(--danger); }
+.li-tag.eth { background: rgba(185,130,43,0.12); color: var(--warn); }
+.li-tag.reg { background: rgba(47,111,143,0.1); color: var(--finance); }
+.li-title { font-weight: 600; font-size: 14.5px; margin-bottom: 5px; }
+.li-body { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; font-weight: 300; }
 
-.learning-item {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 18px 22px;
-  margin-bottom: 10px;
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-}
-.li-tag {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9.5px;
-  padding: 4px 10px;
-  border-radius: 6px;
-  background: var(--accent-soft);
-  color: var(--accent-deep);
-  white-space: nowrap;
-  flex-shrink: 0;
-  letter-spacing: 0.08em;
-  margin-top: 2px;
-  text-transform: uppercase;
-}
-.li-tag.reg { background: rgba(79, 70, 229, 0.12); color: var(--indigo); }
-.li-tag.risk { background: rgba(220, 38, 38, 0.1); color: var(--danger); }
-.li-tag.eth { background: rgba(217, 119, 6, 0.12); color: var(--amber); }
-
-.li-title { font-weight: 500; font-size: 14.5px; margin-bottom: 5px; }
-.li-body { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; }
-
-.debrief-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-/* ─── ACCESSIBILITY ─── */
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 120ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
+.debrief-actions { justify-content: flex-start; }
 </style>
 </head>
 <body>
@@ -1058,8 +578,8 @@ button {
   </h1>
 
   <p class="title-sub">
-    Two scenarios. Four decision rounds each. Every choice ripples across patient safety,
-    clinical trust, innovation, and finances. There are no perfect answers — only defensible ones.
+    Three playable scenarios. Four decision rounds each. Every choice ripples across patient safety,
+    clinical trust, equity, innovation, and accountability. There are no perfect answers — only defensible ones.
   </p>
 
   <div class="scenario-grid" role="list">
@@ -1081,14 +601,23 @@ button {
       <div class="sc-desc">An AI documentation tool stalled at 32% adoption. The Board wants ROI. The nursing workforce wants to be heard.</div>
     </button>
 
-    <button class="scenario-card playable" role="listitem" onclick="startScenario('ceo')" aria-label="Start Trust Chief Executive scenario">
+    <button class="scenario-card playable" role="listitem" onclick="startScenario('cxio')" aria-label="Start CxIO Algorithmic Equity scenario">
       <div class="sc-status-row">
-        <span class="sc-level">Scenario 03 · Trust Chief Executive</span>
+        <span class="sc-level">Scenario 03 · CxIO</span>
         <span class="sc-badge live">Playable</span>
       </div>
-      <div class="sc-title">The Vendor Expansion</div>
-      <div class="sc-desc">A vendor wants to scale AI across the ICS. CQC is asking about equity. Parliament wants written evidence. Personal accountability is on the table.</div>
+      <div class="sc-title">The Invisible Patient</div>
+      <div class="sc-desc">An EIP triage AI is improving referral times — but appears to under-flag young Black men at first episode. Algorithmic equity meets system accountability.</div>
     </button>
+
+    <div class="scenario-card locked" role="listitem">
+      <div class="sc-status-row">
+        <span class="sc-level">Scenario 04 · Trust Chief Executive</span>
+        <span class="sc-badge soon">Coming Soon</span>
+      </div>
+      <div class="sc-title">The Vendor Expansion</div>
+      <div class="sc-desc">A vendor wants to scale AI across the ICS. CQC is asking about equity. Parliament wants written evidence.</div>
+    </div>
   </div>
 
   <div class="title-foot">Proof of Concept · For NHS Clinical & Digital Leaders</div>
@@ -1148,22 +677,22 @@ button {
 
   <div class="dashboard" aria-label="Current metrics">
     <div class="metric-card safety">
-      <div class="metric-name">Patient Safety</div>
+      <div class="metric-name" id="lbl-m-safety">Patient Safety</div>
       <div class="metric-val" id="m-safety">0</div>
       <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-safety"></div></div>
     </div>
     <div class="metric-card trust">
-      <div class="metric-name">Clinical Trust</div>
+      <div class="metric-name" id="lbl-m-trust">Clinical Trust</div>
       <div class="metric-val" id="m-trust">0</div>
       <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-trust"></div></div>
     </div>
     <div class="metric-card innovation">
-      <div class="metric-name">Innovation</div>
+      <div class="metric-name" id="lbl-m-innovation">Innovation</div>
       <div class="metric-val" id="m-innovation">0</div>
       <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-innovation"></div></div>
     </div>
     <div class="metric-card finance">
-      <div class="metric-name">Financial</div>
+      <div class="metric-name" id="lbl-m-finance">Financial</div>
       <div class="metric-val" id="m-finance">0</div>
       <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-finance"></div></div>
     </div>
@@ -1219,19 +748,19 @@ button {
 
   <div class="delta-grid" aria-label="Metric changes">
     <div class="delta-card">
-      <div class="delta-label">Safety</div>
+      <div class="delta-label" id="lbl-d-safety">Safety</div>
       <div class="delta-val" id="d-safety">—</div>
     </div>
     <div class="delta-card">
-      <div class="delta-label">Trust</div>
+      <div class="delta-label" id="lbl-d-trust">Trust</div>
       <div class="delta-val" id="d-trust">—</div>
     </div>
     <div class="delta-card">
-      <div class="delta-label">Innovation</div>
+      <div class="delta-label" id="lbl-d-innovation">Innovation</div>
       <div class="delta-val" id="d-innovation">—</div>
     </div>
     <div class="delta-card">
-      <div class="delta-label">Financial</div>
+      <div class="delta-label" id="lbl-d-finance">Financial</div>
       <div class="delta-val" id="d-finance">—</div>
     </div>
   </div>
@@ -1819,279 +1348,282 @@ const SCENARIOS = {
       { tag: 'System Leadership', tagCls: 'reg', title: 'CNIO influence extends beyond the Trust', body: 'The decisions you make in a single Trust shape national nursing AI policy. ICS-level and NHSE-level decision-makers watch how senior nursing informatics leaders frame trade-offs. Your evidence is their evidence.' }
     ]
   },
-
   /* ──────────────────────────────────────────────────
-     SCENARIO 03 — TRUST CHIEF EXECUTIVE
+     SCENARIO 03 — CxIO · ALGORITHMIC EQUITY
   ────────────────────────────────────────────────── */
-  ceo: {
-    id: 'ceo',
-    name: 'Trust Chief Executive',
-    icon: '🏛️',
-    title: 'The Vendor Expansion',
-    meta: ['Q2 · Acute Trust', '4 Decision Rounds', 'CQC · Parliament · ICB', 'Personal accountability in scope'],
-    role: 'Your Role: Trust Chief Executive',
+  cxio: {
+    id: 'cxio',
+    name: 'CxIO',
+    icon: '🧠',
+    title: 'The Invisible Patient',
+    meta: ['Q1 · Mental Health Trust', '4 Decision Rounds', 'DCB0129 / UK GDPR Art.22', 'EIP Pathway AI · Algorithmic Equity'],
+    role: 'Your Role: CxIO (CNIO / CMIO / CAHPIO)',
+    metricLabels: { safety: 'Patient Safety', trust: 'Equity & Trust', innovation: 'Clinical Adoption', finance: 'System Influence' },
     briefIntro: [
-      'Fourteen months ago your Trust deployed <strong>SepsisAlert AI</strong>. Your CSO managed the early turbulence well — a robust DCB0129 safety case is now on file and post-market surveillance is tight. The Board sees the AI programme as a success story.',
-      'This morning, DataBio Ltd has formally proposed a <strong>five-year, £6.4m expansion</strong> across three new modules: stroke triage, AKI prediction, and discharge planning. Your ICB has linked <strong>£800k of incentive funding</strong> to a quarter-end commitment, positioning your Trust as the regional AI pathfinder.',
-      'In the same week: <strong>CQC has written</strong> asking how you ensure algorithmic equity across your AI deployments; the <strong>Patient Safety Commissioner has issued guidance</strong> placing personal accountability on Chief Executives for AI-related patient harm; and the <strong>Health and Social Care Committee</strong> has invited you to submit written evidence to a parliamentary inquiry on NHS AI.'
+      'Eight months ago, your Trust deployed <strong>PathwayIQ</strong> — an AI-assisted triage and referral prioritisation tool for your Early Intervention in Psychosis (EIP) service. The headline numbers are good: referral-to-treatment times have fallen by 22%, below the 2-week NHS standard for 91% of cases, up from 74%.',
+      'Two weeks ago, a newly qualified mental health nurse — <strong>Amara Osei</strong> — brought you an informal concern. Reviewing her own caseload, she noticed that several young Black men she referred with clear first-episode psychosis indicators were scored as low priority by PathwayIQ, causing delays. She has manually cross-checked 47 cases. Her analysis — informal, not validated — suggests the AI consistently scores this demographic group lower than clinical presentation would predict.',
+      'You have spoken informally to the vendor. Their position: <em>"The model was trained on nationally representative NHS data and has been independently validated. Individual case reviews are not statistically meaningful."</em> Black and minoritised communities are already disproportionately routed to crisis care rather than early intervention in psychosis. If PathwayIQ is reproducing — or amplifying — historical inequity, the consequences extend far beyond this Trust.'
     ],
-    briefAlert: 'A rival vendor (NorthStar AI) has approached you with a 30% cheaper alternative. Two journalists have requested interviews — one on procurement transparency, one on equity. Your CFO has flagged a £3.2m budget gap for the next financial year.',
+    briefAlert: 'Amara has mentioned the issue to her supervisor. It is now known informally across two clinical teams. If you do not act visibly, she may escalate through formal channels — including the Trust\'s Freedom to Speak Up Guardian.',
     briefData: [
-      { label: 'Expansion Value', value: '£6.4m', cls: '', sub: 'Over 5 years' },
-      { label: 'ICB Incentive', value: '£800k', cls: 'up', sub: 'If committed this quarter' },
-      { label: 'Budget Gap', value: '£3.2m', cls: 'down', sub: 'Next financial year' },
-      { label: 'Equity Audit', value: 'None', cls: 'warn', sub: 'Of existing AI deployments' }
+      { label: 'RTT Performance', value: '91%', cls: 'up',   sub: 'Up from 74% pre-AI' },
+      { label: 'Cases Flagged',   value: '47',  cls: 'warn', sub: 'Informal nurse review' },
+      { label: 'Vendor Position', value: 'Disputed', cls: 'down', sub: 'Claims model validated' },
+      { label: 'WRES EIP Access', value: 'Widening', cls: 'warn', sub: 'Equity gap growing' }
     ],
-    startMetrics: { safety: 72, trust: 60, innovation: 55, finance: 48 },
+    startMetrics: { safety: 62, trust: 40, innovation: 71, finance: 55 },
     stakeholders: [
-      { id: 'chair',   icon: '🪑', name: 'Trust Chair', status: 'Cautiously supportive. Wants discipline.' },
-      { id: 'cfo',     icon: '💰', name: 'CFO', status: 'Sees £800k as essential. Worried about lock-in.' },
-      { id: 'cso',     icon: '🩺', name: 'Chief Safety Officer', status: 'Concerned about scaling before equity baseline.' },
-      { id: 'icb',     icon: '🏛️', name: 'ICB Chief Executive', status: 'Wants you to lead the regional AI pilot.' },
-      { id: 'psc',     icon: '⚖️', name: 'Patient Safety Commissioner', status: 'Has written publicly about CEO accountability.' },
-      { id: 'media',   icon: '📰', name: 'Health Journalists', status: 'Two outstanding interview requests.' }
+      { id: 'amara',     icon: '👩🏾‍⚕️', name: 'Amara Osei (MH Nurse)', status: 'Informal concern raised. Watching for your response.' },
+      { id: 'ceo',       icon: '🏛️', name: 'Trust CEO', status: 'Proud of RTT improvement. Unaware of equity concern.' },
+      { id: 'vendor',    icon: '💼', name: 'PathwayIQ Vendor', status: 'Defensive. Claims model validated. Resisting audit.' },
+      { id: 'community', icon: '👥', name: 'Community / Lived Experience', status: 'No formal engagement yet. High distrust of NHS data use.' },
+      { id: 'reg',       icon: '⚖️', name: 'ICO / NHSE / CQC', status: 'No active inquiry. UK GDPR Art.22 in scope.' }
     ],
     regulatory: [
-      { id: 'cqc',    name: 'CQC',                   status: 'amber', state: 'Equity enquiry open' },
-      { id: 'mhra',   name: 'MHRA AIaMD',            status: 'green', state: 'Compliant (existing)' },
-      { id: 'psc',    name: 'Patient Safety Comm.',  status: 'amber', state: 'New CEO guidance issued' },
-      { id: 'parl',   name: 'Parliamentary Inquiry', status: 'amber', state: 'Written evidence requested' }
+      { id: 'dcb',  name: 'DCB0129/0160',     status: 'amber', state: 'Equity not in hazard log' },
+      { id: 'gdpr', name: 'UK GDPR Art.22',   status: 'red',   state: 'Automated decisions unreviewed' },
+      { id: 'psed', name: 'Public Sector Equality Duty', status: 'amber', state: 'Potential breach' },
+      { id: 'ftsu', name: 'Freedom to Speak Up', status: 'green', state: 'Not yet triggered' }
     ],
     rounds: [
       {
-        title: 'Round 1 · The Expansion Decision',
-        situation: `DataBio\'s proposal is well-constructed: three modules, a 12-month implementation, shared evaluation framework, and an ICS-aligned roadmap. Your Medical Director is enthusiastic. Your CSO is more guarded — the existing sepsis deployment has been audited but the three new modules carry different clinical risk profiles, different training cohorts, and different equity questions.<br><br>The <strong>£800k ICB incentive</strong> evaporates if you do not commit by quarter end. The CFO is already modelling it into next year\'s budget. The Chair is in your office wanting to know your view before Friday\'s Board.`,
-        alert: 'A decision now sets the tone for every AI procurement in your Trust over the next three years.',
+        title: 'Round 1 · The First Decision',
+        situation: `Amara\'s informal review has flagged 47 cases. You have read her analysis. It is methodologically limited — a single clinician, unblinded, no comparator group — but her clinical reasoning is <strong>credible and specific</strong>. Three of the cases involve documented delays to first contact that exceeded the NHS standard.<br><br>The vendor has dismissed the concern via email. The CEO does not know. You must decide how to respond to Amara and what investigation, if any, to initiate.`,
+        alert: 'Investigating formally means slowing the AI programme the Board is proud of. Not investigating means risking harm to a group already underserved by mental health services.',
         options: [
           {
             id: 'A',
-            title: 'Accept the expansion with governance conditions',
-            desc: 'Sign with three preconditions: independent equity audit, staged go-live gates, and contractual right to suspend any module on patient safety grounds.',
-            deltas: { safety: 8, trust: 10, innovation: 12, finance: 5 },
+            title: 'Commission a formal equity audit',
+            desc: 'Instruct your clinical informatics team to conduct a demographically stratified analysis of PathwayIQ outputs across the full dataset. Engage the vendor formally. Brief the CEO.',
+            deltas: { safety: 18, trust: 22, innovation: -10, finance: 15 },
             type: 'good',
-            narrative: 'The vendor pushes back on the suspension clause but ultimately accepts. Your Trust secures the £800k incentive and the regional AI pathfinder designation. The equity audit precondition becomes the template for ICS-wide AI procurement. Within six months, two other Trusts adopt your contractual model. The CSO is appointed to chair the ICS AI safety group.',
+            narrative: 'The audit takes six weeks. The findings are unambiguous: PathwayIQ scores Black male patients aged 16–35 an average of 1.4 priority bands lower than clinical presentation predicts, across 312 cases over 8 months. The model was trained on a dataset that underrepresented first-episode presentations in this demographic — because those patients historically accessed crisis care, not EIP. The AI has learned, and reinforced, the inequity it was meant to solve. You brief the CEO. She is shaken. The vendor\'s legal team contacts yours. Amara is formally recognised for raising the concern.',
             reactions: [
-              { icon: '🪑', who: 'Trust Chair', says: 'You secured the funding and protected the Trust. That is the job.' },
-              { icon: '💰', who: 'CFO', says: 'The conditions slowed things but the financial case is now defensible.' },
-              { icon: '🩺', who: 'Chief Safety Officer', says: 'Pre-conditions written into contract. This is how procurement should be done.' },
-              { icon: '🏛️', who: 'ICB Chief Executive', says: 'Your governance approach will be referenced across the ICS.' }
+              { icon: '👩🏾‍⚕️', who: 'Amara Osei', says: 'I was terrified to raise this. The fact that it was taken seriously matters more than I can say.' },
+              { icon: '🏛️', who: 'Trust CEO', says: 'This is deeply concerning. We need to notify NHSE and consider what we owe those patients.' },
+              { icon: '💼', who: 'PathwayIQ Vendor', says: 'We dispute the methodology of your audit. Our validation study remains valid.' },
+              { icon: '⚖️', who: 'ICO', says: 'You are advised to consider your obligations under UK GDPR Article 22 regarding automated decision-making affecting protected characteristics.' }
             ],
             event: null,
-            regUpdate: { cqc: { status: 'green', state: 'Equity audit committed' } }
+            regUpdate: { dcb: { status: 'green', state: 'Equity hazard logged' }, ftsu: { status: 'green', state: 'Concern handled internally' } }
           },
           {
             id: 'B',
-            title: 'Decline the expansion, consolidate the existing deployment',
-            desc: 'Tell the ICB and the vendor that the Trust will not scale further until equity, surveillance, and workforce readiness are independently assured.',
-            deltas: { safety: 12, trust: 4, innovation: -18, finance: -12 },
+            title: 'Request a vendor-led review',
+            desc: 'Write formally to PathwayIQ requesting they conduct an internal performance review by protected characteristic. Give them 30 days to respond.',
+            deltas: { safety: 5, trust: 8, innovation: 3, finance: -5 },
             type: 'mixed',
-            narrative: 'Your decision is principled and unpopular. The £800k disappears. The ICB hands the pathfinder designation to a neighbouring Trust. The CFO is publicly silent and privately furious. But six months later, the neighbouring Trust\'s rushed deployment generates a serious incident — and your decision is cited in a HSJ piece as "the call others should have made". The CQC opens its equity enquiry without finding anything concerning at your Trust.',
+            narrative: 'The vendor responds after 28 days with a 4-page summary concluding their model "shows no statistically significant differential impact across protected characteristics." The methodology is opaque. They have not shared training data, comparator group, or statistical test applied. You cannot verify the claim. Amara reads the response and feels dismissed. She contacts the Freedom to Speak Up Guardian.',
             reactions: [
-              { icon: '🪑', who: 'Trust Chair', says: 'I support this. The Board will need to understand why.' },
-              { icon: '💰', who: 'CFO', says: 'You have just handed £800k to our peer Trust. We will struggle next year.' },
-              { icon: '🏛️', who: 'ICB Chief Executive', says: 'Disappointed. The pathfinder role goes elsewhere.' },
-              { icon: '🩺', who: 'Chief Safety Officer', says: 'Right call. The expansion was not ready for governance.' }
+              { icon: '💼', who: 'PathwayIQ Vendor', says: 'Our internal review is complete. No differential impact was found. We consider the matter closed.' },
+              { icon: '👩🏾‍⚕️', who: 'Amara Osei', says: 'A vendor reviewing their own bias concern. I don\'t think I can leave this here.' },
+              { icon: '🏛️', who: 'Trust CEO', says: 'The vendor says it\'s fine. Is that enough for us?' },
+              { icon: '⚖️', who: 'FTSU Guardian', says: 'A formal concern has been raised. I will be in touch with you directly.' }
             ],
-            event: null,
-            regUpdate: { cqc: { status: 'green', state: 'No concerns at present' } }
+            event: { title: 'FTSU Concern Formally Logged', body: 'Amara Osei has raised a formal Freedom to Speak Up concern. The FTSU Guardian is now required to investigate and report to the Board. The matter is no longer informal. You will be asked to account for your response to the original concern.' },
+            regUpdate: { ftsu: { status: 'red', state: 'Formal concern raised' } }
           },
           {
             id: 'C',
-            title: 'Counter with phased modular procurement',
-            desc: 'Decline the bundled deal. Propose a one-module-at-a-time framework with go/no-go gates between each. Forfeit the timing-dependent £800k.',
-            deltas: { safety: 14, trust: 12, innovation: 6, finance: -6 },
-            type: 'good',
-            narrative: 'Your counter-proposal becomes the most-watched procurement decision in the ICS that quarter. The vendor reluctantly accepts modular procurement; the £800k is rephased over 18 months at a lower headline figure. The phased model is taken up by NHS England\'s AI procurement working group and cited as a model in the NHS AI Procurement Playbook. Innovation slows in the short term; long-term, the Trust\'s position is stronger.',
-            reactions: [
-              { icon: '🪑', who: 'Trust Chair', says: 'Strong commercial leadership. The Board will be reassured.' },
-              { icon: '💰', who: 'CFO', says: 'I lost the headline number but gained much better risk control.' },
-              { icon: '🏛️', who: 'ICB Chief Executive', says: 'Bold. The ICB will likely follow this model.' },
-              { icon: '💼', who: 'DataBio Ltd', says: 'We accept modular procurement. It is not what we wanted.' }
-            ],
-            event: null,
-            regUpdate: {}
-          }
-        ]
-      },
-      {
-        title: 'Round 2 · The Equity Question',
-        situation: `Six weeks on. CQC\'s equity enquiry is now formal. An academic at a Russell Group university has published a critique in <em>The Lancet Digital Health</em> noting that DataBio\'s sepsis model was trained on a 76% white European cohort and that no UK Trust has yet published differential-performance data for it.<br><br>Your CSO confirms: <strong>your Trust has never run an equity audit on its existing AI deployment.</strong> The Patient Safety Commissioner\'s new guidance explicitly names equity audit as a CEO-level responsibility. The journalist working on the equity piece has asked for a comment.`,
-        alert: 'Whatever you say publicly will be quoted. Whatever you do internally will be FOIA-able.',
-        options: [
-          {
-            id: 'A',
-            title: 'Commission an independent algorithmic equity audit',
-            desc: 'Procure an external audit covering all live AI deployments. Publish findings — favourable or not.',
-            deltas: { safety: 16, trust: 14, innovation: 4, finance: -8 },
-            type: 'good',
-            narrative: 'The audit takes four months and costs £85k. It finds the sepsis model performs comparably across ethnicity groups within the Trust\'s population — but worse for patients over 80 and those with severe frailty. The Trust publishes both findings and mitigations. The CQC closes its enquiry citing "exemplary transparency". The Patient Safety Commissioner publicly references your Trust as a positive example. Your CSO is invited onto the national AI Equity Working Group.',
-            reactions: [
-              { icon: '⚖️', who: 'Patient Safety Commissioner', says: 'This is what CEO accountability for AI looks like in practice.' },
-              { icon: '🏛️', who: 'CQC', says: 'Enquiry closed. Trust commended for transparency.' },
-              { icon: '🎓', who: 'Academic Critic', says: 'I disagreed with much of their approach. I cannot disagree with this.' },
-              { icon: '📰', who: 'Health Journalist', says: 'Story angle pivoted: "The Trust that audited its AI before it had to."' }
-            ],
-            event: null,
-            regUpdate: { cqc: { status: 'green', state: 'Enquiry closed — commended' }, psc: { status: 'green', state: 'Cited as exemplar' } }
-          },
-          {
-            id: 'B',
-            title: 'Push the vendor to do equity validation under contract',
-            desc: 'Issue formal contractual notice requiring DataBio to provide a UK-population validation study. Lean on the vendor, retain optionality.',
-            deltas: { safety: 4, trust: 0, innovation: 6, finance: 2 },
-            type: 'mixed',
-            narrative: 'DataBio produces a vendor-led study within ten weeks. The methodology is competent but the conflict of interest is obvious. The CQC notes the study but expresses reservations about independence. The journalist publishes a piece headlined: "NHS Trusts let vendors mark their own AI homework on equity." Your Trust is named in a non-flattering paragraph. Internally, the study is technically sufficient; reputationally, it is a near-miss.',
-            reactions: [
-              { icon: '💼', who: 'DataBio Ltd', says: 'We have produced the validation study. We are proud of it.' },
-              { icon: '🏛️', who: 'CQC', says: 'We have reviewed the vendor study. We would have preferred independent validation.' },
-              { icon: '📰', who: 'Health Journalist', says: 'Story published. Your Trust is mentioned.' },
-              { icon: '⚖️', who: 'Patient Safety Commissioner', says: 'Vendor validation is not the same as independent assurance. Worth reflecting on.' }
-            ],
-            event: { title: 'FOIA Request Lodged', body: 'A campaign group has lodged an FOI request for all internal communications between the Trust and DataBio regarding the equity validation. The request will be processed within 20 working days.' },
-            regUpdate: { cqc: { status: 'amber', state: 'Concerns about independence' } }
-          },
-          {
-            id: 'C',
-            title: 'Pause expansion until equity baseline is established',
-            desc: 'Halt all AI module rollout. Establish equity audit as a pre-condition for any new deployment. Communicate publicly.',
-            deltas: { safety: 14, trust: 10, innovation: -14, finance: -10 },
-            type: 'good',
-            narrative: 'The pause is widely reported and broadly respected. The Lancet author publishes a follow-up endorsing the move. The CFO is unhappy: the rephased £800k now slips into the following financial year. The Patient Safety Commissioner publicly references your Trust as "leading by example". Internally, two clinical directors complain that the pause is overcautious. The CQC enquiry closes positively. Innovation metrics fall but governance position strengthens markedly.',
-            reactions: [
-              { icon: '⚖️', who: 'Patient Safety Commissioner', says: 'Leading by example. This is what the guidance was designed to encourage.' },
-              { icon: '🩺', who: 'Chief Safety Officer', says: 'This is the right call. The Trust will be stronger for it.' },
-              { icon: '💰', who: 'CFO', says: 'Three months of slippage. Manageable, just.' },
-              { icon: '📰', who: 'Health Journalist', says: 'Story filed: NHS Trust pauses AI to audit for equity — a first.' }
-            ],
-            event: null,
-            regUpdate: { cqc: { status: 'green', state: 'Enquiry closed positively' }, psc: { status: 'green', state: 'Cited as exemplar' } }
-          }
-        ]
-      },
-      {
-        title: 'Round 3 · The Procurement Politics',
-        situation: `Three months later. The ICB Chief Executive has formally written asking you to chair the <strong>Regional AI Programme Board</strong> — a coordinating role across nine Trusts. Acceptance comes with the implicit condition that the Trust standardises on DataBio for inter-operability across the ICS.<br><br>Meanwhile, NorthStar AI — the competing vendor — has approached you with a credible, 30% cheaper proposition for the AKI module specifically. Their model is less mature but trained on a more diverse cohort. Your CIO thinks vendor diversity reduces strategic risk; your CFO thinks the cheaper option deserves consideration; your Medical Director thinks a single-vendor estate is operationally simpler.`,
-        options: [
-          {
-            id: 'A',
-            title: 'Accept ICB chair role on DataBio standardised platform',
-            desc: 'Take the regional leadership position. Accept single-vendor lock-in across the ICS for operational coherence.',
-            deltas: { safety: 4, trust: 6, innovation: 14, finance: 8 },
-            type: 'mixed',
-            narrative: 'You become chair of the Regional AI Programme Board. Your visibility rises markedly. But standardising on DataBio across nine Trusts creates a critical single point of failure: when a vendor patch causes a four-hour outage 18 months later, every Trust in the ICS is affected simultaneously. The Patient Safety Commissioner notes "concentration risk" in a subsequent report. Innovation is high; resilience is brittle.',
-            reactions: [
-              { icon: '🏛️', who: 'ICB Chief Executive', says: 'Welcome to the role. The region needs your leadership.' },
-              { icon: '💼', who: 'DataBio Ltd', says: 'Excellent. We will scale the relationship accordingly.' },
-              { icon: '⚖️', who: 'Patient Safety Commissioner', says: 'Concentration risk is a structural patient safety issue. Worth monitoring.' },
-              { icon: '🩺', who: 'Chief Safety Officer', says: 'I would have preferred a multi-vendor option.' }
-            ],
-            event: { title: 'Vendor Outage', body: 'A scheduled DataBio patch creates a four-hour outage of sepsis alerting across nine ICS Trusts. No serious incidents, but the operational risk profile of single-vendor standardisation is now publicly visible.' },
-            regUpdate: { psc: { status: 'amber', state: 'Concentration risk flagged' } }
-          },
-          {
-            id: 'B',
-            title: 'Negotiate a multi-vendor ICS framework',
-            desc: 'Accept the chair role but insist on a multi-vendor framework with inter-operability standards and shared evaluation methodology.',
-            deltas: { safety: 12, trust: 14, innovation: 16, finance: 4 },
-            type: 'good',
-            narrative: 'The negotiation is harder and slower. The vendors object. The ICB is initially sceptical. But within twelve months the multi-vendor framework is operating well: DataBio for sepsis, NorthStar for AKI, a third vendor for discharge. Inter-operability standards force open clinical data formats. NHS England adopts the framework as a national reference architecture. You are invited to give evidence to a House of Lords select committee on AI procurement.',
-            reactions: [
-              { icon: '🏛️', who: 'ICB Chief Executive', says: 'Harder but better. Your framework has changed how we think about AI procurement.' },
-              { icon: '🩺', who: 'Chief Safety Officer', says: 'Multi-vendor resilience plus shared evaluation. Exactly what was needed.' },
-              { icon: '💼', who: 'DataBio Ltd', says: 'We do not love this. We accept it.' },
-              { icon: '🏛️', who: 'NHS England', says: 'Framework adopted as national reference architecture.' }
-            ],
-            event: null,
-            regUpdate: { psc: { status: 'green', state: 'Resilience model commended' } }
-          },
-          {
-            id: 'C',
-            title: 'Decline ICB chair, pilot NorthStar locally',
-            desc: 'Step back from regional leadership. Use the autonomy to pilot the cheaper, more equitable NorthStar AKI module at your Trust only.',
-            deltas: { safety: 6, trust: -4, innovation: 4, finance: 10 },
-            type: 'mixed',
-            narrative: 'The ICB chair role goes to a neighbouring CEO who actively wanted it. The NorthStar pilot is technically interesting — the equity validation is stronger — but your Trust is now outside the regional coordinating structure. When ICB-wide funding allocations are decided 18 months later, your Trust is treated as a peripheral player. The clinical case for NorthStar is good; the political cost was higher than you projected.',
-            reactions: [
-              { icon: '🏛️', who: 'ICB Chief Executive', says: 'Disappointing. We needed your leadership on this.' },
-              { icon: '💰', who: 'CFO', says: 'Cheaper procurement, weaker political position. The maths is mixed.' },
-              { icon: '🩺', who: 'Chief Safety Officer', says: 'I supported NorthStar on equity grounds. The cost was higher than I expected.' },
-              { icon: '💼', who: 'NorthStar AI', says: 'Thank you for the opportunity. We will deliver.' }
-            ],
-            event: null,
-            regUpdate: {}
-          }
-        ]
-      },
-      {
-        title: 'Round 4 · The Parliamentary Evidence',
-        situation: `Six months later. The Health and Social Care Committee\'s deadline for written evidence arrives. Your submission will be public, will be quoted, and will shape how Parliament thinks about NHS AI policy for the next session. The Chair has briefed you that the Trust Board will <em>"see your evidence before it goes"</em> — implying a steer toward institutional caution.<br><br>Your CSO has drafted a candid technical annex. The Director of Communications has drafted a polished, defensive narrative. The CFO has drafted nothing but has reminded you, twice, that the Trust\'s position with NHSE on capital allocation is sensitive this year.`,
-        alert: 'This is your moment to define what kind of CEO and what kind of NHS leader you are. The decision is irreversible the moment you submit.',
-        options: [
-          {
-            id: 'A',
-            title: 'Submit honest, evidence-grounded testimony with policy recommendations',
-            desc: 'Publish what you actually believe: that NHS AI procurement is structurally under-governed, that CEO accountability needs proper resourcing, and that equity must be a pre-condition not an afterthought.',
-            deltas: { safety: 16, trust: 18, innovation: 12, finance: -4 },
-            type: 'good',
-            narrative: 'Your evidence is widely read. Two of your seven policy recommendations are picked up directly in the Committee\'s subsequent report. You are invited to give oral evidence. The Royal College of Physicians and the RCN both publicly endorse your written submission. Within twelve months, you are appointed to a national advisory role on NHS AI policy. The Trust\'s funding position with NHSE is unaffected by the submission — the CFO\'s caution was overcautious.',
-            reactions: [
-              { icon: '🏛️', who: 'HSC Committee Chair', says: 'The most substantive Trust-level submission we received. Thank you.' },
-              { icon: '🪑', who: 'Trust Chair', says: 'Bold. The Board is supportive — and quietly proud.' },
-              { icon: '⚖️', who: 'Patient Safety Commissioner', says: 'This is the kind of executive testimony the system has been waiting for.' },
-              { icon: '📰', who: 'HSJ', says: 'NHS CEO breaks ranks with cautious testimony tradition — and is being read by everyone.' }
-            ],
-            event: null,
-            regUpdate: { parl: { status: 'green', state: 'Recommendations adopted' } }
-          },
-          {
-            id: 'B',
-            title: 'Submit cautious, Trust-defensive evidence',
-            desc: 'Follow the Communications draft. Emphasise positive deployment outcomes. Avoid policy recommendations. Protect the Trust\'s NHSE relationship.',
-            deltas: { safety: 0, trust: -8, innovation: -10, finance: 6 },
+            title: 'Acknowledge and monitor — no formal action yet',
+            desc: 'Thank Amara for raising the concern. Note it informally. Request the clinical team log any further suspected cases. Review in 3 months.',
+            deltas: { safety: -5, trust: -15, innovation: 5, finance: -10 },
             type: 'bad',
-            narrative: 'Your submission reads as institutional. The Committee notes it but moves on. Other Trusts submit more substantive evidence and are referenced in the final report. You watch peers be invited to give oral evidence and to advisory boards. The CFO\'s sensitivity about the NHSE funding relationship was real but the trade-off was not worth what you gave up. Internally, your CSO is privately disappointed; the staff network reads the submission as managerialist; the Board moves on.',
+            narrative: 'Over the following 6 weeks, three more patients experience delayed EIP access. Amara contacts a health equity advocacy organisation she is connected to through community work. They in turn contact NHS England\'s Health Inequalities team. The story reaches a trade journal. The headline: "NHS Mental Health Trust ignored AI bias warning from frontline nurse." The CEO calls you at 7am.',
             reactions: [
-              { icon: '🏛️', who: 'HSC Committee Clerk', says: 'Noted. We are quoting from three other Trusts in the final report.' },
-              { icon: '🩺', who: 'Chief Safety Officer', says: 'I expected more from this. We had a chance to shape policy.' },
-              { icon: '👥', who: 'Trust Staff Network', says: 'A submission that sounds like it was written by our PR team. Disappointing.' },
-              { icon: '💰', who: 'CFO', says: 'NHSE relationship protected. That was the priority.' }
+              { icon: '👩🏾‍⚕️', who: 'Amara Osei', says: 'I raised this in good faith. I expected leadership to at least look. I was wrong.' },
+              { icon: '🏛️', who: 'Trust CEO', says: 'You were aware of this concern and took no formal action. Explain to me why.' },
+              { icon: '📰', who: 'HSJ', says: 'Trust ignored AI bias warning, nurse says — front-page digital edition.' },
+              { icon: '👥', who: 'Community Advocates', says: 'This is exactly the pattern we warned about when the NHS said it would use AI to improve mental health equity.' }
+            ],
+            event: { title: 'Media Escalation', body: 'The health equity concern has reached NHS England\'s Health Inequalities directorate. A formal inquiry into the Trust\'s AI governance processes has been opened. The CEO has requested an extraordinary Board meeting.' },
+            regUpdate: { dcb: { status: 'red', state: 'External inquiry opened' }, psed: { status: 'red', state: 'Inquiry under PSED' }, ftsu: { status: 'red', state: 'External escalation' } }
+          }
+        ]
+      },
+      {
+        title: 'Round 2 · The Audit Findings',
+        situation: `The equity audit (or its equivalent) has concluded. The evidence is now clear: PathwayIQ has been producing lower priority scores for young Black men at first presentation. The gap is clinically significant in <strong>22% of affected cases</strong> — meaning real patients experienced delayed care.<br><br>You must now decide what to do with the findings. The CEO has asked for a recommendation. The vendor\'s legal team is engaged. NHSE have been informally notified.`,
+        alert: 'The vendor has sent a legal letter asserting that publication of the audit findings would constitute breach of commercial confidentiality. Your legal team says this claim is not straightforward.',
+        options: [
+          {
+            id: 'A',
+            title: 'Notify affected patients and NHSE — publish findings',
+            desc: 'Proactively contact patients whose care may have been affected. Notify NHS England. Publish a summary of findings on the Trust\'s transparency portal. Engage the ICO regarding UK GDPR Article 22.',
+            deltas: { safety: 20, trust: 28, innovation: -8, finance: 20 },
+            type: 'good',
+            narrative: 'The notification process is difficult and distressing for some patients and families. A formal duty of candour process is initiated for three cases. The vendor threatens litigation but does not pursue it. NHSE commission a review of PathwayIQ\'s deployment across 14 other Trusts — discovering similar patterns in two. Your Trust is nationally recognised for the transparency of its response. Amara is invited to co-author a journal paper on algorithmic equity in mental health.',
+            reactions: [
+              { icon: '👥', who: 'Affected Patients', says: 'We deserved to know this. It still hurts — but being told matters.' },
+              { icon: '🏛️', who: 'NHS England', says: 'This is the standard we expect. We are reviewing deployment across the system.' },
+              { icon: '💼', who: 'PathwayIQ Vendor', says: 'We strongly dispute the framing of these findings and reserve our legal position.' },
+              { icon: '⚖️', who: 'ICO', says: 'The Trust\'s engagement with Article 22 obligations is noted as a model response.' }
             ],
             event: null,
-            regUpdate: { parl: { status: 'amber', state: 'Submission noted, not cited' } }
+            regUpdate: { gdpr: { status: 'green', state: 'Art.22 review engaged' }, psed: { status: 'green', state: 'Duty discharged' } }
+          },
+          {
+            id: 'B',
+            title: 'Suspend PathwayIQ and redesign the equity protocol',
+            desc: 'Pause deployment. Work with the vendor contractually to retrain the model using a more equitable dataset. Re-deploy only once equity validation has been completed.',
+            deltas: { safety: 12, trust: 15, innovation: -20, finance: 8 },
+            type: 'mixed',
+            narrative: 'The suspension causes immediate disruption. RTT performance drops back toward pre-AI levels within 6 weeks. The Board is alarmed. The vendor disputes the retraining requirement and the timeline slips. Nine months later, a revised model is deployed with an equity validation layer. Performance recovers. The gap is eliminated. The process was painful and expensive but the outcome is clinically and ethically sound.',
+            reactions: [
+              { icon: '🏛️', who: 'Trust CEO', says: 'Nine months back to manual. The Board is unhappy but I support the principle.' },
+              { icon: '👩🏾‍⚕️', who: 'Amara Osei', says: 'This is the right thing. It was never about stopping AI — it was about making it actually fair.' },
+              { icon: '💼', who: 'PathwayIQ Vendor', says: 'Retraining will take 9–12 months and is not covered under the current contract.' },
+              { icon: '👩‍⚕️', who: 'Clinical Staff', says: 'We\'re back to paper processes through winter. This is going to be hard.' }
+            ],
+            event: { title: 'Winter Pressure Coincides with Suspension', body: 'The suspension period overlaps with peak referral season. Two patients experience delayed EIP access during the manual interim period. The suspension decision is questioned publicly. A balance must be struck between AI equity and the harms of no AI at all.' },
+            regUpdate: { dcb: { status: 'green', state: 'Suspended pending retrain' } }
           },
           {
             id: 'C',
-            title: 'Submit through the ICB and NHS Confederation collective voice',
-            desc: 'Defer to a coordinated multi-Trust submission via the ICB and NHS Confederation. Add a brief individual letter on equity specifically.',
-            deltas: { safety: 8, trust: 6, innovation: 4, finance: 2 },
+            title: 'Apply a manual equity override layer',
+            desc: 'Keep PathwayIQ running. Implement mandatory clinical review for all patients scoring low priority who are Black or Mixed ethnicity. A workaround, not a fix.',
+            deltas: { safety: 8, trust: 6, innovation: 5, finance: -12 },
             type: 'mixed',
-            narrative: 'The collective submission is competent and represents 23 Trusts. Your individual letter on equity is referenced once in the Committee\'s final report. You retain political safety and modest influence. Twelve months later, when individual Trust CEOs are invited to advisory roles, you are not on the shortlist — those who submitted independent substantive evidence are. The collective voice protected you and limited you in equal measure.',
+            narrative: 'The override reduces harm in the short term but creates a new problem: you are now operating a system where clinical staff are required to apply different processes based on a patient\'s ethnicity. A specialist equality law firm advises this may itself raise Equality Act concerns depending on implementation. The ICO asks for a Data Protection Impact Assessment. The vendor notes the override "introduces human bias into a validated algorithm." You have fixed the symptom without addressing the cause.',
             reactions: [
-              { icon: '🏛️', who: 'ICB Chief Executive', says: 'Sensible. Solidarity matters.' },
-              { icon: '🏛️', who: 'NHS Confederation', says: 'Strong collective submission. Thank you for the contribution.' },
-              { icon: '🪑', who: 'Trust Chair', says: 'Safe choice. Possibly too safe.' },
-              { icon: '⚖️', who: 'Patient Safety Commissioner', says: 'I appreciated your individual letter on equity. I wished for more.' }
+              { icon: '⚖️', who: 'Equality Law Specialist', says: 'A process that applies different clinical protocols based on ethnicity requires very careful legal framing to avoid its own discrimination risk.' },
+              { icon: '💼', who: 'PathwayIQ Vendor', says: 'The introduction of a manual override layer compromises the integrity of the validated model.' },
+              { icon: '👩‍⚕️', who: 'Clinical Staff', says: 'We\'re now running two different processes. Which one is clinically authoritative?' },
+              { icon: '⚖️', who: 'ICO', says: 'A DPIA is required for this modified processing arrangement within 28 days.' }
             ],
             event: null,
-            regUpdate: { parl: { status: 'green', state: 'Collective submission accepted' } }
+            regUpdate: { gdpr: { status: 'amber', state: 'DPIA required' } }
+          }
+        ]
+      },
+      {
+        title: 'Round 3 · System Leadership',
+        situation: `Two neighbouring Trust CxIOs have contacted you. They have heard about the PathwayIQ situation and want to understand whether they have the same problem — both Trusts use PathwayIQ or comparable products. NHS England\'s Health Inequalities directorate has asked whether you would lead a system-wide algorithmic equity review for mental health AI across the ICS.<br><br>Meanwhile, a community mental health advocate — representing service user groups, many from Black and minoritised communities — has requested a meeting. They want to know what role the community should play in AI governance.`,
+        alert: 'System leadership is an opportunity. But it comes with accountability. If you lead and the ICS review finds widespread harm, you own the findings — and the response.',
+        options: [
+          {
+            id: 'A',
+            title: 'Lead an ICS-wide algorithmic equity review',
+            desc: 'Accept NHS England\'s invitation. Commission a cross-Trust equity audit of mental health AI tools across the ICS. Co-produce the methodology with the community advocate.',
+            deltas: { safety: 10, trust: 18, innovation: 5, finance: 22 },
+            type: 'good',
+            narrative: 'The ICS review takes four months and examines seven AI tools across three Trusts. It finds equity concerns in three. A shared algorithmic equity standard emerges, co-produced with service users. NHS England funds a dedicated AI equity team. You are appointed as the ICS Clinical AI Ethics Lead — a new role created around your work. The community advocate becomes a standing member of the AI governance board. The work is cited in the NHS England AI framework update.',
+            reactions: [
+              { icon: '🏛️', who: 'NHS England', says: 'This is exactly the system-level thinking that was missing from NHS AI deployment. We want to fund this nationally.' },
+              { icon: '👥', who: 'Community Advocate', says: 'Finally. We have been asking to be at this table since the first AI deployment. Not consulted — present.' },
+              { icon: '👩🏾‍⚕️', who: 'Amara Osei', says: 'One informal caseload review became a national standard. I still can\'t quite believe it.' },
+              { icon: '🏥', who: 'Neighbouring Trust CxIO', says: 'We needed someone to lead this. We\'ll follow your framework.' }
+            ],
+            event: null,
+            regUpdate: {}
+          },
+          {
+            id: 'B',
+            title: 'Share your findings — decline the leadership role',
+            desc: 'Provide your audit methodology and findings to neighbouring Trusts freely. Decline the NHS England invitation — your Trust needs your focus right now, not a system role.',
+            deltas: { safety: 5, trust: 8, innovation: 8, finance: -5 },
+            type: 'mixed',
+            narrative: 'A pragmatic call. Your Trust stabilises and internal adoption recovers. The neighbouring Trusts use your methodology but without consistent leadership, the ICS review stalls. NHS England commissions an external consultant instead — at significant cost — producing a report that is technically sound but lacks clinical credibility. The community advocate is not engaged. The opportunity for genuinely co-produced governance is missed.',
+            reactions: [
+              { icon: '🏛️', who: 'NHS England', says: 'We understand. The external review will proceed but we had hoped for your involvement.' },
+              { icon: '👥', who: 'Community Advocate', says: 'The meeting was helpful. But without formal inclusion in the governance structure, I\'m not sure how much changes.' },
+              { icon: '🏥', who: 'Neighbouring Trust CxIO', says: 'We\'ve used your framework. It\'s good. But the ICS consistency isn\'t there without coordination.' },
+              { icon: '🏛️', who: 'Trust CEO', says: 'Sensible. Your first obligation is to this Trust.' }
+            ],
+            event: null,
+            regUpdate: {}
+          },
+          {
+            id: 'C',
+            title: 'Establish a Community AI Ethics Panel at Trust level',
+            desc: 'Focus at home. Create a formal service user and community panel to advise on AI deployment decisions. Invite the community advocate to chair it.',
+            deltas: { safety: 8, trust: 20, innovation: 10, finance: 8 },
+            type: 'good',
+            narrative: 'The panel — the "Lived Experience AI Advisory Board" — meets quarterly. Its first act is to require plain-English summaries of all AI tools in the Trust\'s clinical pathway. Its second is to veto a new AI risk stratification tool that community members identify as replicating problematic risk factors used historically in mental health detention decisions. The panel becomes a nationally cited model. NHS England requests a site visit.',
+            reactions: [
+              { icon: '👥', who: 'Community Advocate', says: 'Being asked to chair, not just attend. That\'s the difference. That\'s co-production.' },
+              { icon: '🏛️', who: 'Trust CEO', says: 'I was sceptical about how this would work in practice. I was wrong to be.' },
+              { icon: '👩‍⚕️', who: 'Clinical Staff', says: 'The panel raised something about the risk tool that none of us had seen. Having that perspective is clinically valuable, not just ethically right.' },
+              { icon: '🏛️', who: 'NHS England', says: 'Model for community AI governance. Requesting site visit to learn from your approach.' }
+            ],
+            event: null,
+            regUpdate: {}
+          }
+        ]
+      },
+      {
+        title: 'Round 4 · The Policy Moment',
+        situation: `You have been invited to give evidence to an NHS England policy working group reviewing the use of AI in mental health services. They are developing national guidance on algorithmic equity, procurement standards, and community governance for mental health AI.<br><br>Your experience with PathwayIQ — the bias finding, the response, and the system-level work — has given you a genuine evidence base. What you recommend will shape how the NHS approaches mental health AI equity for the next decade.`,
+        alert: 'This is where your CxIO role extends beyond your Trust. The choices you make here have the potential to protect future patients you will never meet — or to fail them.',
+        options: [
+          {
+            id: 'A',
+            title: 'Recommend mandatory pre-deployment equity validation',
+            desc: 'Argue that no AI tool should be deployed in mental health services without a prospective equity validation study, stratified by ethnicity, age, gender, and deprivation. Vendors should bear the cost.',
+            deltas: { safety: 18, trust: 20, innovation: -8, finance: 18 },
+            type: 'good',
+            narrative: 'The recommendation is adopted into the NHS England Mental Health AI Procurement Framework. Several smaller vendors protest the cost burden — two withdraw products from the NHS market. This is initially seen as a loss but the products that remain are demonstrably more equitable. Five years later, the framework is cited in a Lancet paper as the most rigorous national standard for AI equity in healthcare.',
+            reactions: [
+              { icon: '🏛️', who: 'NHS England Policy Lead', says: 'This is the right standard. It will be hard to implement but we cannot set a lower bar.' },
+              { icon: '💼', who: 'AI Vendors', says: 'The compliance cost is prohibitive for smaller innovators. This will reduce the market.' },
+              { icon: '👥', who: 'Community Advocate', says: 'We have been asking for this since the first AI deployment. The NHS is finally listening.' },
+              { icon: '⚖️', who: 'CQC', says: 'Equity validation will be incorporated into our inspection framework for digital mental health services.' }
+            ],
+            event: null,
+            regUpdate: {}
+          },
+          {
+            id: 'B',
+            title: 'Recommend a lived experience co-design standard',
+            desc: 'Argue that community and service user involvement must be mandatory — not optional — at every stage of mental health AI development, procurement, and governance.',
+            deltas: { safety: 10, trust: 25, innovation: 8, finance: 15 },
+            type: 'good',
+            narrative: 'The co-design standard transforms procurement processes nationally. Mental health Trusts are required to evidence community engagement before new AI tools receive sign-off. A national Lived Experience AI Advisory Network is established, paid and resourced. It identifies four equity concerns in nationally procured tools within 18 months — before harm occurs. The NHS credits this as the most consequential governance reform in mental health AI.',
+            reactions: [
+              { icon: '👥', who: 'National Lived Experience Network', says: 'Mandatory. Not consulted. Not informed after the fact. Mandatory. That word means everything.' },
+              { icon: '🏛️', who: 'NHS England', says: 'This reframes AI governance in mental health from technical assurance to democratic accountability.' },
+              { icon: '👩🏾‍⚕️', who: 'Amara Osei', says: 'This started with one nurse reviewing 47 cases. Now it is national policy. I still find it hard to believe.' },
+              { icon: '🌍', who: 'WHO Digital Health', says: 'The UK mental health AI co-design standard is being reviewed as a global model.' }
+            ],
+            event: null,
+            regUpdate: {}
+          },
+          {
+            id: 'C',
+            title: 'Recommend a post-market equity surveillance requirement',
+            desc: 'Argue for mandatory ongoing monitoring of AI tools in deployment — reporting equity metrics by protected characteristic quarterly to NHSE and making results publicly available.',
+            deltas: { safety: 15, trust: 18, innovation: 5, finance: 12 },
+            type: 'good',
+            narrative: 'The post-market surveillance requirement is adopted as a condition of NHS AI Framework approval. Trusts submit quarterly equity dashboards. In the first year, two Trusts self-identify equity drift in deployed tools before harm escalates — a direct result of having the monitoring infrastructure. The transparency creates healthy pressure on vendors to maintain equitable performance. A national algorithmic equity data repository is established at NHSE.',
+            reactions: [
+              { icon: '🏛️', who: 'NHS England', says: 'Transparency is the foundation of trust. This requirement will drive equitable performance more effectively than any pre-deployment standard alone.' },
+              { icon: '💼', who: 'AI Vendors', says: 'Quarterly public reporting is a significant burden, but we accept that equity performance must be demonstrable.' },
+              { icon: '⚖️', who: 'Patient Safety Commissioner', says: 'This is the missing piece. Pre-deployment validation tells you what the AI can do. Post-market surveillance tells you what it actually does.' },
+              { icon: '👥', who: 'Community Groups', says: 'Public dashboards mean we can hold the NHS to account without needing to be insiders. That matters.' }
+            ],
+            event: null,
+            regUpdate: {}
           }
         ]
       }
     ],
     learning: [
-      { tag: 'CEO Accountability', tagCls: 'risk', title: 'Personal accountability does not delegate', body: 'The Patient Safety Commissioner\'s 2024–25 guidance explicitly extends executive accountability to AI-mediated patient harm. Sub-delegating clinical AI decisions to the CSO, CIO, or vendor does not transfer accountability — it only obscures it. CEOs need direct AI literacy.' },
-      { tag: 'Equity', tagCls: 'eth', title: 'Algorithmic equity is a CEO-level decision', body: 'Decisions about who validates an AI model, on what cohort, and with what publication policy are board-level commercial and ethical choices — not technical ones. Vendor-led equity validation creates a conflict of interest that no contractual instrument fully neutralises.' },
-      { tag: 'Procurement', tagCls: 'reg', title: 'Single-vendor lock-in is a structural patient safety risk', body: 'Standardising AI infrastructure across an ICS on one vendor concentrates failure modes and reduces negotiating power across the contract lifecycle. Multi-vendor frameworks with shared evaluation methodology cost more upfront and pay back across resilience, equity, and commercial leverage.' },
-      { tag: 'Public Voice', tagCls: '', title: 'Trust CEOs shape national AI policy whether they intend to or not', body: 'Written evidence to select committees, public statements, and procurement decisions accumulate into the de facto policy environment for NHS AI. CEOs who treat external testimony as risk-management produce institutional voice; those who treat it as strategic leverage produce national influence.' },
-      { tag: 'System Thinking', tagCls: 'reg', title: 'Innovation, equity, and finance are not in tension by default', body: 'The scenario\'s strongest outcomes consistently combined ambition with discipline: phased procurement, multi-vendor frameworks, independent equity audit. The apparent trade-off between innovation and safety is most often a symptom of weak procurement, not a fundamental conflict.' },
-      { tag: 'Career Strategy', tagCls: '', title: 'Defensive leadership is rarely safer than evidence-grounded leadership', body: 'Across this scenario, the cautious option consistently produced worse long-term outcomes than the well-reasoned bold option. Institutional caution feels safer in the moment and reads as managerialism in retrospect. CEOs build durable influence through evidence-grounded conviction, not press-release prudence.' }
+      { tag: 'Algorithmic Equity', tagCls: 'eth', title: 'AI trained on biased data reproduces biased outcomes', body: 'PathwayIQ was trained on NHS data that underrepresented early-intervention presentations from Black and minoritised communities — because those patients historically accessed crisis care, not EIP. The AI learned historical inequity as if it were clinical truth. This is not a fringe risk: it is the default outcome when equity is not explicitly built into training data and validation.' },
+      { tag: 'Speak Up Culture', tagCls: '', title: 'Frontline staff are your most important AI safety signal', body: 'Amara Osei\'s informal review of 47 cases identified a systemic equity failure that no automated monitoring caught. The CxIO\'s first obligation was to take that signal seriously. Organisations that create psychological safety around AI concerns will detect problems earlier and at lower cost than those that don\'t.' },
+      { tag: 'UK GDPR Art.22', tagCls: 'reg', title: 'Automated prioritisation affecting protected characteristics requires legal review', body: 'PathwayIQ\'s outputs were being used to determine clinical priority without consistent human review. This falls within the scope of UK GDPR Article 22 — automated decision-making with significant effect — and additionally engages the Public Sector Equality Duty under the Equality Act 2010. These are not optional considerations for a CxIO: they are legal obligations.' },
+      { tag: 'Community Governance', tagCls: '', title: 'Co-production is not consultation. It changes the outcome.', body: 'Where community and lived experience voices were genuinely embedded in AI governance — not informed after decisions, not consulted in token focus groups — they identified risks that clinical and technical teams missed. The Lived Experience AI Advisory Board vetoed a risk stratification tool that reproduced historically discriminatory criteria. Co-production is a safety mechanism, not a PR exercise.' },
+      { tag: 'System Leadership', tagCls: 'safety', title: 'The CxIO\'s accountability extends beyond their own organisation', body: 'The CxIO role carries influence at system level. When a Trust identifies an AI equity failure, the obligation to share findings, shape procurement standards, and influence national guidance is not optional. The harm PathwayIQ caused was not unique to one Trust — and the response could not be contained to one Trust either.' },
+      { tag: 'Post-Market Surveillance', tagCls: 'reg', title: 'Equity drift can occur after a clean pre-deployment validation', body: 'PathwayIQ passed pre-deployment validation. The equity failure emerged at scale, in the real clinical environment, over months. This is characteristic of algorithmic performance drift — particularly when a model encounters patient cohorts underrepresented in its training data. Ongoing equity monitoring is not a quality assurance nicety. It is clinically essential.' }
     ]
-  }
+  },
+
 };
 
 /* ═══════════════════════════════════════════════════════════════
    GAME STATE
 ═══════════════════════════════════════════════════════════════ */
+
+const DEFAULT_METRIC_LABELS = { safety: 'Patient Safety', trust: 'Clinical Trust', innovation: 'Innovation', finance: 'Financial' };
 
 let state = {
   scenarioId: null,
@@ -2198,6 +1730,15 @@ function startGame() {
   document.getElementById('game-role-label').textContent = `${scenario.icon} ${scenario.role}`;
   document.getElementById('cons-scenario-name').textContent = scenario.name;
   document.getElementById('debrief-role-label').textContent = `Simulation Complete · ${scenario.name}`;
+
+  // Per-scenario metric labels (dashboard + consequence delta labels)
+  const lbls = scenario.metricLabels || DEFAULT_METRIC_LABELS;
+  ['safety','trust','innovation','finance'].forEach(k => {
+    const ml = document.getElementById('lbl-m-' + k);
+    const dl = document.getElementById('lbl-d-' + k);
+    if (ml) ml.textContent = lbls[k];
+    if (dl) dl.textContent = lbls[k];
+  });
 
   renderRound();
   showScreen('screen-game');
@@ -2408,7 +1949,7 @@ function nextRound() {
 ═══════════════════════════════════════════════════════════════ */
 
 function showDebrief() {
-  const labels = { safety: 'Patient Safety', trust: 'Clinical Trust', innovation: 'Innovation', finance: 'Financial' };
+  const labels = state.scenario.metricLabels || DEFAULT_METRIC_LABELS;
   const colorVars = { safety: 'safety', trust: 'trust', innovation: 'innovation', finance: 'finance' };
 
   document.getElementById('final-scores').innerHTML = ['safety', 'trust', 'innovation', 'finance'].map(k => {
