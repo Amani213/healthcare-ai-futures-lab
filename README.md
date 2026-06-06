@@ -10,7 +10,7 @@ A free, open-source clinical AI governance simulation for NHS leaders, clinician
 
 ## What is this?
 
-Healthcare AI Futures Lab is a decision simulation that places you inside real NHS AI governance dilemmas. Every choice has second- and third-order consequences. There are no perfect answers — only defensible ones.
+Healthcare AI Futures Lab is a decision simulation that places you inside real NHS AI governance dilemmas. Every choice has second and third-order consequences. There are no perfect answers — only defensible ones.
 
 Each scenario tracks four interconnected metrics — patient safety, clinical trust, innovation, and financial sustainability — and generates a full debrief tied to NHS clinical AI governance frameworks.
 
