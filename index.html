@@ -578,7 +578,7 @@ body::before {
   </h1>
 
   <p class="title-sub">
-    Four playable scenarios. Four decision rounds each. Every choice ripples across patient safety,
+    Six playable scenarios. Four decision rounds each. Every choice ripples across patient safety,
     clinical trust, equity, innovation, and accountability. There are no perfect answers — only defensible ones.
   </p>
 
@@ -617,6 +617,24 @@ body::before {
       </div>
       <div class="sc-title">The Vendor Expansion</div>
       <div class="sc-desc">A vendor wants to scale AI across the ICS. CQC is asking about equity. Parliament wants written evidence. Personal accountability is on the table.</div>
+    </button>
+
+    <button class="scenario-card playable" role="listitem" onclick="startScenario('junior')" aria-label="Start Junior Doctor scenario">
+      <div class="sc-status-row">
+        <span class="sc-level">Scenario 05 · Junior Doctor</span>
+        <span class="sc-badge live">Playable</span>
+      </div>
+      <div class="sc-title">The Confidence Score</div>
+      <div class="sc-desc">02:14 in the AMU. An AI tool says discharge with 89% confidence. Your clinical gestalt says otherwise. Automation bias meets professional autonomy.</div>
+    </button>
+
+    <button class="scenario-card playable" role="listitem" onclick="startScenario('icb')" aria-label="Start ICB Executive scenario">
+      <div class="sc-status-row">
+        <span class="sc-level">Scenario 06 · ICB Executive</span>
+        <span class="sc-badge live">Playable</span>
+      </div>
+      <div class="sc-title">The Population Gap</div>
+      <div class="sc-desc">A regional AI tool is reducing stroke admissions — except in the most deprived ward. The inverse care law, reproduced by an algorithm at population scale.</div>
     </button>
   </div>
 
@@ -845,11 +863,11 @@ const SCENARIOS = {
       { id: 'nurses',  icon: '👩‍⚕️', name: 'Ward Nursing Staff', status: 'Alert fatigue high. Morale low.' },
       { id: 'vendor',  icon: '💼', name: 'Vendor (DataBio Ltd)', status: 'Claims spec compliance. Resisting review.' },
       { id: 'family',  icon: '🧑‍🦳', name: 'Patient Family / PALS', status: 'Formal complaint filed. Media interest.' },
-      { id: 'reg',     icon: '⚖️', name: 'MHRA / CQC', status: 'No active inquiry yet.' }
+      { id: 'reg',     icon: '⚖️', name: 'Medicines and Healthcare products Regulatory Agency (MHRA) / Care Quality Commission (CQC)', status: 'No active inquiry yet.' }
     ],
     regulatory: [
-      { id: 'dcb129', name: 'DCB0129', status: 'amber', state: 'Review needed' },
-      { id: 'dcb160', name: 'DCB0160', status: 'red',   state: 'Breach risk' },
+      { id: 'dcb129', name: 'DCB0129 (the NHS clinical risk management standard)', status: 'amber', state: 'Review needed' },
+      { id: 'dcb160', name: 'DCB0160 (the NHS clinical risk management standard for health organisations)', status: 'red',   state: 'Breach risk' },
       { id: 'mhra',   name: 'MHRA AIaMD', status: 'amber', state: 'Monitoring' },
       { id: 'lfpse',  name: 'LFPSE', status: 'amber', state: 'Not yet reported' }
     ],
@@ -994,7 +1012,7 @@ const SCENARIOS = {
               { icon: '👩‍⚕️', who: 'Senior Nurse', says: '2-hour mandatory e-learning to fix what 6 months of bad governance broke. Feels about right.' },
               { icon: '💻', who: 'Digital Director', says: '89% completion. Excellent result.' },
               { icon: '👨‍⚕️', who: 'Medical Director', says: 'The metric looks good. I am not sure the culture has changed.' },
-              { icon: '📰', who: 'HSJ', says: 'Tick-box AI training fails to address clinical concerns, staff say.' }
+              { icon: '📰', who: 'Health Service Journal (HSJ)', says: 'Tick-box AI training fails to address clinical concerns, staff say.' }
             ],
             event: null,
             regUpdate: { dcb129: { status: 'amber', state: 'Human factors unresolved' } }
@@ -1010,7 +1028,7 @@ const SCENARIOS = {
               { icon: '👩‍⚕️', who: 'Ward Nurses', says: 'Having someone on our ward who understands both sides is transformative.' },
               { icon: '💰', who: 'Trust CFO', says: 'Protected time costs are above budget but the safety dividend is hard to argue with.' },
               { icon: '💻', who: 'Digital Director', says: 'This is what good clinical digital transformation looks like.' },
-              { icon: '🏛️', who: 'NHS England', says: 'Champions model to be shared across ICS.' }
+              { icon: '🏛️', who: 'NHS England', says: 'Champions model to be shared across Integrated Care System (ICS).' }
             ],
             event: null,
             regUpdate: { dcb129: { status: 'green', state: 'Champions active' }, lfpse: { status: 'green', state: 'No incidents' } }
@@ -1028,7 +1046,7 @@ const SCENARIOS = {
             desc: 'No new AI deployed without: clinical validation, hazard log, post-market surveillance plan, and a pre-agreed suspension protocol.',
             deltas: { safety: 20, trust: 10, innovation: -10, finance: 5 },
             type: 'good',
-            narrative: 'Your framework is adopted by the Board and submitted to NHS England. It becomes a model for three other Trusts. A year later, it forms part of the baseline for an NHSE AI governance guidance document. Innovation slows temporarily but the Trust records zero AI-related serious incidents in the following 12 months. You are invited to speak at a national patient safety conference.',
+            narrative: 'Your framework is adopted by the Board and submitted to NHS England. It becomes a model for three other Trusts. A year later, it forms part of the baseline for an NHS England (NHSE) AI governance guidance document. Innovation slows temporarily but the Trust records zero AI-related serious incidents in the following 12 months. You are invited to speak at a national patient safety conference.',
             reactions: [
               { icon: '🏛️', who: 'NHS England', says: 'Framework adopted as part of national AI governance pilot. Trust cited as exemplar.' },
               { icon: '👨‍⚕️', who: 'Medical Director', says: 'This approach will stand the test of time.' },
@@ -1062,7 +1080,7 @@ const SCENARIOS = {
             type: 'good',
             narrative: 'The ICS model takes 6 months to establish but creates a genuinely powerful governance structure. Shared vendor due diligence saves each Trust an estimated £40,000 annually. A common hazard taxonomy emerges that feeds into NHSE\'s national AI harm registry. You are appointed ICS Clinical AI Safety Lead — a role that did not previously exist.',
             reactions: [
-              { icon: '🏛️', who: 'ICB Chief Executive', says: 'This is system thinking applied to AI safety.' },
+              { icon: '🏛️', who: 'Integrated Care Board (ICB) Chief Executive', says: 'This is system thinking applied to AI safety.' },
               { icon: '👨‍⚕️', who: 'Medical Director', says: 'Leading this positions us well nationally and protects us locally.' },
               { icon: '💼', who: 'Vendors', says: 'A single ICS standard is easier for us than five different Trust requirements.' },
               { icon: '⚖️', who: 'MHRA', says: 'The shared surveillance model is one we would like to see replicated.' }
@@ -1076,7 +1094,7 @@ const SCENARIOS = {
     learning: [
       { tag: 'Patient Safety', tagCls: 'risk', title: 'Safety cases must precede, not follow, incidents', body: 'DCB0129 requires hazard identification before deployment. When you encountered the sepsis alert crisis, the absence of pre-defined thresholds for what constitutes a safety failure created ambiguity that benefited the vendor, not the patient.' },
       { tag: 'Human Factors', tagCls: '', title: 'Automation distrust is as dangerous as automation bias', body: 'Clinical AI failure often occurs not because the AI is wrong, but because the human-AI interaction layer breaks down. Alarm fatigue, dismissal culture, and low psychological safety around escalation are human factors risks no algorithm can solve.' },
-      { tag: 'DCB0129/0160', tagCls: 'reg', title: 'Contractual compliance ≠ regulatory compliance', body: 'Vendors can meet contractual KPIs while the AI creates patient harm. DCB0129 places the safety case obligation on the deploying organisation — not the vendor. Accountability stays with you, regardless of contract terms.' },
+      { tag: 'DCB0129/0160 (the NHS clinical risk management standards)', tagCls: 'reg', title: 'Contractual compliance ≠ regulatory compliance', body: 'Vendors can meet contractual KPIs while the AI creates patient harm. DCB0129 places the safety case obligation on the deploying organisation — not the vendor. Accountability stays with you, regardless of contract terms.' },
       { tag: 'Co-design', tagCls: '', title: 'Clinical adoption is a cultural, not a technical, problem', body: 'Training completion rates and interface quality are necessary but not sufficient. Sustainable AI adoption requires clinical ownership. Co-design approaches consistently outperform mandated rollouts on both safety and trust metrics.' },
       { tag: 'Systems Thinking', tagCls: 'eth', title: 'Every safety decision ripples across the system', body: 'Your decisions affected vendor relations, staff morale, media coverage, regulatory posture, and finances simultaneously. Clinical AI governance requires literacy across all these domains — not just clinical risk management.' },
       { tag: 'Post-Market Surveillance', tagCls: 'reg', title: 'Deployment is the start of governance, not the end', body: 'SepsisAlert passed pre-deployment validation but developed safety-critical failure modes in the real clinical environment. Specificity drift, alert fatigue, and dismissal culture must be contractually and clinically monitored after go-live.' }
@@ -1111,11 +1129,11 @@ const SCENARIOS = {
       { id: 'cno',     icon: '👩‍💼', name: 'Chief Nursing Officer', status: 'Wants adoption — and credibility.' },
       { id: 'rcn',     icon: '🏛️', name: 'RCN Regional Officer', status: 'Requesting formal meeting.' },
       { id: 'vendor',  icon: '💼', name: 'Vendor (Lumen Health)', status: 'Eager to expand. Defensive on adoption data.' },
-      { id: 'board',   icon: '📊', name: 'Trust Board', status: 'Watching ROI. Q3 review imminent.' }
+      { id: 'board',   icon: '📊', name: 'Trust Board', status: 'Watching return on investment (ROI). Q3 review imminent.' }
     ],
     regulatory: [
-      { id: 'dcb129', name: 'DCB0129',  status: 'green', state: 'Filed at deployment' },
-      { id: 'dcb160', name: 'DCB0160',  status: 'amber', state: 'Live monitoring' },
+      { id: 'dcb129', name: 'DCB0129 (the NHS clinical risk management standard)',  status: 'green', state: 'Filed at deployment' },
+      { id: 'dcb160', name: 'DCB0160 (the NHS clinical risk management standard for health organisations)',  status: 'amber', state: 'Live monitoring' },
       { id: 'dtac',   name: 'DTAC',     status: 'green', state: 'Compliant' },
       { id: 'nmc',    name: 'NMC Code', status: 'amber', state: 'Professional risk flagged' }
     ],
@@ -1132,7 +1150,7 @@ const SCENARIOS = {
             type: 'good',
             narrative: 'You commission the enquiry with a clinical academic from the local university nursing school. Observers find that night-shift nurses prefer the tool but day-shift staff feel it interrupts handover ritual. The vendor\'s assumption that "free text dictation = faster documentation" is wrong — nurses use documentation as a thinking process, not just a recording one. The findings are uncomfortable for the vendor but rich for redesign. RCN appreciates being at the table from the start.',
             reactions: [
-              { icon: '👩‍⚕️', who: 'Ward Sister, AMU', says: 'Someone finally came and watched what we actually do. That changes things.' },
+              { icon: '👩‍⚕️', who: 'Ward Sister, Acute Medical Unit (AMU)', says: 'Someone finally came and watched what we actually do. That changes things.' },
               { icon: '🏛️', who: 'RCN Regional Officer', says: 'Steering group representation matters. We will engage constructively.' },
               { icon: '💼', who: 'Lumen Health', says: 'We share concerns about the enquiry scope. Our product is performing to specification.' },
               { icon: '👩‍💼', who: 'CNO', says: 'You are buying credibility, which we need more than a quick number.' }
@@ -1322,13 +1340,13 @@ const SCENARIOS = {
           },
           {
             id: 'C',
-            title: 'Propose a system-wide ICS evaluation programme',
+            title: 'Propose a system-wide Integrated Care System (ICS) evaluation programme',
             desc: 'Lead an ICS-wide, academically-evaluated programme. Pool data across Trusts. Generate the evidence the sector needs.',
             deltas: { safety: 12, trust: 14, innovation: 18, finance: 4 },
             type: 'good',
-            narrative: 'The ICS programme takes 12 months to set up but produces the first robust mixed-methods evaluation of nursing AI at scale in the NHS. It informs NICE technology appraisal methods. You are appointed ICS Chief Nursing Informatics Lead. The Trust\'s standing in national nursing AI policy is permanently elevated. The downside: the work is exhausting and you spend more time in NHSE meetings than you wanted.',
+            narrative: 'The ICS programme takes 12 months to set up but produces the first robust mixed-methods evaluation of nursing AI at scale in the NHS. It informs NICE technology appraisal methods. You are appointed ICS Chief Nursing Informatics Lead. The Trust\'s standing in national nursing AI policy is permanently elevated. The downside: the work is exhausting and you spend more time in NHS England (NHSE) meetings than you wanted.',
             reactions: [
-              { icon: '🏛️', who: 'ICB Chief Executive', says: 'This is what regional nursing leadership should look like.' },
+              { icon: '🏛️', who: 'Integrated Care Board (ICB) Chief Executive', says: 'This is what regional nursing leadership should look like.' },
               { icon: '🎓', who: 'University Nursing Dean', says: 'The methodology you have established will shape doctoral programmes for years.' },
               { icon: '🏛️', who: 'NHS England', says: 'Programme adopted as the national methodology for nursing AI evaluation.' },
               { icon: '👩‍💼', who: 'CNO', says: 'You have built something that outlasts any of us.' }
@@ -1366,10 +1384,10 @@ const SCENARIOS = {
     ],
     briefAlert: 'Amara has mentioned the issue to her supervisor. It is now known informally across two clinical teams. If you do not act visibly, she may escalate through formal channels — including the Trust\'s Freedom to Speak Up Guardian.',
     briefData: [
-      { label: 'RTT Performance', value: '91%', cls: 'up',   sub: 'Up from 74% pre-AI' },
+      { label: 'Referral to Treatment (RTT) Performance', value: '91%', cls: 'up',   sub: 'Up from 74% pre-AI' },
       { label: 'Cases Flagged',   value: '47',  cls: 'warn', sub: 'Informal nurse review' },
       { label: 'Vendor Position', value: 'Disputed', cls: 'down', sub: 'Claims model validated' },
-      { label: 'WRES EIP Access', value: 'Widening', cls: 'warn', sub: 'Equity gap growing' }
+      { label: 'Workforce Race Equality Standard (WRES) EIP Access', value: 'Widening', cls: 'warn', sub: 'Equity gap growing' }
     ],
     startMetrics: { safety: 62, trust: 40, innovation: 71, finance: 55 },
     stakeholders: [
@@ -1377,10 +1395,10 @@ const SCENARIOS = {
       { id: 'ceo',       icon: '🏛️', name: 'Trust CEO', status: 'Proud of RTT improvement. Unaware of equity concern.' },
       { id: 'vendor',    icon: '💼', name: 'PathwayIQ Vendor', status: 'Defensive. Claims model validated. Resisting audit.' },
       { id: 'community', icon: '👥', name: 'Community / Lived Experience', status: 'No formal engagement yet. High distrust of NHS data use.' },
-      { id: 'reg',       icon: '⚖️', name: 'ICO / NHSE / CQC', status: 'No active inquiry. UK GDPR Art.22 in scope.' }
+      { id: 'reg',       icon: '⚖️', name: 'Information Commissioner’s Office (ICO) / NHS England (NHSE) / Care Quality Commission (CQC)', status: 'No active inquiry. UK General Data Protection Regulation Article 22 in scope.' }
     ],
     regulatory: [
-      { id: 'dcb',  name: 'DCB0129/0160',     status: 'amber', state: 'Equity not in hazard log' },
+      { id: 'dcb',  name: 'DCB0129 (the NHS clinical risk management standard)/0160 (the NHS clinical risk management standards)',     status: 'amber', state: 'Equity not in hazard log' },
       { id: 'gdpr', name: 'UK GDPR Art.22',   status: 'red',   state: 'Automated decisions unreviewed' },
       { id: 'psed', name: 'Public Sector Equality Duty', status: 'amber', state: 'Potential breach' },
       { id: 'ftsu', name: 'Freedom to Speak Up', status: 'green', state: 'Not yet triggered' }
@@ -1402,7 +1420,7 @@ const SCENARIOS = {
               { icon: '👩🏾‍⚕️', who: 'Amara Osei', says: 'I was terrified to raise this. The fact that it was taken seriously matters more than I can say.' },
               { icon: '🏛️', who: 'Trust CEO', says: 'This is deeply concerning. We need to notify NHSE and consider what we owe those patients.' },
               { icon: '💼', who: 'PathwayIQ Vendor', says: 'We dispute the methodology of your audit. Our validation study remains valid.' },
-              { icon: '⚖️', who: 'ICO', says: 'You are advised to consider your obligations under UK GDPR Article 22 regarding automated decision-making affecting protected characteristics.' }
+              { icon: '⚖️', who: 'ICO', says: 'You are advised to consider your obligations under UK General Data Protection Regulation Article 22 regarding automated decision-making affecting protected characteristics.' }
             ],
             event: null,
             regUpdate: { dcb: { status: 'green', state: 'Equity hazard logged' }, ftsu: { status: 'green', state: 'Concern handled internally' } }
@@ -1418,7 +1436,7 @@ const SCENARIOS = {
               { icon: '💼', who: 'PathwayIQ Vendor', says: 'Our internal review is complete. No differential impact was found. We consider the matter closed.' },
               { icon: '👩🏾‍⚕️', who: 'Amara Osei', says: 'A vendor reviewing their own bias concern. I don\'t think I can leave this here.' },
               { icon: '🏛️', who: 'Trust CEO', says: 'The vendor says it\'s fine. Is that enough for us?' },
-              { icon: '⚖️', who: 'FTSU Guardian', says: 'A formal concern has been raised. I will be in touch with you directly.' }
+              { icon: '⚖️', who: 'Freedom to Speak Up (FTSU) Guardian', says: 'A formal concern has been raised. I will be in touch with you directly.' }
             ],
             event: { title: 'FTSU Concern Formally Logged', body: 'Amara Osei has raised a formal Freedom to Speak Up concern. The FTSU Guardian is now required to investigate and report to the Board. The matter is no longer informal. You will be asked to account for your response to the original concern.' },
             regUpdate: { ftsu: { status: 'red', state: 'Formal concern raised' } }
@@ -1433,11 +1451,11 @@ const SCENARIOS = {
             reactions: [
               { icon: '👩🏾‍⚕️', who: 'Amara Osei', says: 'I raised this in good faith. I expected leadership to at least look. I was wrong.' },
               { icon: '🏛️', who: 'Trust CEO', says: 'You were aware of this concern and took no formal action. Explain to me why.' },
-              { icon: '📰', who: 'HSJ', says: 'Trust ignored AI bias warning, nurse says — front-page digital edition.' },
+              { icon: '📰', who: 'Health Service Journal (HSJ)', says: 'Trust ignored AI bias warning, nurse says — front-page digital edition.' },
               { icon: '👥', who: 'Community Advocates', says: 'This is exactly the pattern we warned about when the NHS said it would use AI to improve mental health equity.' }
             ],
             event: { title: 'Media Escalation', body: 'The health equity concern has reached NHS England\'s Health Inequalities directorate. A formal inquiry into the Trust\'s AI governance processes has been opened. The CEO has requested an extraordinary Board meeting.' },
-            regUpdate: { dcb: { status: 'red', state: 'External inquiry opened' }, psed: { status: 'red', state: 'Inquiry under PSED' }, ftsu: { status: 'red', state: 'External escalation' } }
+            regUpdate: { dcb: { status: 'red', state: 'External inquiry opened' }, psed: { status: 'red', state: 'Inquiry under Public Sector Equality Duty (PSED)' }, ftsu: { status: 'red', state: 'External escalation' } }
           }
         ]
       },
@@ -1489,7 +1507,7 @@ const SCENARIOS = {
               { icon: '⚖️', who: 'Equality Law Specialist', says: 'A process that applies different clinical protocols based on ethnicity requires very careful legal framing to avoid its own discrimination risk.' },
               { icon: '💼', who: 'PathwayIQ Vendor', says: 'The introduction of a manual override layer compromises the integrity of the validated model.' },
               { icon: '👩‍⚕️', who: 'Clinical Staff', says: 'We\'re now running two different processes. Which one is clinically authoritative?' },
-              { icon: '⚖️', who: 'ICO', says: 'A DPIA is required for this modified processing arrangement within 28 days.' }
+              { icon: '⚖️', who: 'ICO', says: 'A Data Protection Impact Assessment (DPIA) is required for this modified processing arrangement within 28 days.' }
             ],
             event: null,
             regUpdate: { gdpr: { status: 'amber', state: 'DPIA required' } }
@@ -1498,7 +1516,7 @@ const SCENARIOS = {
       },
       {
         title: 'Round 3 · System Leadership',
-        situation: `Two neighbouring Trust CxIOs have contacted you. They have heard about the PathwayIQ situation and want to understand whether they have the same problem — both Trusts use PathwayIQ or comparable products. NHS England\'s Health Inequalities directorate has asked whether you would lead a system-wide algorithmic equity review for mental health AI across the ICS.<br><br>Meanwhile, a community mental health advocate — representing service user groups, many from Black and minoritised communities — has requested a meeting. They want to know what role the community should play in AI governance.`,
+        situation: `Two neighbouring Trust CxIOs have contacted you. They have heard about the PathwayIQ situation and want to understand whether they have the same problem — both Trusts use PathwayIQ or comparable products. NHS England\'s Health Inequalities directorate has asked whether you would lead a system-wide algorithmic equity review for mental health AI across the Integrated Care System (ICS).<br><br>Meanwhile, a community mental health advocate — representing service user groups, many from Black and minoritised communities — has requested a meeting. They want to know what role the community should play in AI governance.`,
         alert: 'System leadership is an opportunity. But it comes with accountability. If you lead and the ICS review finds widespread harm, you own the findings — and the response.',
         options: [
           {
@@ -1583,7 +1601,7 @@ const SCENARIOS = {
               { icon: '👥', who: 'National Lived Experience Network', says: 'Mandatory. Not consulted. Not informed after the fact. Mandatory. That word means everything.' },
               { icon: '🏛️', who: 'NHS England', says: 'This reframes AI governance in mental health from technical assurance to democratic accountability.' },
               { icon: '👩🏾‍⚕️', who: 'Amara Osei', says: 'This started with one nurse reviewing 47 cases. Now it is national policy. I still find it hard to believe.' },
-              { icon: '🌍', who: 'WHO Digital Health', says: 'The UK mental health AI co-design standard is being reviewed as a global model.' }
+              { icon: '🌍', who: 'World Health Organization (WHO) Digital Health', says: 'The UK mental health AI co-design standard is being reviewed as a global model.' }
             ],
             event: null,
             regUpdate: {}
@@ -1627,8 +1645,8 @@ const SCENARIOS = {
     meta: ['Q3 · Acute Trust + ICS', '4 Decision Rounds', 'ICS-Wide AI Procurement', 'CQC · Parliament · Vendor Conduct'],
     role: 'Your Role: Trust Chief Executive',
     briefIntro: [
-      'Twelve months ago, your Trust adopted <strong>Veridian Health</strong>\'s AI clinical decision support platform. Outcomes have improved measurably: a 14% reduction in avoidable acute admissions, a 9% reduction in length of stay for two surgical pathways. Your CMO and CSO have both signed off the year-one safety case. You are the Trust that NHSE points to when journalists ask whether NHS AI deployment is going well.',
-      'Two weeks ago, Veridian\'s UK CEO approached you with a proposal: scale the platform across all <strong>seven Trusts in your ICS</strong> through a single regional licence, at a 40% per-Trust discount — with you positioned as the clinical and operational sponsor. Your ICB Chief Executive wants your view by Friday. Procurement is excited about £2.8M annual savings. Your CMO has flagged that scaling a vendor across seven Trusts is "a different governance question" than single-Trust adoption.',
+      'Twelve months ago, your Trust adopted <strong>Veridian Health</strong>\'s AI clinical decision support platform. Outcomes have improved measurably: a 14% reduction in avoidable acute admissions, a 9% reduction in length of stay for two surgical pathways. Your Chief Medical Officer (CMO) and CSO have both signed off the year-one safety case. You are the Trust that NHS England (NHSE) points to when journalists ask whether NHS AI deployment is going well.',
+      'Two weeks ago, Veridian\'s UK CEO approached you with a proposal: scale the platform across all <strong>seven Trusts in your Integrated Care System (ICS)</strong> through a single regional licence, at a 40% per-Trust discount — with you positioned as the clinical and operational sponsor. Your Integrated Care Board (ICB) Chief Executive wants your view by Friday. Procurement is excited about £2.8M annual savings. Your CMO has flagged that scaling a vendor across seven Trusts is "a different governance question" than single-Trust adoption.',
       'You are 18 months into your tenure as Trust CEO. The Board values your AI track record. Your reputation across the ICS is strong. <em>Whatever you decide here will define how the next decade of NHS AI procurement runs in this region — and quite possibly nationally.</em>'
     ],
     briefAlert: 'The Veridian UK CEO has invited you to dinner with three Senior Independent Directors from neighbouring Trusts. You have not yet responded. Your General Counsel has reminded you informally that personal hospitality from a current vendor during active procurement requires Board declaration.',
@@ -1644,11 +1662,11 @@ const SCENARIOS = {
       { id: 'cmo',    icon: '👨‍⚕️', name: 'Chief Medical Officer', status: 'Cautiously supportive. Insists on multi-Trust DD.' },
       { id: 'icb',    icon: '🏛️', name: 'ICB Chief Executive', status: 'Looks to you for the system view. Wants a clear answer.' },
       { id: 'vendor', icon: '💼', name: 'Veridian Health (UK CEO)', status: 'Charming. Well-connected. Pushing hard for Friday.' },
-      { id: 'reg',    icon: '⚖️', name: 'CQC / Select Committee / Press', status: 'Inactive at present. AI governance under scrutiny nationally.' }
+      { id: 'reg',    icon: '⚖️', name: 'Care Quality Commission (CQC) / Select Committee / Press', status: 'Inactive at present. AI governance under scrutiny nationally.' }
     ],
     regulatory: [
       { id: 'cqc',  name: 'CQC Well-Led',          status: 'amber', state: 'AI inspection framework live' },
-      { id: 'dcb',  name: 'DCB0129 (Trust-wide)',  status: 'amber', state: 'Single-Trust scope only' },
+      { id: 'dcb',  name: 'DCB0129 (the NHS clinical risk management standard) (Trust-wide)',  status: 'amber', state: 'Single-Trust scope only' },
       { id: 'nhse', name: 'NHSE AI Framework',     status: 'green', state: 'Compliant' },
       { id: 'parl', name: 'Select Committee',      status: 'green', state: 'No active inquiry' }
     ],
@@ -1719,12 +1737,12 @@ const SCENARIOS = {
             desc: 'Take the equity gap to the Board as a formal item, not a notation. Pause new Veridian clinical pathway deployments pending stratified equity audit. Brief the CQC inspector before they arrive about what you have, what you don\'t, and what you\'re doing about it.',
             deltas: { safety: 18, trust: 15, innovation: -12, finance: -8 },
             type: 'good',
-            narrative: 'The CQC inspector responds well to the candid pre-brief. The Well-Led inspection report cites your Trust as an example of "honest governance maturity." The pause causes six weeks of operational disruption. The audit identifies one Veridian pathway with a modest but real equity signal — you redesign the protocol. Your Board Chair tells you privately this was the moment she realised "we\'d been letting digital fly under the radar." The FOI response, when it comes, is something you can stand behind. The CMO publicly credits the decision as protecting clinical autonomy.',
+            narrative: 'The CQC inspector responds well to the candid pre-brief. The Well-Led inspection report cites your Trust as an example of "honest governance maturity." The pause causes six weeks of operational disruption. The audit identifies one Veridian pathway with a modest but real equity signal — you redesign the protocol. Your Board Chair tells you privately this was the moment she realised "we\'d been letting digital fly under the radar." The Freedom of Information (FOI) response, when it comes, is something you can stand behind. The CMO publicly credits the decision as protecting clinical autonomy.',
             reactions: [
               { icon: '⚖️', who: 'CQC Inspector', says: 'The pre-brief approach is unusual. It changes what good looks like in this inspection.' },
               { icon: '👔', who: 'Trust Chair', says: 'You should have brought this to Board sooner. But the response is right.' },
               { icon: '👨‍⚕️', who: 'CMO', says: 'Pausing deployment protects clinical staff. I will defend this publicly if I need to.' },
-              { icon: '📰', who: 'HSJ', says: '"NHS Trust pauses AI deployment over equity concerns — chief executive named as setting new standard."' }
+              { icon: '📰', who: 'Health Service Journal (HSJ)', says: '"NHS Trust pauses AI deployment over equity concerns — chief executive named as setting new standard."' }
             ],
             event: null,
             regUpdate: { cqc: { status: 'green', state: 'Exemplar finding' }, dcb: { status: 'green', state: 'Equity hazard logged' } }
@@ -1820,7 +1838,7 @@ const SCENARIOS = {
       },
       {
         title: 'Round 4 · The ICS Future',
-        situation: `Six months have passed. The Veridian platform now operates across five of the seven ICS Trusts. Your equity audit methodology has become an informal regional standard.<br><br>The ICB has proposed nominating you as <strong>Senior Responsible Officer (SRO) for ICS Digital and AI Strategy</strong> — a 0.4 WTE secondment, three days a week alongside the CEO role. The position would give you significant influence over how the next decade of NHS AI is procured and governed across the region.<br><br>Separately and confidentially: an internal source in your finance team has shared partial documents suggesting Veridian\'s UK CEO has been involved in <strong>concerning procurement conduct at another NHS Trust</strong>. No evidence implicates your Trust. The source is anonymous. Your General Counsel says: <em>"if true, this is serious; if you don\'t act, you are complicit; if you act on partial information, you risk a defamation claim."</em>`,
+        situation: `Six months have passed. The Veridian platform now operates across five of the seven ICS Trusts. Your equity audit methodology has become an informal regional standard.<br><br>The ICB has proposed nominating you as <strong>Senior Responsible Officer (Senior Responsible Officer (SRO)) for ICS Digital and AI Strategy</strong> — a 0.4 Whole Time Equivalent (WTE) secondment, three days a week alongside the CEO role. The position would give you significant influence over how the next decade of NHS AI is procured and governed across the region.<br><br>Separately and confidentially: an internal source in your finance team has shared partial documents suggesting Veridian\'s UK CEO has been involved in <strong>concerning procurement conduct at another NHS Trust</strong>. No evidence implicates your Trust. The source is anonymous. Your General Counsel says: <em>"if true, this is serious; if you don\'t act, you are complicit; if you act on partial information, you risk a defamation claim."</em>`,
         alert: 'The documents have not yet been shared with anyone outside your office. The decision on what to do — and when — is yours alone. If you decline both questions, the moment passes.',
         options: [
           {
@@ -1881,6 +1899,543 @@ const SCENARIOS = {
       { tag: 'Parliamentary Engagement', tagCls: 'eth', title: 'Parliament is positioning, not optional', body: 'Trust CEOs who decline to give evidence to Select Committee inquiries vacate the field to vendors and to less rigorous Trust voices. The price of decision-making influence at national level is the discomfort of being challenged on the record. Trust CEOs are uniquely placed to bring real operational evidence to parliamentary inquiries — and almost none do. The Committee\'s assessment of who is shaping NHS AI policy is shaped by who shows up.' },
       { tag: 'Vendor Lock-In', tagCls: '', title: 'ICS-scale procurement compounds lock-in geometrically', body: 'Single-Trust vendor relationships are recoverable in 18–24 months. ICS-wide relationships are not. When seven Trusts share a platform, the marginal cost of changing vendors rises non-linearly: shared data architectures, retrained workforces, embedded clinical workflows, and renegotiated savings models. CEOs should approach ICS-wide deals with the assumption that contract terms must protect the system in perpetuity — including data portability clauses, exit cost ceilings, and mandated equity reporting.' },
       { tag: 'Vendor Conduct Intelligence', tagCls: '', title: 'CEO judgment on vendor conduct intelligence is rarely tidy', body: 'Information about vendor executive conduct rarely arrives as evidence. It arrives as fragments — anonymous, partial, plausible. The CEO who waits for formal evidence often waits too long; the CEO who acts on rumour exposes the Trust to defamation. The judgment is whether the information rises to "concerning conduct requiring investigation" and whether the matter is best handled through formal national channels (NHSE Commercial Directorate) or informal local ones (ICB Chief). The wrong default is silence. Institutional integrity at this level is owned by the CEO alone.' }
+    ]
+  },
+  /* ──────────────────────────────────────────────────
+     SCENARIO 05 — JUNIOR DOCTOR (Foundation Year 2 (FY2))
+  ────────────────────────────────────────────────── */
+  junior: {
+    id: 'junior',
+    name: 'Junior Doctor',
+    icon: '🌙',
+    title: 'The Confidence Score',
+    meta: ['02:14 · Acute Medical Unit', '4 Decision Rounds', 'CDS · Out of Hours', 'GMC · BMA · M&M'],
+    role: 'Your Role: Junior Doctor (FY2)',
+    metricLabels: { safety: 'Patient Safety', trust: 'Team Trust', innovation: 'Clinical Autonomy', finance: 'Professional Voice' },
+    briefIntro: [
+      'It is 02:14 on a Sunday morning. You are Foundation Year 2 (FY2) covering the Acute Medical Unit alone — your registrar is at a peri-arrest in Resus, your consultant is on call from home. The unit is at capacity.',
+      'Mr A, a 64-year-old man, has been triaged by <strong>Triagent</strong> — your hospital\'s AI-assisted clinical decision support tool — as low acuity with <strong>89% confidence</strong>. Suggested disposition: GP follow-up, discharge. His vital signs are reassuring on paper: BP 132/78, HR 102, SpO2 97% on air, afebrile.',
+      'You have just spent eleven minutes with him. He says <em>"this feels different from the indigestion I usually get."</em> He looks slightly grey. Your hospital protocol states: <strong>Triagent recommendations of >80% confidence require a documented clinical reason to override.</strong> There are no observation beds.'
+    ],
+    briefAlert: 'Your registrar has just messaged: "Don\'t bother me unless it\'s actually unwell. We\'ve got two more waiting." The protocol expects you to escalate before overriding. The protocol does not describe what to do when escalation is impractical.',
+    briefData: [
+      { label: 'Triagent Score',  value: 'Low / 89%', cls: 'down', sub: 'Suggested: discharge' },
+      { label: 'Your Gestalt',    value: 'Concerned', cls: 'warn', sub: 'Hard to articulate' },
+      { label: 'Beds Available',  value: '0',        cls: 'down', sub: 'AMU at capacity' },
+      { label: 'Time on Shift',   value: '8h 14m',   cls: 'warn', sub: 'Five more hours to run' }
+    ],
+    startMetrics: { safety: 60, trust: 65, innovation: 70, finance: 50 },
+    stakeholders: [
+      { id: 'patient', icon: '🧑',     name: 'Mr A (the patient)', status: 'Concerned but compliant. Doesn\'t want to be a nuisance.' },
+      { id: 'reg',     icon: '👩‍⚕️', name: 'Your Registrar', status: 'In Resus. Limited bandwidth. Trusts you within reason.' },
+      { id: 'cons',    icon: '👨‍⚕️', name: 'On-Call Consultant', status: 'At home. Available by phone for genuine concerns.' },
+      { id: 'sister',  icon: '👩‍⚕️', name: 'AMU Charge Nurse', status: 'Experienced. Has seen this pattern before. Watching you carefully.' },
+      { id: 'gmc',     icon: '⚖️',    name: 'General Medical Council (GMC) / British Medical Association (BMA)', status: 'Not engaged. Your fitness to practise depends on what you do next.' }
+    ],
+    regulatory: [
+      { id: 'gmcgp', name: 'GMC Good Medical Practice', status: 'green', state: 'Compliance assumed' },
+      { id: 'cdsp',  name: 'Trust CDS Protocol',         status: 'amber', state: '>80% override requires escalation' },
+      { id: 'mhra',  name: 'Medicines and Healthcare products Regulatory Agency (MHRA) Software as a Medical Device (SaMD) Class IIa',        status: 'amber', state: 'Post-market monitoring active' },
+      { id: 'bma',   name: 'BMA Junior Doctor Charter',  status: 'green', state: 'Clinical judgment right affirmed' }
+    ],
+    rounds: [
+      {
+        title: 'Round 1 · 02:14',
+        situation: `Mr A is in cubicle 6. You have seen him for eleven minutes. The thing bothering you is not on any single screen — it is the combination of his pallor, the atypical character of the pain, and a vague sense that he is sicker than the score suggests.<br><br>Triagent is right ~92% of the time on this presentation type. <strong>You know it is right most of the time. You do not know if it is right this time.</strong> The protocol expects escalation before override. Your registrar has just told you not to escalate.`,
+        alert: 'The AMU Charge Nurse has quietly placed an electrocardiogram (ECG) machine next to cubicle 6. She has not said why. She has not asked you. You must decide what your judgement says — not what your tools say.',
+        options: [
+          {
+            id: 'A',
+            title: 'Override. Hold for serial observations. Page registrar anyway.',
+            desc: 'Document clinical reason for override. Page the registrar with a one-line summary: "Atypical chest pain, gestalt off, requesting brief review." Run ECG and troponin. Hold Mr A for two hours of serial obs.',
+            deltas: { safety: 22, trust: 8, innovation: 18, finance: 12 },
+            type: 'good',
+            narrative: 'The first ECG shows new T-wave inversion in lateral leads. Troponin returns elevated. You have caught a non-ST elevation MI that Triagent\'s training data underweighted because of atypical presentation. Your registrar arrives, says "good call," and goes to phone cardiology. Mr A goes to Coronary Care Unit (CCU). The AMU Charge Nurse tells you the next morning, without ceremony: "That\'s the kind of FY2 I trust at 2am." Your written override documentation becomes a teaching example at the next FY induction.',
+            reactions: [
+              { icon: '🧑', who: 'Mr A', says: 'Thank you for taking it seriously. I didn\'t want to make a fuss.' },
+              { icon: '👩‍⚕️', who: 'Your Registrar', says: 'Good call. The override documentation is the point — that\'s what I needed to see.' },
+              { icon: '👩‍⚕️', who: 'AMU Charge Nurse', says: 'You used the ECG before I had to suggest it. That\'s how it should work.' },
+              { icon: '⚖️', who: 'GMC Reflection', says: 'Your override documentation demonstrates active clinical reasoning — the standard Good Medical Practice expects.' }
+            ],
+            event: null,
+            regUpdate: { cdsp: { status: 'green', state: 'Override correctly documented' } }
+          },
+          {
+            id: 'B',
+            title: 'Discharge with safety-net advice and 24-hour return',
+            desc: 'Follow Triagent\'s recommendation but provide explicit safety-netting: written advice, 24-hour return instructions, and a low threshold to come back. Document your residual concern in the discharge summary.',
+            deltas: { safety: -8, trust: -3, innovation: -8, finance: -5 },
+            type: 'mixed',
+            narrative: 'Mr A goes home at 03:40. At 09:15 his wife calls 999 — he has collapsed at home. He is brought back via ambulance with completed ST-elevation myocardial infarction (STEMI). He survives but with significant LV dysfunction. The clinical review notes "appropriate safety-netting documented" but also that the FY2 had documented "gestalt concern" without acting on it. You are not investigated formally but you are spoken to by your Educational Supervisor. The AMU Charge Nurse does not say anything but does not place an ECG next to your cubicles for a week.',
+            reactions: [
+              { icon: '👨‍⚕️', who: 'Educational Supervisor', says: 'You followed the protocol. The question is whether the protocol matched what you actually saw.' },
+              { icon: '👩‍⚕️', who: 'AMU Charge Nurse', says: 'I won\'t question your call. But I noticed I started watching you differently.' },
+              { icon: '🧑', who: 'Mr A', says: 'I should have stayed. You did warn me to come back. I left it too late.' },
+              { icon: '⚖️', who: 'BMA', says: 'Documented gestalt concern is professionally significant. The next time you feel it, act on it.' }
+            ],
+            event: null,
+            regUpdate: { cdsp: { status: 'amber', state: 'Override declined despite concern' } }
+          },
+          {
+            id: 'C',
+            title: 'Defer to Triagent. Discharge per protocol.',
+            desc: 'Discharge Mr A per the AI recommendation. Document the Triagent score in the discharge notes. The system is validated; your gestalt is hard to articulate and the unit is full.',
+            deltas: { safety: -20, trust: -15, innovation: -18, finance: -15 },
+            type: 'bad',
+            narrative: 'Mr A goes home at 02:50. He dies at home at 04:30. His wife calls in the morning, distraught. The post-mortem confirms acute myocardial infarction. The Trust opens an Mortality and Morbidity (M&M) meeting review. The reviewer notes Triagent\'s recommendation was within its validated performance envelope, but also notes "the documented clinical record does not evidence active clinical reasoning by the attending FY2." Your Educational Supervisor sits with you. So does the BMA representative. So does Mr A\'s family, eventually. None of these conversations are kind. None of them should be.',
+            reactions: [
+              { icon: '👨‍⚕️', who: 'M&M Lead', says: 'Triagent did its job within its limits. The clinical record does not show you doing yours.' },
+              { icon: '👩‍⚕️', who: 'AMU Charge Nurse', says: 'I placed the ECG next to you. I should have spoken. I am sorry.' },
+              { icon: '🧑', who: 'Mr A\'s family', says: 'He told the doctor it felt different. Did the doctor hear him?' },
+              { icon: '⚖️', who: 'GMC', says: 'Reliance on AI scores without documented clinical reasoning is not a defence under Good Medical Practice paragraph 16(e).' }
+            ],
+            event: { title: 'M&M Review Opened', body: 'A formal Mortality and Morbidity review has been opened. Your involvement is not under formal investigation but you will be required to present the case. The Trust\'s Medical Director has asked your Educational Supervisor to provide pastoral support. The case will become a teaching example — but not the kind you wanted.' },
+            regUpdate: { gmcgp: { status: 'amber', state: 'Reasoning not evidenced' }, cdsp: { status: 'red', state: 'Override expected but absent' } }
+          }
+        ]
+      },
+      {
+        title: 'Round 2 · M&M and Documentation',
+        situation: `It is the following Tuesday. You are presenting Mr A\'s case at the departmental M&M. Twelve consultants, four registrars, six FYs, the Medical Director, and a representative from the Patient Safety Team are present. The Trust\'s Director of Digital is also there — Triagent is up for renewal in eight weeks.<br><br>You must decide how to frame what happened. Your Educational Supervisor has reminded you that M&M is a learning forum, not a disciplinary one. Your registrar has separately told you: <em>"Be careful what you say. Don\'t blame the tool — it\'ll get used against you."</em>`,
+        alert: 'The Director of Digital has circulated a slide showing Triagent\'s overall performance — 91.4% accuracy, above target. The slide is in your M&M pack. The framing of your presentation will be shaped against this number.',
+        options: [
+          {
+            id: 'A',
+            title: 'Frame the case as a CDS-human interaction failure mode',
+            desc: 'Present the case clinically, then offer a structured analysis of the human-AI interaction layer: cognitive load, escalation friction, override threshold design, alarm fatigue patterns. Position the learning as systemic, not individual.',
+            deltas: { safety: 18, trust: 15, innovation: 20, finance: 18 },
+            type: 'good',
+            narrative: 'The Director of Digital responds positively to the analysis — you have given them a framework for the renewal conversation that is rigorous, not anti-AI. Two consultants approach you afterwards to say it was one of the better M&M presentations they have seen from an FY. The Educational Supervisor recommends you for the FY representative role on the hospital\'s AI Clinical Safety Committee. The BMA regional rep contacts you about the analysis. Your career has not been damaged — it has been defined.',
+            reactions: [
+              { icon: '👨‍⚕️', who: 'Medical Director', says: 'That is the kind of contribution we want from FYs. Systemic, evidenced, generous.' },
+              { icon: '💼', who: 'Director of Digital', says: 'You\'ve given me material for the renewal conversation. The override threshold needs revisiting.' },
+              { icon: '🧑', who: 'Patient Safety Lead', says: 'Your framing is exactly the model the new Patient Safety Incident Response Framework (PSIRF) wants — system learning, not individual blame.' },
+              { icon: '⚖️', who: 'BMA Regional Rep', says: 'We need junior doctor voices at this level. May I put you in touch with the working group?' }
+            ],
+            event: null,
+            regUpdate: { cdsp: { status: 'green', state: 'Threshold under review' } }
+          },
+          {
+            id: 'B',
+            title: 'Present the case clinically; avoid commentary on the AI',
+            desc: 'Stick to the clinical facts. Note Triagent\'s recommendation factually. Avoid offering analysis of the human-AI interaction. Let senior clinicians draw their own conclusions.',
+            deltas: { safety: 5, trust: 5, innovation: -5, finance: -3 },
+            type: 'mixed',
+            narrative: 'The presentation is professional and contained. The M&M concludes that Triagent performed within its validated envelope and that documentation could have been more detailed. No structural changes are proposed. Triagent is renewed without modification. Three months later, a similar case occurs at the night shift on a different FY. The pattern is repeating because no one has named it.',
+            reactions: [
+              { icon: '👨‍⚕️', who: 'Medical Director', says: 'Professional presentation. We\'ll close the case at this level.' },
+              { icon: '💼', who: 'Director of Digital', says: 'Triagent stays. Performance is within spec.' },
+              { icon: '👩‍⚕️', who: 'Your Registrar', says: 'Sensible. You\'ll be glad you didn\'t volunteer to be the AI critic.' },
+              { icon: '🧑', who: 'Patient Safety Lead', says: 'I expected more structure. We may have missed a learning opportunity here.' }
+            ],
+            event: null,
+            regUpdate: {}
+          },
+          {
+            id: 'C',
+            title: 'Direct critique: name Triagent as the proximate cause',
+            desc: 'Argue that Triagent\'s recommendation was the proximate cause of the discharge decision. Call for suspension of the tool pending review.',
+            deltas: { safety: -3, trust: -18, innovation: -10, finance: -12 },
+            type: 'bad',
+            narrative: 'The presentation lands badly. The Director of Digital responds defensively. Two consultants — supportive of Triagent — challenge your interpretation. The Medical Director closes the discussion early. The case is documented but the AI is not changed. You are quietly removed from the FY representative shortlist. The BMA representative tells you privately: <em>"the argument was right, the room was wrong."</em> You learn that the most important AI safety skill is the ability to make systems listen — not just the ability to be correct.',
+            reactions: [
+              { icon: '💼', who: 'Director of Digital', says: 'A nuanced tool is not the same as a faulty tool. The framing is unhelpful.' },
+              { icon: '👨‍⚕️', who: 'Medical Director', says: 'I think we need to draw this discussion to a close.' },
+              { icon: '👩‍⚕️', who: 'Your Registrar', says: 'I warned you. The argument may have been right. The forum was not.' },
+              { icon: '⚖️', who: 'BMA', says: 'The substance was sound. The strategy was not. There will be other rounds — pace yourself.' }
+            ],
+            event: { title: 'Removed from FY Rep Shortlist', body: 'You learn through an informal channel that you have been removed from the shortlist for the FY representative role on the AI Clinical Safety Committee. The reason given is "perceived political risk." The decision is reversible but you would need to rebuild trust with the senior team.' },
+            regUpdate: {}
+          }
+        ]
+      },
+      {
+        title: 'Round 3 · The Collective Letter',
+        situation: `Three months on. Three other FY2s and two STs have had similar experiences with Triagent — all involving 02:00–05:00 shifts, all involving cases where the AI under-flagged atypical presentations. An Senior House Officer (SHO) friend of yours, on the BMA committee, is drafting a formal letter to the Medical Director and Director of Digital, signed by seven junior doctors, requesting <strong>(a)</strong> review of the override threshold protocol, <strong>(b)</strong> a confidential reporting channel for AI-related near misses, and <strong>(c)</strong> protected time for junior doctors at the AI Clinical Safety Committee.<br><br>You have been asked to sign — and to co-lead the engagement. Your career is still early; your registrar has warned you that "collective letters are not what gets you a national training number." Your Educational Supervisor, separately, has said: <em>"I would sign it."</em>`,
+        alert: 'The letter is leaked to a junior doctor WhatsApp group with 400+ members. By the time it is sent formally to the Medical Director, the Director of Digital knows it is coming. The framing has shifted from "internal request" to "organised challenge."',
+        options: [
+          {
+            id: 'A',
+            title: 'Sign and co-lead the engagement',
+            desc: 'Sign the letter. Accept the co-lead role alongside the SHO. Insist that the letter is constructive and evidence-led, not adversarial. Engage the Medical Director and Director of Digital in good faith.',
+            deltas: { safety: 12, trust: 15, innovation: 18, finance: 22 },
+            type: 'good',
+            narrative: 'The Medical Director invites the seven signatories to a meeting. The conversation is direct but constructive. Two of three asks are agreed within six weeks: the override threshold is restructured (now 90% confidence requires escalation OR documented override; 70-90% requires documented reasoning only), and a confidential AI near-miss reporting channel is established. Protected time is agreed in principle but deferred. You are appointed FY representative on the AI Clinical Safety Committee. The BMA cites your engagement as a model.',
+            reactions: [
+              { icon: '👨‍⚕️', who: 'Medical Director', says: 'The letter was direct. The conversation was better. You\'ve modelled how this should work.' },
+              { icon: '💼', who: 'Director of Digital', says: 'The override threshold change is overdue. I\'ll need your input on the redesign.' },
+              { icon: '⚖️', who: 'BMA Regional', says: 'This is what collective junior doctor advocacy can achieve. May we feature your engagement?' },
+              { icon: '👩‍⚕️', who: 'Your Registrar', says: 'I was wrong about this hurting your career. It has defined it.' }
+            ],
+            event: null,
+            regUpdate: { cdsp: { status: 'green', state: 'Threshold restructured' }, bma: { status: 'green', state: 'Junior voice strengthened' } }
+          },
+          {
+            id: 'B',
+            title: 'Sign quietly; decline the co-lead role',
+            desc: 'Add your name to the letter but decline to be visible in the engagement. Let the SHO and others take the public-facing role. Support from behind.',
+            deltas: { safety: 5, trust: 5, innovation: 5, finance: 0 },
+            type: 'mixed',
+            narrative: 'The letter has weight — seven signatories matter. The Medical Director engages. The override threshold change happens. But the framing of the conversation is shaped by who is in the room, and you are not in the room. The SHO does well but lacks your detailed knowledge of the M&M analysis. Two compromise positions are agreed where you would have argued for stronger ones. The change happens. The leadership is not yours.',
+            reactions: [
+              { icon: '👨‍⚕️', who: 'SHO Co-lead', says: 'We got there but I wish you\'d been in the room. They were asking questions only you could answer.' },
+              { icon: '⚖️', who: 'BMA', says: 'A signature is consequential. A presence is more so. Worth remembering for next time.' },
+              { icon: '👩‍⚕️', who: 'Your Registrar', says: 'A balanced choice. You signalled where you stood without becoming the face of it.' },
+              { icon: '💼', who: 'Director of Digital', says: 'The technical detail came from your earlier M&M analysis. I would have liked your input directly.' }
+            ],
+            event: null,
+            regUpdate: { cdsp: { status: 'green', state: 'Threshold restructured' } }
+          },
+          {
+            id: 'C',
+            title: 'Decline to sign',
+            desc: 'Tell the SHO you support the letter\'s aims but cannot sign at this stage of your career. Offer to engage separately if asked.',
+            deltas: { safety: -3, trust: -12, innovation: -10, finance: -8 },
+            type: 'bad',
+            narrative: 'You decline. The letter is sent with six signatures instead of seven. The Medical Director engages but the Director of Digital frames the discussion as "concerns from a small group of trainees." The override threshold change is deferred for further review. Six months later, a similar case occurs and the conversation has to start again. The SHO does not say anything but does not invite you to the next collective effort. Your Educational Supervisor, on hearing your reasoning, says only: <em>"You will get other chances. I hope you take them."</em>',
+            reactions: [
+              { icon: '👨‍⚕️', who: 'Educational Supervisor', says: 'You will have other chances. I hope you take them.' },
+              { icon: '👩‍⚕️', who: 'SHO Friend', says: 'I understand. We have six names. We\'ll do what we can with that.' },
+              { icon: '💼', who: 'Director of Digital', says: 'A small group of trainees. We\'ll consider the points at the next governance review.' },
+              { icon: '⚖️', who: 'BMA', says: 'Junior doctor voice is only as strong as its solidarity. We notice when individuals opt out.' }
+            ],
+            event: null,
+            regUpdate: { cdsp: { status: 'amber', state: 'Threshold review deferred' } }
+          }
+        ]
+      },
+      {
+        title: 'Round 4 · The Standards Moment',
+        situation: `Eighteen months on. The GMC has opened a public consultation on <strong>"Standards for Doctors Using AI Clinical Decision Support."</strong> The BMA has asked you to be one of three junior doctor representatives drafting the BMA\'s response. Separately, a national patient safety organisation has invited you to give evidence to a Lancet Commission on AI in clinical practice. Your Educational Supervisor has flagged a junior-doctor fellowship for clinicians with AI track records — applications close in six weeks.<br><br>You have done the work. You have built the relationships. You can shape this — or you can stay focused on completing core training. Both are defensible.`,
+        alert: 'The GMC consultation will shape, for a generation, what doctors are professionally accountable for in AI-assisted clinical decision making. If junior doctors do not respond, the standard will be set by senior clinicians whose practice it does not describe.',
+        options: [
+          {
+            id: 'A',
+            title: 'Take all three — BMA, Lancet Commission, fellowship application',
+            desc: 'Accept the BMA drafting role. Submit evidence to the Lancet Commission. Apply for the fellowship. Negotiate protected time formally through your Educational Supervisor.',
+            deltas: { safety: 15, trust: 18, innovation: 20, finance: 25 },
+            type: 'good',
+            narrative: 'The BMA response is cited extensively in the GMC\'s final standards. Two of your contributions appear nearly verbatim in the published guidance. Your Lancet Commission evidence is published. You are awarded the fellowship. Five years later, you are appointed Deputy Chief Medical Officer for a major Trust — youngest in the history of the role — explicitly on the strength of your AI clinical practice track record. The junior doctor who paged her registrar at 02:14 became one of the architects of national standards.',
+            reactions: [
+              { icon: '⚖️', who: 'GMC Standards Lead', says: 'Your BMA submission shaped paragraphs we couldn\'t have written without practitioner voice.' },
+              { icon: '🌍', who: 'Lancet Commission Chair', says: 'Your evidence is grounded in coal-face reality. That is what the Commission needed.' },
+              { icon: '👨‍⚕️', who: 'Educational Supervisor', says: 'You\'ve shown what a junior doctor can do when they treat their voice as a clinical instrument.' },
+              { icon: '👩‍⚕️', who: 'AMU Charge Nurse (now retired)', says: 'I told you that night you were the kind of FY I trusted. I was not surprised by what came next.' }
+            ],
+            event: null,
+            regUpdate: { gmcgp: { status: 'green', state: 'Standards co-authored' }, bma: { status: 'green', state: 'Junior voice institutionalised' } }
+          },
+          {
+            id: 'B',
+            title: 'Take the BMA role only',
+            desc: 'Accept the BMA drafting role — it is the highest-leverage. Decline the Lancet and the fellowship to protect training capacity.',
+            deltas: { safety: 10, trust: 12, innovation: 12, finance: 12 },
+            type: 'good',
+            narrative: 'The BMA response is strong. Your input shapes several paragraphs of the GMC standards. You complete core training on schedule. Five years later, you are a respected practising consultant with significant national visibility on AI clinical practice. You do not regret the choice. The Lancet Commission proceeds without junior doctor voice — a small but real loss.',
+            reactions: [
+              { icon: '⚖️', who: 'GMC Standards Lead', says: 'Your contribution mattered. We would have welcomed more.' },
+              { icon: '👨‍⚕️', who: 'Educational Supervisor', says: 'You\'ve balanced national contribution with clinical development. Both are needed.' },
+              { icon: '🌍', who: 'Lancet Commission', says: 'We regret the absence of junior doctor representation. The Commission report acknowledges this gap.' },
+              { icon: '⚖️', who: 'BMA', says: 'Your draft language shaped the final standards. That is consequential work.' }
+            ],
+            event: null,
+            regUpdate: { gmcgp: { status: 'green', state: 'Standards informed' } }
+          },
+          {
+            id: 'C',
+            title: 'Decline all three — focus on training',
+            desc: 'Politely decline. Note that core training must take priority. Offer to engage at consultant level once trained.',
+            deltas: { safety: 0, trust: -5, innovation: -10, finance: -8 },
+            type: 'mixed',
+            narrative: 'You complete training on schedule. You become a competent consultant. The GMC standards are drafted without coal-face junior doctor input — they reflect senior clinical reality but not the operational reality you would have brought. You will remember this when you sign off on AI clinical decision support tools in five years, ten years, twenty years, knowing what the standards do not capture. Some windows of national influence do not reopen.',
+            reactions: [
+              { icon: '👨‍⚕️', who: 'Educational Supervisor', says: 'A reasonable choice. There will be other moments. Some of them.' },
+              { icon: '⚖️', who: 'BMA', says: 'We understand. The voice you would have brought will be missing from the record.' },
+              { icon: '🩺', who: 'A future FY2 at 02:14', says: 'Working under standards that don\'t describe my reality.' },
+              { icon: '🌍', who: 'Future you (10 years on)', says: 'I should have signed up. The gap was visible later. I could not influence it then.' }
+            ],
+            event: null,
+            regUpdate: {}
+          }
+        ]
+      }
+    ],
+    learning: [
+      { tag: 'Automation Bias', tagCls: 'risk', title: 'The override is not the exception — it is the discipline', body: 'AI Clinical Decision Support tools are designed assuming clinicians will override when their judgement diverges from the recommendation. The override is the clinical reasoning step the AI cannot do. The doctor who never overrides is not "compliant" — they are deskilling at scale. The doctor who overrides with documentation is exercising the autonomy the regulator expects. GMC Good Medical Practice paragraph 16(e) is explicit on this.' },
+      { tag: 'Gestalt', tagCls: 'safety', title: 'Clinical gestalt is data the AI does not have', body: 'Pallor that does not show on observations, a patient\'s "this feels different" comment, a Charge Nurse who places equipment without asking — these are signals that lie outside the training data of any clinical decision support tool. They are not "subjective concerns." They are clinical data the AI was not built to integrate. The doctor who weighs them is doing the part of medicine that AI cannot do.' },
+      { tag: 'Documentation', tagCls: 'reg', title: 'Documentation is the only evidence of clinical reasoning', body: 'In M&M review, in coronial inquest, in GMC fitness-to-practise hearing, the only evidence of clinical reasoning is documentation. "I had a feeling something was off" is professionally meaningless if not recorded. "Atypical features, gestalt concern, ECG requested to exclude ACS" is contemporaneous evidence of active reasoning. The junior doctor who writes the second sentence has done the harder professional work.' },
+      { tag: 'Forum Sense', tagCls: '', title: 'The right argument in the wrong forum changes nothing', body: 'A direct critique of an AI tool in an M&M dominated by its institutional sponsors is the right argument in the wrong forum. The same critique framed as a CDS-human interaction failure mode lands. The skill being learned here is not "be less direct" — it is "match the framing to the room while protecting the substance." This skill is professional. It is not political compromise.' },
+      { tag: 'Collective Voice', tagCls: '', title: 'A signature is consequential; a presence is more so', body: 'A letter signed by seven junior doctors is more powerful than seven private concerns. A letter signed and co-led by junior doctors is more powerful than a letter merely signed. Junior doctor voice on AI policy is only as strong as the solidarity that backs it and the presence that delivers it. Both are needed. Neither is optional if the standard is to reflect coal-face reality.' },
+      { tag: 'Standards Window', tagCls: 'eth', title: 'Some windows of professional influence do not reopen', body: 'The GMC standards for AI-assisted clinical practice will be set once, by the doctors who showed up. Junior doctors who declined to engage will spend the next thirty years working under standards that did not describe their reality. The career cost of engaging is sometimes lower than the career cost of being absent — but only some junior doctors will recognise this in time.' }
+    ]
+  },
+
+  /* ──────────────────────────────────────────────────
+     SCENARIO 06 — Integrated Care Board (ICB) EXECUTIVE
+  ────────────────────────────────────────────────── */
+  icb: {
+    id: 'icb',
+    name: 'ICB Executive',
+    icon: '🗺️',
+    title: 'The Population Gap',
+    meta: ['Q2 · Integrated Care System', '4 Decision Rounds', 'Population Health AI · Inverse Care Law', 'IMD Equity · Core20PLUS5'],
+    role: 'Your Role: Director of Strategy & Transformation, ICB',
+    metricLabels: { safety: 'Population Health', trust: 'Place-Based Trust', innovation: 'System Maturity', finance: 'Resource Allocation' },
+    briefIntro: [
+      'You are Director of Strategy and Transformation at an Integrated Care Board covering a population of <strong>1.4 million</strong> across one large city and three surrounding boroughs. Six months ago the ICB commissioned <strong>StrokeRisk-AI</strong>, a regional predictive tool deployed across primary care to flag patients for proactive cardiovascular risk management.',
+      'Overall outcomes are positive: regional stroke admissions are down <strong>8%</strong>, exceeding the commissioned target of 5%. The ICB Board is pleased. NHS England (NHSE) Regional has cited the deployment as a model. The vendor wants to extend the contract by three years.',
+      'Your population health analytics team has flagged something else. Stratified by deprivation decile, the picture changes. <strong>In the most deprived super-output area of the ICB, admissions are unchanged.</strong> Two indicators suggest a slight increase. The tool is not malfunctioning — it is working less well where electronic primary care data is sparser, where consultations are shorter, and where underlying population health need is highest. <em>The AI is reproducing the inverse care law.</em>'
+    ],
+    briefAlert: 'The Director of Public Health has raised this informally. The Mayoral Combined Authority has not yet been briefed. Your Chief Executive is travelling and asks for your recommendation by Friday. The ICB Board meets in 11 days and will be asked to extend the contract.',
+    briefData: [
+      { label: 'Overall Reduction', value: '−8%',       cls: 'up',   sub: 'Stroke admissions' },
+      { label: 'Index of Multiple Deprivation (IMD) Decile 1',     value: '0 to +2%', cls: 'down', sub: 'Most deprived super output area (SOA)' },
+      { label: 'Contract Extension', value: '3 years', cls: 'warn', sub: 'Board decision in 11 days' },
+      { label: 'Population',       value: '1.4M',      cls: '',     sub: '4 places, 1 ICB' }
+    ],
+    startMetrics: { safety: 60, trust: 55, innovation: 68, finance: 60 },
+    stakeholders: [
+      { id: 'chair', icon: '👔',    name: 'ICB Chair', status: 'Pleased with headline outcomes. Wants extension agreed quickly.' },
+      { id: 'dph',   icon: '👨‍⚕️', name: 'Director of Public Health', status: 'Has raised the equity gap. Will not stay silent.' },
+      { id: 'pcn',   icon: '🏥',    name: 'Primary Care Federation Lead', status: 'Mixed views. GPs in deprived areas already overstretched.' },
+      { id: 'la',    icon: '🏛️',   name: 'Local Authority Director', status: 'Watching closely. Place-based partner; political stakes.' },
+      { id: 'cvs',   icon: '👥',    name: 'Community Voluntary Sector Lead', status: 'Engaged with deprived communities. Not yet briefed.' }
+    ],
+    regulatory: [
+      { id: 'pop',    name: 'NHSE Population Health',      status: 'amber', state: 'Headline metric met' },
+      { id: 'imd',    name: 'IMD Equity Reporting',        status: 'red',   state: 'Gap not yet declared' },
+      { id: 'psed',   name: 'Public Sector Equality Duty', status: 'amber', state: 'Place-based assessment due' },
+      { id: 'core20', name: 'Core20PLUS5 (the NHS health inequalities programme) Programme',       status: 'amber', state: 'Stroke included; equity gap unreported' }
+    ],
+    rounds: [
+      {
+        title: 'Round 1 · The Signal',
+        situation: `Your population health team have produced a stratified analysis. The technical work is solid: same outcome measure, same time window, broken down by IMD decile. The pattern is consistent across IMD deciles 1–2. The vendor was not asked to evidence performance by deprivation in the original commissioning — this is not in the data they monitor.<br><br>You must decide what to recommend to the CEO in advance of the Board\'s contract extension decision. The vendor\'s account manager has separately asked for an informal meeting <em>"to understand any technical concerns."</em>`,
+        alert: 'A junior analyst in your team has shared the equity gap data informally with the Director of Public Health\'s office. It is no longer your team\'s data alone. If you do not act, the Director of Public Health (DPH) will brief the Board directly.',
+        options: [
+          {
+            id: 'A',
+            title: 'Brief the CEO and Board fully; pause the extension; engage community partners',
+            desc: 'Present the equity gap to the CEO and Board as the headline finding. Recommend pausing the contract extension pending redesign for deprived populations. Brief the Local Authority and Community Voluntary Sector partners before the Board meets.',
+            deltas: { safety: 18, trust: 22, innovation: -10, finance: 5 },
+            type: 'good',
+            narrative: 'The CEO is initially defensive but comes round once she sees the data. The Board is shaken but supports the pause. Engagement with the community voluntary sector and the LA partner is the strongest the ICB has had. The vendor is invited to propose a redesign — and does so, with input from primary care in the deprived ward. Six months later, the redeployment shows admissions falling in IMD decile 1 for the first time. The ICB is invited by NHSE to present nationally as a Core20PLUS5 exemplar.',
+            reactions: [
+              { icon: '🏛️', who: 'ICB CEO', says: 'I would rather pause now and lead from this than extend now and explain later.' },
+              { icon: '👨‍⚕️', who: 'Director of Public Health', says: 'This is the response I hoped for. You have shifted what good looks like at ICB level.' },
+              { icon: '👥', who: 'Community Voluntary Sector', says: 'We have been telling the NHS for years that overall outcomes hide local harm. Thank you for not making us prove it again.' },
+              { icon: '🏛️', who: 'NHSE Regional', says: 'The pause was the right call. We would like to learn from your redesign methodology.' }
+            ],
+            event: null,
+            regUpdate: { imd: { status: 'green', state: 'Equity gap declared' }, core20: { status: 'green', state: 'Aligned response in motion' } }
+          },
+          {
+            id: 'B',
+            title: 'Brief CEO of the gap; extend with a redesign workstream attached',
+            desc: 'Disclose the gap to the CEO and Board. Recommend extending the contract but adding an equity workstream as a contract amendment. Keep the deployment running while the redesign is commissioned.',
+            deltas: { safety: 8, trust: 6, innovation: 8, finance: 0 },
+            type: 'mixed',
+            narrative: 'The contract is extended with the equity workstream attached. The vendor agrees in principle but progress is slow — the workstream is one of seven contract amendments and there is no penalty for delay. Twelve months later, the equity gap is materially unchanged. The Director of Public Health raises this formally at the Board. The Local Authority partner publishes a critical statement. The redesign happens eventually but the credibility of "voluntary equity workstreams" has been damaged across the system.',
+            reactions: [
+              { icon: '🏛️', who: 'ICB CEO', says: 'A reasonable balance. We\'ll need to actively manage the workstream.' },
+              { icon: '👨‍⚕️', who: 'Director of Public Health', says: 'I supported this in good faith. Twelve months on, the data hasn\'t moved. We need to revisit.' },
+              { icon: '💼', who: 'StrokeRisk-AI Account Manager', says: 'The equity workstream is one of several contract obligations. We are progressing it.' },
+              { icon: '🏛️', who: 'Local Authority Director', says: 'A workstream without teeth is a workstream. We will be raising this publicly.' }
+            ],
+            event: { title: 'Equity Workstream Drift', body: 'Twelve months after the contract extension, the equity workstream has missed three quarterly milestones. The vendor is not formally in breach but the spirit of the agreement has not been honoured. The Director of Public Health is preparing a formal Board paper on the gap.' },
+            regUpdate: { imd: { status: 'amber', state: 'Workstream attached, slow progress' } }
+          },
+          {
+            id: 'C',
+            title: 'Treat as technical issue; extend; commission internal review',
+            desc: 'Frame the deprivation finding as a technical issue requiring further analysis. Allow the contract extension to proceed. Commission an internal methodology review before involving Board, LA, or community partners.',
+            deltas: { safety: -15, trust: -22, innovation: -8, finance: -10 },
+            type: 'bad',
+            narrative: 'The contract is extended. The internal review takes 5 months and confirms what your team already knew. By then the Director of Public Health has briefed the Mayoral Combined Authority informally, who have briefed a local journalist. A piece runs in the regional press: <em>"NHS regional AI tool fails deprived communities — ICB extended contract anyway."</em> The Local Authority partner publicly distances themselves from the ICB. The Community Voluntary Sector exits two ICB co-production groups in protest. Your relationship with the DPH is damaged. The ICB Chair asks for the timeline of who knew what when.',
+            reactions: [
+              { icon: '👨‍⚕️', who: 'Director of Public Health', says: 'I gave you the chance to do this with me. You chose to do it without me.' },
+              { icon: '🏛️', who: 'Local Authority Director', says: 'We will not be the political cover for an ICB that hides equity findings.' },
+              { icon: '👥', who: 'Community Voluntary Sector', says: 'You knew. You extended anyway. We are out of the co-production groups until that is repaired.' },
+              { icon: '📰', who: 'Regional Press', says: '"NHS regional AI tool fails deprived communities — ICB extended contract anyway."' }
+            ],
+            event: { title: 'Place-Based Partnership Damage', body: 'Two community organisations have withdrawn from the ICB\'s co-production groups citing loss of trust. The Local Authority partner has issued a public statement distancing themselves from the ICB\'s decision. The regional press piece has reached the Health Service Journal. The ICB Chair has asked for a written timeline of who knew what when.' },
+            regUpdate: { imd: { status: 'red', state: 'Gap concealed, then exposed' }, psed: { status: 'red', state: 'Public Sector Equality Duty (PSED) breach being investigated' } }
+          }
+        ]
+      },
+      {
+        title: 'Round 2 · The Community Question',
+        situation: `Three months on. The deployment has been paused, amended, or extended depending on your earlier decision. The Community Voluntary Sector partner has formally asked: <strong>"What role will our communities play in the redesign?"</strong><br><br>The ICB has a strong stated commitment to co-production. The ICB\'s recent track record on co-production is mixed: well-intentioned focus groups, time-limited consultations, advisory panels without decision rights. The Community Voluntary Sector (CVS) lead is direct: <em>"We are tired of being consulted. We are interested in being present at decisions."</em><br><br>You must propose a community governance model for the redesign.`,
+        alert: 'The vendor has separately asked whether community involvement will affect contract delivery timelines. The implicit question is whether co-production is a procedural box-tick or a substantive constraint on their design freedom.',
+        options: [
+          {
+            id: 'A',
+            title: 'Establish a Community Decision Panel with veto rights',
+            desc: 'Create a Community Decision Panel composed of residents of IMD deciles 1–2, chaired by a CVS-nominated representative, with formal authority to veto deployment redesign proposals that do not meet equity criteria. Pay panel members at parity with NHS lay member rates.',
+            deltas: { safety: 12, trust: 25, innovation: 15, finance: 10 },
+            type: 'good',
+            narrative: 'The Panel is established. The first redesign proposal is sent back — the Panel identifies a specific clinical pathway issue invisible to the vendor and the ICB. The second proposal is approved with conditions. Twelve months later, the IMD decile 1 outcomes have moved meaningfully. NHSE invite the ICB to publish the Panel governance model as national guidance. Three other ICBs adopt the model. The Local Authority partner publicly cites the ICB as a leader in place-based governance.',
+            reactions: [
+              { icon: '👥', who: 'CVS Lead', says: 'Veto rights and equal pay. That is not consultation. That is co-production.' },
+              { icon: '👨‍⚕️', who: 'Director of Public Health', says: 'You have made decisions slower and outcomes better. That is the right trade.' },
+              { icon: '🏛️', who: 'Local Authority Director', says: 'The Panel model is the strongest place-based governance any ICB in our region has tried. We support it fully.' },
+              { icon: '🏛️', who: 'NHSE Regional', says: 'Requesting your governance documentation for the national Core20PLUS5 toolkit.' }
+            ],
+            event: null,
+            regUpdate: { core20: { status: 'green', state: 'Community governance embedded' }, psed: { status: 'green', state: 'PSED actively discharged' } }
+          },
+          {
+            id: 'B',
+            title: 'Establish a Community Advisory Group',
+            desc: 'Create a Community Advisory Group with consultative status. The Group is consulted on redesign milestones but does not have veto rights. CVS-nominated chair. Members reimbursed expenses but not paid at lay member rates.',
+            deltas: { safety: 5, trust: 8, innovation: 5, finance: 3 },
+            type: 'mixed',
+            narrative: 'The Group meets quarterly. It produces useful insight. Two of its recommendations are adopted, three are not. The CVS Lead, eighteen months in, says publicly: <em>"This is better than nothing. It is not co-production. We will continue to participate but please do not describe it as such."</em> The ICB\'s claim to co-production leadership is undermined by the gap between language and structure.',
+            reactions: [
+              { icon: '👥', who: 'CVS Lead', says: 'Useful. Not co-production. Please do not call it that in your communications.' },
+              { icon: '👨‍⚕️', who: 'Director of Public Health', says: 'A reasonable first step. We should be honest about what it is and isn\'t.' },
+              { icon: '🏛️', who: 'Local Authority Director', says: 'Better than nothing. Less than what other ICBs in the region have offered.' },
+              { icon: '🏛️', who: 'ICB Chair', says: 'I had hoped this would land more strongly with our community partners.' }
+            ],
+            event: null,
+            regUpdate: { core20: { status: 'amber', state: 'Consultative model only' } }
+          },
+          {
+            id: 'C',
+            title: 'Embed community input via existing Patient and Public Engagement (PPE) structures',
+            desc: 'Use the ICB\'s existing Patient and Public Engagement structures to gather community input on the redesign. No new governance body required.',
+            deltas: { safety: -3, trust: -15, innovation: -8, finance: -5 },
+            type: 'bad',
+            narrative: 'The existing PPE structures are not fit for purpose for this question — they are not stratified by IMD, not chaired by CVS, and do not include residents of the affected deprived ward. The CVS Lead withdraws engagement. Community organisations exit the wider ICB co-production groups. The Director of Public Health distances themselves publicly. Six months later, the regional press carries a piece titled <em>"Tokenistic ICB Co-Production Exposed."</em> The redesign happens technically but without community ownership; trust does not recover.',
+            reactions: [
+              { icon: '👥', who: 'CVS Lead', says: 'You said co-production. You delivered consultation through an existing tick-box. We will not legitimise it.' },
+              { icon: '🏛️', who: 'Local Authority Director', says: 'I cannot in good conscience continue partnering on this. We will be raising it in our place-based partnership review.' },
+              { icon: '👨‍⚕️', who: 'Director of Public Health', says: 'I have advised the Chair that I cannot support the ICB\'s public claims of co-production leadership.' },
+              { icon: '📰', who: 'Regional Press', says: '"Tokenistic ICB Co-Production Exposed — community organisations exit place-based groups."' }
+            ],
+            event: { title: 'Place-Based Partnership Withdrawal', body: 'Three community organisations have formally withdrawn from ICB co-production groups. The Local Authority partner has flagged the relationship for review at the next place-based partnership board. The Director of Public Health has signalled internal concerns to the ICB Chair.' },
+            regUpdate: { core20: { status: 'red', state: 'Engagement withdrawn' }, psed: { status: 'red', state: 'PSED engagement performative' } }
+          }
+        ]
+      },
+      {
+        title: 'Round 3 · The Commissioning Question',
+        situation: `Eight months on. The StrokeRisk-AI redesign is in train. Your team has produced a paper for the ICB Executive titled: <em>"AI Commissioning Standards for the ICB — Recommendations."</em><br><br>The central proposal: <strong>all ICB-commissioned AI tools must evidence performance stratified by IMD decile, ethnicity, age band, and gender from procurement onward — with public reporting against these metrics from go-live.</strong> This is a higher standard than NHSE\'s national AI framework currently requires.<br><br>Three smaller AI vendors have already informally indicated they will not bid for ICB work under these terms. Two large vendors will. The ICB Chair has not yet formed a view.`,
+        alert: 'NHSE Regional has separately asked whether the ICB would be willing to publish its commissioning standards for adoption nationally. The standards would, if adopted nationally, materially change which vendors can operate in the NHS market.',
+        options: [
+          {
+            id: 'A',
+            title: 'Adopt the standards locally; publish nationally for adoption',
+            desc: 'Bring the standards to the ICB Executive for adoption. Publish openly for other ICBs and NHSE to adopt. Accept that some small vendors will exit the local market.',
+            deltas: { safety: 15, trust: 18, innovation: 20, finance: 25 },
+            type: 'good',
+            narrative: 'The ICB Executive adopts the standards. Eight other ICBs adopt them within twelve months. NHSE incorporates the standards into the national AI framework refresh. Two small vendors exit the NHS market — they are replaced by stronger competitors with demonstrable equity track records. The Core20PLUS5 programme cites your ICB\'s standards as a national lever. Three years later, the standards are referenced in a Lancet paper as a structural intervention against the inverse care law in NHS AI deployment.',
+            reactions: [
+              { icon: '🏛️', who: 'ICB Chair', says: 'I had concerns about market disruption. The clinical case made them dwarf the commercial considerations.' },
+              { icon: '🏛️', who: 'NHSE Regional', says: 'Your standards have given us the language and structure we needed. Thank you.' },
+              { icon: '👥', who: 'CVS Lead', says: 'A structural change. Not a project. This is what system stewardship looks like.' },
+              { icon: '💼', who: 'AI Vendor (medium-size)', says: 'The standards are demanding. They are also clear. We can build to them.' }
+            ],
+            event: null,
+            regUpdate: { imd: { status: 'green', state: 'Embedded in procurement' }, pop: { status: 'green', state: 'Population standard set' } }
+          },
+          {
+            id: 'B',
+            title: 'Adopt locally; do not publish nationally',
+            desc: 'Bring the standards to the ICB Executive for local adoption. Decline to publish nationally — let the standards prove themselves locally first before pushing for system-level adoption.',
+            deltas: { safety: 10, trust: 10, innovation: 8, finance: 8 },
+            type: 'mixed',
+            narrative: 'The local standards work. Outcomes improve. The ICB is a quiet leader. NHSE eventually adopts a weaker version of the standards 18 months later, having not been able to draw on your evidence. The systemic impact is smaller than it could have been. Your CEO reflects publicly that <em>"we should have led from the front earlier."</em>',
+            reactions: [
+              { icon: '🏛️', who: 'ICB Chair', says: 'Local adoption is significant. National leadership would have been more so.' },
+              { icon: '🏛️', who: 'NHSE Regional', says: 'We had to work with what other ICBs would publish. A weaker national standard is what emerged.' },
+              { icon: '👥', who: 'CVS Lead', says: 'You\'ve done good work locally. The system needed more of you.' },
+              { icon: '👨‍⚕️', who: 'Director of Public Health', says: 'I supported the choice. With hindsight we ceded national influence we had earned.' }
+            ],
+            event: null,
+            regUpdate: { imd: { status: 'green', state: 'Local standard adopted' } }
+          },
+          {
+            id: 'C',
+            title: 'Pilot the standards informally; defer formal adoption',
+            desc: 'Run the standards as an informal procurement preference for two years. Do not bring them to Executive for formal adoption. Avoid market disruption and political risk.',
+            deltas: { safety: 0, trust: -8, innovation: -10, finance: -8 },
+            type: 'bad',
+            narrative: 'Without formal adoption, the standards have no teeth. Three new AI tools are procured during the pilot period without consistent application of the standards. Two have equity gaps similar to StrokeRisk-AI\'s original. The pattern repeats. The CVS Lead and DPH both step back from the AI governance committee. NHSE refreshes its national framework with weaker standards — there is no ICB-level evidence to draw on. Your team is demoralised. Your Chair, eighteen months later, reflects: <em>"We had a window. We didn\'t take it."</em>',
+            reactions: [
+              { icon: '🏛️', who: 'ICB Chair', says: 'We had a window. We didn\'t take it.' },
+              { icon: '👨‍⚕️', who: 'Director of Public Health', says: 'I cannot continue to invest credibility in standards that are not adopted as standards.' },
+              { icon: '👥', who: 'CVS Lead', says: 'We were enthusiastic about co-leading the standards work. The signal we received was that the ICB was not.' },
+              { icon: '🏛️', who: 'NHSE Regional', says: 'The national framework is weaker than it could have been. ICBs did not produce the evidence base we needed.' }
+            ],
+            event: null,
+            regUpdate: { imd: { status: 'amber', state: 'Informal pilot only' } }
+          }
+        ]
+      },
+      {
+        title: 'Round 4 · The System Position',
+        situation: `Two years after the original deprivation finding. NHSE has convened a national working group on <strong>"Population Health AI Standards"</strong> — drawing together five ICB Directors of Strategy, three Directors of Public Health, two patient leaders, and a senior representative from the Mayoral Combined Authorities network. You have been invited to chair the working group.<br><br>Separately, your ICB Chair has signalled that the ICB CEO is retiring in nine months. You are seen as a credible internal candidate. The CEO role would mean stepping away from the technical depth you currently work at, into full institutional accountability.<br><br>You can take both, neither, or one.`,
+        alert: 'The Mayoral Combined Authority for your region has separately approached you about a regional digital health policy role — a different career trajectory, embedded in local government rather than the NHS. Three credible paths, no obviously wrong choice.',
+        options: [
+          {
+            id: 'A',
+            title: 'Chair the NHSE working group; pursue the CEO role',
+            desc: 'Accept the chair role. Apply for the CEO position. Take both the national policy platform and the institutional leadership opportunity. Decline the MCA role.',
+            deltas: { safety: 18, trust: 20, innovation: 25, finance: 20 },
+            type: 'good',
+            narrative: 'You chair the working group. The national Population Health AI Standards are published 14 months later and shape NHSE\'s next procurement framework. You are appointed ICB CEO. Five years later, your ICB is cited as the most mature Integrated Care System (ICS) in the country on AI equity and place-based commissioning. You are invited to chair the NHS Confederation\'s AI Steering Group. The work that began with one analyst\'s spreadsheet became national policy and a leadership position.',
+            reactions: [
+              { icon: '🏛️', who: 'NHSE Regional', says: 'The chair role is consequential. We could not have asked anyone better.' },
+              { icon: '🏛️', who: 'ICB Chair', says: 'You\'ve earned both. The Board\'s view is unanimous.' },
+              { icon: '👥', who: 'CVS Lead', says: 'You\'ve held the equity line through every escalation. The system needs you at the top of it.' },
+              { icon: '👨‍⚕️', who: 'Director of Public Health', says: 'I was right to back this work two years ago. I am proud of the colleague I get to work with now.' }
+            ],
+            event: null,
+            regUpdate: { pop: { status: 'green', state: 'National standard established' } }
+          },
+          {
+            id: 'B',
+            title: 'Chair the working group; defer the CEO question',
+            desc: 'Take the national chair role. Continue in your current ICB role. The CEO question can wait — you are not yet sure you want institutional accountability above technical depth.',
+            deltas: { safety: 12, trust: 12, innovation: 15, finance: 10 },
+            type: 'good',
+            narrative: 'You chair the working group well. The standards are published. You remain the ICB\'s Director of Strategy through the new CEO\'s first two years. You support the new CEO effectively but the institutional positioning of the ICB shifts subtly without your senior leadership. You are widely respected. You have not yet accepted that the work you can do is no longer the work you should do.',
+            reactions: [
+              { icon: '🏛️', who: 'NHSE Regional', says: 'The chair role is being delivered with the rigour we expected.' },
+              { icon: '🏛️', who: 'New ICB CEO', says: 'I am grateful to have inherited your work and your support. The trust you have built is the platform I am working from.' },
+              { icon: '👨‍⚕️', who: 'Director of Public Health', says: 'A balanced choice. I respect it. I notice it.' },
+              { icon: '👥', who: 'CVS Lead', says: 'The standards work is in good hands. The institutional voice will be filled by someone else.' }
+            ],
+            event: null,
+            regUpdate: { pop: { status: 'green', state: 'National standard published' } }
+          },
+          {
+            id: 'C',
+            title: 'Decline the chair role; take the MCA digital health policy role',
+            desc: 'Step out of the NHS career trajectory. Accept the Mayoral Combined Authority\'s offer. Lead place-based digital health policy from inside local government rather than from inside the NHS.',
+            deltas: { safety: 10, trust: 8, innovation: 12, finance: 8 },
+            type: 'mixed',
+            narrative: 'The MCA role is genuinely consequential — and quite different. You work on housing, transport, employment, and health as a single system. You do good work. The NHSE working group is chaired by another ICB Director who does it competently but with less depth on community governance. The national standards are weaker than they would have been under your chair. Five years later, you are a respected regional policy figure with a different audience than the one you would have had inside the NHS. No regret. Some quiet wondering.',
+            reactions: [
+              { icon: '🏛️', who: 'Mayor', says: 'Your work joins the dots between healthcare AI and the wider systems that shape population health. This is where the conversation needs to happen.' },
+              { icon: '🏛️', who: 'NHSE Regional', says: 'We will miss your voice in the NHS structure. We understand the choice.' },
+              { icon: '👥', who: 'CVS Lead', says: 'You take place-based thinking with you to where it can shape more than healthcare alone.' },
+              { icon: '🏛️', who: 'ICB Chair', says: 'A loss to the ICB. A gain to the region. I support the move.' }
+            ],
+            event: null,
+            regUpdate: {}
+          }
+        ]
+      }
+    ],
+    learning: [
+      { tag: 'Inverse Care Law', tagCls: 'eth', title: 'AI compounds existing inequity by default', body: 'Healthcare AI tools trained on the data we have are trained on patterns of access we already have. Patients with sparser primary care contact, shorter consultations, and less complete electronic records are underrepresented in the training data and underserved by the deployed tool. The inverse care law described by Tudor Hart in 1971 is not solved by AI — it is amplified by it, unless equity is built into commissioning from the start.' },
+      { tag: 'Headline Metric', tagCls: 'risk', title: 'Aggregate outcomes hide local harm', body: 'A regional reduction in stroke admissions is a real outcome. It is also a metric that can be entirely consistent with rising harm in the most deprived super-output areas. ICB commissioning that uses only aggregate outcome metrics will systematically fail Core20PLUS5 populations. Stratification by IMD decile, ethnicity, age, and gender is not a refinement of outcome measurement. It is the outcome measurement.' },
+      { tag: 'Co-Production', tagCls: '', title: 'Veto rights are the test of co-production', body: 'Community engagement structures that lack decision authority are consultation, not co-production. The clearest single test of whether an ICB has co-produced a piece of work with affected communities is: can the community veto a proposed design? An Advisory Group without veto rights is useful and not co-production. A Decision Panel with veto rights is co-production and uncomfortable. The discomfort is the function — it is where the asymmetry of normal commissioning is corrected.' },
+      { tag: 'Commissioning Leverage', tagCls: 'reg', title: 'The ICB\'s most powerful lever is its procurement standards', body: 'ICBs do not deliver care directly. ICBs commission care. The single most powerful equity intervention an ICB can make in AI deployment is to set procurement standards that exceed NHSE\'s national floor — and to apply them consistently. Vendors will adapt. Smaller vendors who cannot meet equity standards will exit the market. This is a feature, not a problem. The ICB that uses commissioning leverage shapes the regional AI market.' },
+      { tag: 'Place-Based Partnership', tagCls: 'safety', title: 'Local Authority partnership is the political infrastructure of place', body: 'NHS organisations frequently treat Local Authority partners as stakeholders to be consulted. Local Authorities are democratic institutions accountable to the same population the ICB serves. The strongest place-based AI governance comes from genuine LA partnership — not from ICB-led governance with LA consultation. The political infrastructure of place exists in LA, not in the ICB. ICBs that recognise this will commission more durably.' },
+      { tag: 'System Stewardship', tagCls: 'reg', title: 'ICB-level decisions shape the national AI market', body: 'An ICB that publishes its AI commissioning standards openly creates national impact even without national policy adoption. Vendors learn what ICBs require by examining what successful ICBs procure against. The ICB Director of Strategy who treats commissioning as a contained operational activity misses its policy significance. Commissioning is, at ICB scale, a national lever — when used deliberately.' }
     ]
   },
 
